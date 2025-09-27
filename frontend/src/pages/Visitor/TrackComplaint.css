@@ -1,0 +1,135 @@
+.track-hero {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: linear-gradient(-45deg, #ffffff, #e3f2fd, #e6f7f5, #ffffff);
+  background-size: 400% 400%;
+  animation: moveGradient 15s ease infinite;
+}
+
+.track-hero h1 {
+  font-size: 3rem;
+  color: var(--primary-text-color);
+  margin-bottom: 1rem;
+}
+
+.track-hero p {
+  font-size: 1.2rem;
+  color: var(--secondary-text-color);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.track-status-section {
+  padding: 4rem 2rem;
+  background-color: var(--background-color);
+  display: flex;
+  justify-content: center;
+}
+
+.track-card {
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.track-form {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.track-form input {
+  padding: 0.9rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  width: 350px;
+}
+
+.track-form button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.9rem 1.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* --- REVISED TIMELINE CSS STARTS HERE --- */
+.status-timeline {
+  text-align: left;
+  margin-top: 3rem;
+  position: relative;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  padding-left: 50px; /* Space for icon */
+  padding-bottom: 3rem;
+}
+
+/* The vertical line for each item */
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 19px; /* Centered with the 40px icon */
+  top: 10px;
+  width: 2px;
+  height: 100%;
+  background-color: var(--border-color); /* Default line color */
+}
+
+/* Hide the line for the very last item */
+.timeline-item:last-child::before {
+  display: none;
+}
+
+/* Style the line for COMPLETED items to be green */
+.timeline-item.completed::before {
+  background-color: var(--primary-color);
+}
+
+.timeline-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #f0f2f5;
+  color: var(--secondary-text-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 0; /* Align icon to the left */
+  top: 0;
+  z-index: 1; /* Make sure icon is above the line */
+}
+
+.timeline-content h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    padding-top: 5px;
+    color: var(--primary-text-color);
+}
+
+.timeline-content p {
+    margin: 0;
+    color: var(--secondary-text-color);
+}
+
+/* Active & Completed States for the ICON */
+.timeline-item.completed .timeline-icon,
+.timeline-item.active .timeline-icon {
+  background-color: var(--primary-color-light);
+  color: var(--primary-color);
+}
+
+.timeline-item.active h4 {
+    color: var(--primary-color);
+}

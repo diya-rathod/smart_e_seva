@@ -1,0 +1,143 @@
+.how-container {
+  padding: 4rem 2rem;
+  text-align: center;
+  min-height: calc(100vh - 120px);
+}
+
+.how-container h2 {
+  font-size: 2.5rem;
+  color: #0d2c54;
+  margin-bottom: 3rem;
+}
+
+.steps-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.step {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px Bpx rgba(0, 0, 0, 0.1);
+  width: 300px;
+  text-align: center;
+  border-top: 4px solid #1e63ff;
+}
+
+.step-number {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #1e63ff;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: -4rem auto 1.5rem auto;
+}
+
+.step h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.step p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.step-arrow {
+  font-size: 3rem;
+  color: #a9b8d3;
+  margin-top: 4rem;
+}
+
+
+/* Hero section for the 'How It Works' page */
+.how-hero {
+  text-align: center;
+  padding: 5rem 2rem;
+  /* The same beautiful animated gradient */
+  background: linear-gradient(-45deg, #ffffff, #e3f2fd, #e6f7f5, #ffffff);
+  background-size: 400% 400%;
+  animation: moveGradient 15s ease infinite;
+}
+
+.how-hero h1 {
+  font-size: 3rem;
+  color: var(--primary-text-color);
+  margin-bottom: 1rem;
+}
+
+.how-hero p {
+  font-size: 1.2rem;
+  color: var(--secondary-text-color);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Styling for the steps section below */
+.how-steps-section {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 5rem 2rem;
+  background-color: var(--background-color);
+  flex-wrap: wrap; /* Allows cards to stack on smaller screens */
+}
+
+.step-card {
+  background-color: #fff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  flex-basis: 350px; /* Base width for each card */
+
+  /* Staggered animation for the cards */
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Animation Delays */
+.step-card:nth-child(1) { animation-delay: 0.2s; }
+.step-card:nth-child(2) { animation-delay: 0.4s; }
+.step-card:nth-child(3) { animation-delay: 0.6s; }
+
+.step-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+}
+
+.step-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--primary-color-light);
+  color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 1.5rem auto;
+}
+
+.step-card h3 {
+  color: var(--primary-text-color);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.step-card p {
+  color: var(--secondary-text-color);
+  line-height: 1.6;
+}
+
+

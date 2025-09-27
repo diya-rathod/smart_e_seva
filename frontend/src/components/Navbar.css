@@ -1,0 +1,75 @@
+.navbar {
+  display: flex;
+  justify-content: space-between; /* This pushes logo and links apart */
+  align-items: center;
+  padding: 1rem 4rem; /* Added more horizontal padding */
+  background-color: var(--background-color);
+  height: 70px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-logo a {
+  color: var(--primary-text-color);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 2.5rem; /* Increased space between links */
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links a {
+  color: var(--secondary-text-color);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar-links a:hover {
+  color: var(--primary-color);
+}
+
+/* Style for the active NavLink */
+.navbar-links a.active {
+  color: var(--primary-text-color); /* Make the text darker */
+  font-weight: 700; /* Make the text bold */
+  position: relative;
+}
+
+/* The underline effect */
+.navbar-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -5px; /* Position the line below the text */
+  left: 0;
+  width: 100%;
+  height: 2px; /* Thickness of the line */
+  background-color: var(--primary-color); /* Use the main green color */
+}
+
+
+
+/* Style for the Login/Register button */
+.auth-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

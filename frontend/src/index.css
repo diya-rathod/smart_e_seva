@@ -1,0 +1,23 @@
+:root {
+  /* New muted green color for buttons and highlights */
+  --primary-color: #66bb6a;
+  --primary-color-light: rgba(102, 187, 106, 0.1);
+  --primary-text-color: #2c3e50;
+    --blue-color: #42a5f5;
+  --blue-color-light: rgba(66, 165, 245, 0.1);
+  --yellow-color: #ffca28;
+  --yellow-color-light: rgba(255, 202, 40, 0.1);
+  --secondary-text-color: #5d6d7e;
+  --background-color: #FFFFFF;
+  --page-background: #f4f6f9;
+  --border-color: #e5e7eb;
+}
+
+body {
+  margin: 0;
+  /* Using the new Poppins font */
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--page-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

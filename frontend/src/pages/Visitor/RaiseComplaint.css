@@ -1,0 +1,86 @@
+.raise-hero {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: linear-gradient(-45deg, #ffffff, #e3f2fd, #e6f7f5, #ffffff);
+  background-size: 400% 400%;
+  animation: moveGradient 15s ease infinite;
+}
+
+.raise-hero h1 {
+  font-size: 3rem;
+  color: var(--primary-text-color);
+}
+
+.raise-hero p {
+  font-size: 1.2rem;
+  color: var(--secondary-text-color);
+  max-width: 700px;
+  margin: 1rem auto 0 auto;
+}
+
+.raise-form-section {
+  padding: 4rem 2rem;
+  background-color: var(--background-color);
+  display: flex;
+  justify-content: center;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 800px; /* Wider form card */
+  background-color: #fff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.complaint-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.complaint-form label {
+  font-weight: 500;
+  color: var(--primary-text-color);
+}
+
+.complaint-form input,
+.complaint-form select,
+.complaint-form textarea {
+  padding: 0.9rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-family: 'Poppins', sans-serif;
+}
+
+.complaint-form hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 1rem 0;
+}
+
+.submit-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 1rem;
+} 

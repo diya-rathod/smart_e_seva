@@ -1,0 +1,32 @@
+/* Corrected Footer.css */
+.footer {
+  background-color: #0d2c54; /* Dark Blue */
+  color: white;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  box-sizing: border-box;
+}
+/* Keep the other styles (.footer-content, etc.) as they are */
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #a9b8d3; /* Lighter blue for hover */
+}
+
+.footer-links span {
+  color: #556a8a;
+}
