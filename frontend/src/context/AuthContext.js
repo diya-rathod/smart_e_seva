@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
   const login = (newToken) => {
     localStorage.setItem('token', newToken); // Save token to local storage
     setToken(newToken); // Update state
-    navigate('/citizen/dashboard'); // Redirect to dashboard
+    navigate('/registered/dashboard'); // Redirect to dashboard
   };
 
   // Function to handle logout
