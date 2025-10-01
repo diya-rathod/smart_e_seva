@@ -28,3 +28,82 @@ body {
 .main-content-area {
   flex: 1;
 }
+
+
+/* === GLOBAL STYLES === */
+
+/* Step 1: Define Your Color Theme and Fonts */
+:root {
+  --primary-color: #28a745; /* Green color from your login button */
+  --secondary-color: #0d6efd; /* Blue for links and active states */
+  --background-color: #f8f9fa; /* Light grey for page background */
+  --surface-color: #ffffff; /* White for cards and tables */
+  --text-color: #212529; /* Dark grey for text */
+  --border-color: #dee2e6;
+  --font-family: 'Poppins', sans-serif; /* A modern, clean font */
+  --font-size-base: 16px;
+}
+
+/* Step 2: Apply Base Styles to the Body */
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* Step 3: Global Styles for Common Elements */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+p {
+  line-height: 1.6;
+}
+
+/* Step 4: Reusable Button Styles */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  font-family: var(--font-family);
+  transition: opacity 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Step 5: Reusable Form Styles */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  font-family: var(--font-family);
+  box-sizing: border-box; /* Important for padding and width */
+}

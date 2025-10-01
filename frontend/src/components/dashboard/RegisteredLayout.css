@@ -1,0 +1,27 @@
+/* Final Layout CSS to Fix Spacing */
+
+/* This rule sets the default space for the OPEN sidebar */
+.main-content {
+  padding: 40px;
+  box-sizing: border-box;
+  margin-left: 260px; /* Width of the open sidebar */
+  transition: margin-left 0.3s ease-in-out; /* Smooth animation for margin change */
+  min-height: 100vh;
+
+  /* Adding the animated gradient back from your theme */
+  background: linear-gradient(-45deg, #ffffff, #e3f2fd, #e6f7f5, #ffffff);
+  background-size: 400% 400%;
+  animation: moveGradient 15s ease infinite;
+}
+
+/* This rule REDUCES the space when the sidebar is COLLAPSED */
+.layout-container.collapsed .main-content {
+  margin-left: 88px; /* Width of the collapsed sidebar */
+}
+
+/* Keyframes for the animated background */
+@keyframes moveGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
