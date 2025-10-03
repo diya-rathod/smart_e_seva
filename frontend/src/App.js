@@ -1,9 +1,10 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar'; // Assuming Navbar is in src/components/
-import Footer from './components/Footer'; // Assuming Footer is in src/components/
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
-// Corrected paths with a capital 'V' in "Visitor"
+// Importing all pages with correct paths
+import Home from './pages/visitor/Home'; // Home page import add kiya
 import About from './pages/visitor/About';
 import HowItWorks from './pages/visitor/HowItWorks';
 import Contact from './pages/visitor/Contact';
@@ -11,9 +12,7 @@ import RaiseComplaint from './pages/visitor/RaiseComplaint';
 import TrackComplaint from './pages/visitor/TrackComplaint';
 import Login from './pages/visitor/Auth/Login';
 import Register from './pages/visitor/Auth/Register';
-
-// You might need to import other pages like Home as well
-// import Home from './pages/Visitor/Home';
+import CitizenDashboard from './pages/registered/Dashboard';
 
 import './App.css';
 
@@ -23,7 +22,7 @@ function App() {
       <Navbar />
       <main className="main-content-area">
         <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/" element={<Home />} /> {/* Home page route add kiya */}
           <Route path="/about" element={<About />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/contact" element={<Contact />} />
@@ -31,7 +30,7 @@ function App() {
           <Route path="/track-complaint" element={<TrackComplaint />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* Add other routes for your project here */}
+          <Route path="/registered/dashboard" element={<CitizenDashboard />} />
         </Routes>
       </main>
       <Footer />

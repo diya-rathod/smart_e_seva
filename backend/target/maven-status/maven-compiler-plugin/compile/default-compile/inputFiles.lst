@@ -1,0 +1,6 @@
+D:\smart_city\backend\src\main\java\com\smarteseva\backend\BackendApplication.java
+D:\smart_city\backend\src\main\java\com\smarteseva\backend\config\SecurityConfig.java
+D:\smart_city\backend\src\main\java\com\smarteseva\backend\controller\AuthController.java
+D:\smart_city\backend\src\main\java\com\smarteseva\backend\model\User.java
+D:\smart_city\backend\src\main\java\com\smarteseva\backend\repository\UserRepository.java
+D:\smart_city\backend\src\main\java\com\smarteseva\backend\service\JwtService.java
