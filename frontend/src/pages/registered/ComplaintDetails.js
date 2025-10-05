@@ -15,7 +15,7 @@ const ComplaintDetails = () => {
   }
 
   return (
-    <div className="complaint-details-container">
+    <div className="page-content-card">
       <h1>Complaint Details: {complaint.ticketId}</h1>
       <div className="details-grid">
         <div className="details-main">

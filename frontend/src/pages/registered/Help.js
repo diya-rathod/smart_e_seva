@@ -3,7 +3,7 @@ import './Help.css';
 
 const Help = () => {
   return (
-    <div className="help-container">
+    <div className="page-content-card">
       <h1>Support / Help Center</h1>
 
       {/* --- FAQs Section --- */}

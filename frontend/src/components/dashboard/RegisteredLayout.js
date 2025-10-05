@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import Fab from '../ui/Fab'; // <-- Step 1: Ensure FAB is imported
 import './RegisteredLayout.css';
 
 const RegisteredLayout = () => {
@@ -15,9 +16,9 @@ const RegisteredLayout = () => {
   };
 
   return (
-    // Dekhiye, yahan se onMouseEnter aur onMouseLeave hata diya gaya hai
-    <div className={isSidebarCollapsed ? 'layout-container collapsed' : 'layout-container'}>
-      {/* Humne functions ko yahan props ke through pass kar diya hai */}
+    <div 
+      className={isSidebarCollapsed ? 'layout-container collapsed' : 'layout-container'}
+    >
       <Sidebar 
         isCollapsed={isSidebarCollapsed} 
         handleMouseEnter={handleMouseEnter}
@@ -26,6 +27,8 @@ const RegisteredLayout = () => {
       <div className="main-content">
         <Outlet />
       </div>
+
+      <Fab /> {/* <-- Step 2: Ensure FAB component is called here */}
     </div>
   );
 };

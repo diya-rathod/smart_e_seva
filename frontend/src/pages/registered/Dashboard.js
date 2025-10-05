@@ -17,12 +17,10 @@ const dummyComplaints = [
 
 const Dashboard = () => {
   return (
-    <div className="dashboard-container">
+    <div className="page-content-card">
       <div className="dashboard-header">
         <h1>Welcome back, Diya!</h1>
-        <Link to="/raise-complaint" className="report-button">
-          + Raise New Complaint
-        </Link>
+        
       </div>
 
       <div className="summary-cards">

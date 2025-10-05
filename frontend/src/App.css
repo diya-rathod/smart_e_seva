@@ -107,3 +107,19 @@ p {
   font-family: var(--font-family);
   box-sizing: border-box; /* Important for padding and width */
 }
+
+/* === NEW GLOBAL STYLE FOR PAGE CONTENT === */
+
+/* src/App.css */
+/* src/App.css */
+.page-content-card {
+  background-color: var(--surface-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border-color);
+  position: relative;
+  
+  /* --- CHANGED --- */
+  /* Top, Right/Left, Bottom */
+  padding: 30px 40px 100px; /* Neeche 100px ki extra padding */
+}

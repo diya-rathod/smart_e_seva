@@ -2,7 +2,7 @@ import React from 'react';
 import './Profile.css'; 
 const Profile = () => {
   return (
-    <div className="profile-container">
+    <div className="page-content-card">
       <h1>Profile & Settings</h1>
 
       {/* --- Personal Information Section --- */}

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import authService from '../../../services/authService'; // authService ko import karein
+// Step 1: Link ke saath useNavigate ko bhi import karein
+import { Link, useNavigate } from 'react-router-dom'; 
+import authService from '../../../services/authService';
 import AuthContext from '../../../context/AuthContext';
 import './Login.css';
 
@@ -8,14 +9,18 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate(); // Step 2: useNavigate ko initialize karein
 
-    const handleLogin = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
 
     authService.login(email, password).then(
       (response) => {
         // Call the context login function with the token
         login(response.data.token);
+
+        // Step 3: Successful login ke baad dashboard par redirect karein
+        navigate('/dashboard'); 
       },
       (error) => {
         console.log('Login Failed:', error);
@@ -25,8 +30,8 @@ const Login = () => {
   };
 
   return (
+    // ... Aapka baaki ka JSX code bilkul same rahega ...
     <main className="auth-page-container">
-      {/* ... Hero Section ... */}
       <section className="auth-content-section">
         <div className="auth-card">
           <h2>Login to Your Account</h2>
