@@ -1,76 +1,50 @@
-    package com.smarteseva.backend.model;
+package com.smarteseva.backend.model;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Table(name = "users")
+@Data
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String role;
+    private String role; // e.g., "ROLE_ADMIN", "ROLE_CITIZEN"
 
-    // Constructors
-    public User() {
-    }
+    // --- NEW FIELDS ---
+    private String mobileNumber;
+    
+    @Column(unique = true)
+    private String meterNumber;
 
-    public User(String name, String email, String password, String role) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
+    private LocalDate dob; // Date of Birth
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    private String serviceAddress; // For simplicity, we keep the address as a single string for now
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String landmark;
 
-    public String getName() {
-        return name;
-    }
+    private String accountStatus; // e.g., "Active", "Inactive"
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    private String createdBy; // Admin who created this user
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+    private LocalDateTime createdAt;
 }

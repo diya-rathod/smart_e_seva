@@ -1,58 +1,60 @@
 package com.smarteseva.backend.controller;
 
-import com.smarteseva.backend.model.User;
-import com.smarteseva.backend.repository.UserRepository;
-import com.smarteseva.backend.service.JwtService; // JwtService ko import karein
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-import java.util.Optional;
+import com.smarteseva.backend.dto.AuthResponseDTO;
+import com.smarteseva.backend.dto.LoginRequestDTO;
+import com.smarteseva.backend.model.User;
+import com.smarteseva.backend.repository.UserRepository;
+import com.smarteseva.backend.service.JwtService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @CrossOrigin(origins = "http://localhost:3000") 
 public class AuthController {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtService jwtService; // JwtService ko inject karein
+    @Autowired private UserRepository userRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private JwtService jwtService;
+    @Autowired private AuthenticationManager authenticationManager; // Inject AuthenticationManager
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User newUser) {
+        newUser.setRole("ROLE_CITIZEN");
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         userRepository.save(newUser);
         return ResponseEntity.ok("User registered successfully!");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginRequest) {
-        String email = loginRequest.get("email");
-        String password = loginRequest.get("password");
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequestDTO loginRequest) {
+        // Use AuthenticationManager to handle login
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+        );
 
-        Optional<User> userOptional = userRepository.findByEmail(email);
-
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(401).body("Invalid credentials");
-        }
-
-        User user = userOptional.get();
-
-        if (passwordEncoder.matches(password, user.getPassword())) {
-            // Password match hone par token generate karein
-            String token = jwtService.generateToken(user.getEmail());
-
-            // Token ko response mein bhejein
-            return ResponseEntity.ok(Map.of("token", token));
+        if (authentication.isAuthenticated()) {
+            User user = userRepository.findByEmail(loginRequest.getEmail()).get();
+    
+            // --- THIS LINE IS CHANGED ---
+            // Pass both email and role to generate the token
+            String token = jwtService.generateToken(user.getEmail(), user.getRole());
+            
+            AuthResponseDTO authResponse = new AuthResponseDTO(token, user.getRole());
+            return ResponseEntity.ok(authResponse);
         } else {
-            return ResponseEntity.status(401).body("Invalid credentials");
+            throw new UsernameNotFoundException("Invalid user request!");
         }
     }
 }

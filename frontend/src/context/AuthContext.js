@@ -1,41 +1,38 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; // You might need to install this: npm install jwt-decode
 
-// 1. Create the context
 const AuthContext = createContext();
 
-// 2. Create the provider component
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
-  const navigate = useNavigate();
+    // Initialize state from localStorage to stay logged in on refresh
+    const [auth, setAuth] = useState(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            // Decode token to get user info if you need it
+            // const decoded = jwtDecode(token);
+            return { token: token, user: null, role: null }; // Add user/role later
+        }
+        return null;
+    });
 
-  useEffect(() => {
-    // Check local storage for token on initial load
-    const storedToken = localStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
-    }
-  }, []);
+    const login = (token, role) => {
+        localStorage.setItem('token', token);
+        // You can also save the role in localStorage
+        localStorage.setItem('role', role); 
+        setAuth({ token, role });
+    };
 
-  // Function to handle login
-  const login = (newToken) => {
-    localStorage.setItem('token', newToken); // Save token to local storage
-    setToken(newToken); // Update state
-    navigate('/registered/dashboard'); // Redirect to dashboard
-  };
+    const logout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        setAuth(null);
+    };
 
-  // Function to handle logout
-  const logout = () => {
-    localStorage.removeItem('token'); // Remove token from local storage
-    setToken(null); // Clear state
-    navigate('/login'); // Redirect to login
-  };
-
-  return (
-    <AuthContext.Provider value={{ token, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider value={{ auth, login, logout }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
 
 export default AuthContext;

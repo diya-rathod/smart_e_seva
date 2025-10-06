@@ -1,0 +1,20 @@
+.register-citizen-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2-column layout */
+    gap: 20px 30px; /* Vertical and horizontal gap */
+    margin-bottom: 30px;
+}
+
+.form-group.form-span-2 {
+    grid-column: span 2; /* Make this field take up both columns */
+}
+
+.register-citizen-form .btn {
+    align-self: flex-end; /* Push button to the right */
+    min-width: 200px;
+}

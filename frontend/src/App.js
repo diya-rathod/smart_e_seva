@@ -7,20 +7,24 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
 // --- Visitor Pages ---
-import Home from './pages/visitor/Home';
-import About from './pages/visitor/About';
-import HowItWorks from './pages/visitor/HowItWorks';
-import Contact from './pages/visitor/Contact';
-import RaiseComplaint from './pages/visitor/RaiseComplaint';
-import TrackComplaint from './pages/visitor/TrackComplaint';
-import Login from './pages/visitor/Auth/Login';
-import Register from './pages/visitor/Auth/Register';
+import Home from './pages/Visitor/Home';
+import About from './pages/Visitor/About';
+import HowItWorks from './pages/Visitor/HowItWorks';
+import Contact from './pages/Visitor/Contact';
+import RaiseComplaint from './pages/Visitor/RaiseComplaint';
+import TrackComplaint from './pages/Visitor/TrackComplaint';
+import Login from './pages/Visitor/Auth/Login';
+import Register from './pages/Visitor/Auth/Register';
 
 // --- Registered User Pages ---
 import CitizenDashboard from './pages/registered/Dashboard'; // Using your name 'CitizenDashboard'
 import Profile from './pages/registered/Profile';
 import Help from './pages/registered/Help';
 import ComplaintDetails from './pages/registered/ComplaintDetails';
+import RaiseComplaintPage from './pages/registered/RaiseComplaintPage';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminLayout from './components/admin/AdminLayout';
+import RegisterCitizenPage from './pages/admin/RegisterCitizenPage';
 
 import './App.css';
 
@@ -58,8 +62,14 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/help" element={<Help />} />
         <Route path="/complaint/:ticketId" element={<ComplaintDetails />} />
-        <Route path="/raise-complaint" element={<RaiseComplaint />} />
+        <Route path="/raise-complaint" element={<RaiseComplaintPage />} />
       </Route>
+       {/* Sub-Group B: Admin Routes */}
+        <Route element={<AdminLayout />}>
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/register-citizen" element={<RegisterCitizenPage />} />
+          {/* Future admin routes will go here */}
+        </Route>
     </Routes>
   );
 }
