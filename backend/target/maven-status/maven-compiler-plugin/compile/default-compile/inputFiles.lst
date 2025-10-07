@@ -4,10 +4,14 @@ F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\RegisterRequest
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\ComplaintRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\service\ComplaintService.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\service\JwtService.java
+F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\RegisterAgentRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\LoginRequestDTO.java
+F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\AgentController.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\service\UserDetailsServiceImpl.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\AdminController.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\entity\Complaint.java
+F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\UserController.java
+F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\RegisterAdminRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\repository\ComplaintRepository.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\AuthController.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\AuthResponseDTO.java

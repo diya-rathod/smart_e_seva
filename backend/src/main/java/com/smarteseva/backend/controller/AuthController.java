@@ -29,14 +29,6 @@ public class AuthController {
     @Autowired private JwtService jwtService;
     @Autowired private AuthenticationManager authenticationManager; // Inject AuthenticationManager
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User newUser) {
-        newUser.setRole("ROLE_CITIZEN");
-        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        userRepository.save(newUser);
-        return ResponseEntity.ok("User registered successfully!");
-    }
-
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequestDTO loginRequest) {
         // Use AuthenticationManager to handle login

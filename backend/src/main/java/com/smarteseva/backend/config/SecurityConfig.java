@@ -47,11 +47,23 @@ public class SecurityConfig {
         return http
                 .cors(withDefaults()) // Apply CORS configuration from the bean
                 .csrf(csrf -> csrf.disable())
+                // Inside the securityFilterChain method...
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**", "/api/v1/complaints/**").permitAll()
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
+                    // Public APIs
+                    .requestMatchers("/api/v1/auth/**", "/api/v1/complaints/**").permitAll()
+                    
+                    // Rule 1: ONLY Super Admin can access endpoints for registering other admins
+                    .requestMatchers("/api/v1/admin/register-admin").hasRole("SUPER_ADMIN")
+                    
+                    // Rule 2: Other admin endpoints can be accessed by both ADMIN and SUPER_ADMIN
+                    .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
+
+                    .requestMatchers("/api/v1/agent/**").hasRole("AGENT")
+                    
+                    // All other requests need to be authenticated
+                    .anyRequest().authenticated()
                 )
+                // ... (rest of the configuration)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)

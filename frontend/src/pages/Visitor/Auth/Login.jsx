@@ -100,10 +100,10 @@ const Login = () => {
 
         // Step 2: Context mein token aur user info save karein
         // Hum maan rahe hain ki aapka login function token aur role le sakta hai
-        login(jwtToken, { email, role });
+        login(jwtToken, role);
 
         // Step 3: Role ke hisab se redirect karein
-        if (role === 'ROLE_ADMIN') {
+        if (role === 'ROLE_ADMIN' || role === 'ROLE_SUPER_ADMIN')  {
           navigate('/admin/dashboard');
         } else {
           navigate('/dashboard');
@@ -146,9 +146,7 @@ const Login = () => {
             </div>
             <button type="submit" className="auth-button-submit">Login</button>
           </form>
-          <div className="auth-switch">
-            <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
-          </div>
+          
         </div>
       </section>
     </main>

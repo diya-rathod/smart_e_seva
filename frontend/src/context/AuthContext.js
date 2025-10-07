@@ -1,31 +1,32 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode'; // You might need to install this: npm install jwt-decode
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    // Initialize state from localStorage to stay logged in on refresh
     const [auth, setAuth] = useState(() => {
+        // On page load, try to get auth info from localStorage
         const token = localStorage.getItem('token');
-        if (token) {
-            // Decode token to get user info if you need it
-            // const decoded = jwtDecode(token);
-            return { token: token, user: null, role: null }; // Add user/role later
+        const role = localStorage.getItem('role');
+        if (token && role) {
+            return { token, role };
         }
         return null;
     });
 
     const login = (token, role) => {
+        // Save token and role to localStorage and state
         localStorage.setItem('token', token);
-        // You can also save the role in localStorage
-        localStorage.setItem('role', role); 
+        localStorage.setItem('role', role);
         setAuth({ token, role });
     };
 
     const logout = () => {
+        // Clear auth info from localStorage and state
         localStorage.removeItem('token');
         localStorage.removeItem('role');
         setAuth(null);
+        // Optional: redirect to login page
+        window.location.href = '/login';
     };
 
     return (

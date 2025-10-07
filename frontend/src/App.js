@@ -14,7 +14,6 @@ import Contact from './pages/Visitor/Contact';
 import RaiseComplaint from './pages/Visitor/RaiseComplaint';
 import TrackComplaint from './pages/Visitor/TrackComplaint';
 import Login from './pages/Visitor/Auth/Login';
-import Register from './pages/Visitor/Auth/Register';
 
 // --- Registered User Pages ---
 import CitizenDashboard from './pages/registered/Dashboard'; // Using your name 'CitizenDashboard'
@@ -25,6 +24,9 @@ import RaiseComplaintPage from './pages/registered/RaiseComplaintPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminLayout from './components/admin/AdminLayout';
 import RegisterCitizenPage from './pages/admin/RegisterCitizenPage';
+import RegisterAgentPage from './pages/admin/RegisterAgentPage';
+import RegisterAdminPage from './pages/admin/RegisterAdminPage';
+import ManageComplaintsPage from './pages/admin/ManageComplaintsPage';
 
 import './App.css';
 
@@ -52,7 +54,6 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/track-complaint" element={<TrackComplaint />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         {/* Note: We will handle raise-complaint separately for visitors if needed */}
       </Route>
 
@@ -68,6 +69,9 @@ function App() {
         <Route element={<AdminLayout />}>
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/register-citizen" element={<RegisterCitizenPage />} />
+          <Route path="/admin/register-agent" element={<RegisterAgentPage />} />
+          <Route path="/admin/register-admin" element={<RegisterAdminPage />} />
+          <Route path="/admin/manage-complaints" element={<ManageComplaintsPage />} />
           {/* Future admin routes will go here */}
         </Route>
     </Routes>

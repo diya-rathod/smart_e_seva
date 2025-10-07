@@ -11,5 +11,10 @@ public class ComplaintRequestDTO {
     private String landmark;
     private String meterNumber;
     private String mobileNumber;
+    // Inside the ComplaintRequestDTO.java class
+
+    private Double latitude;
+    private Double longitude;
+    
     // We will handle photoUrl later
 }

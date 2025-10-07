@@ -28,23 +28,30 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String role; // e.g., "ROLE_ADMIN", "ROLE_CITIZEN"
+    private String role; 
 
-    // --- NEW FIELDS ---
+    // --- COMMON & CITIZEN FIELDS ---
     private String mobileNumber;
     
     @Column(unique = true)
     private String meterNumber;
 
-    private LocalDate dob; // Date of Birth
+    private LocalDate dob;
 
-    private String serviceAddress; // For simplicity, we keep the address as a single string for now
+    private String serviceAddress;
 
     private String landmark;
 
-    private String accountStatus; // e.g., "Active", "Inactive"
+    // --- NEW AGENT-SPECIFIC FIELDS ---
+    @Column(unique = true)
+    private String employeeId;
 
-    private String createdBy; // Admin who created this user
+    private String division; // Service Area for Agent
+
+    // --- SYSTEM FIELDS ---
+    private String status; // Renamed from accountStatus for consistency
+
+    private String createdBy;
 
     private LocalDateTime createdAt;
 }
