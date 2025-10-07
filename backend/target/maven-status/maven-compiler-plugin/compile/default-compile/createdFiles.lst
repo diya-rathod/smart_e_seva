@@ -1,10 +1,10 @@
-com\smarteseva\backend\controller\ComplaintController.class
 com\smarteseva\backend\model\User.class
-com\smarteseva\backend\repository\UserRepository.class
 com\smarteseva\backend\controller\AuthController.class
+com\smarteseva\backend\entity\Complaint.class
+com\smarteseva\backend\controller\ComplaintController.class
+com\smarteseva\backend\repository\UserRepository.class
 com\smarteseva\backend\dto\ComplaintRequestDTO.class
 com\smarteseva\backend\config\SecurityConfig.class
-com\smarteseva\backend\entity\Complaint.class
 com\smarteseva\backend\BackendApplication.class
 com\smarteseva\backend\dto\RegisterAgentRequestDTO.class
 com\smarteseva\backend\service\JwtService.class

@@ -25,6 +25,9 @@ public class ComplaintService {
         return complaintRepository.findAll();
     }
 
+    @Autowired
+    private NotificationService notificationService; // <-- Nayi service ko inject karein
+
     public Complaint createComplaint(ComplaintRequestDTO complaintDTO, String citizenEmail) {
         User citizen = userRepository.findByEmail(citizenEmail)
                 .orElseThrow(() -> new RuntimeException("Citizen not found with email: " + citizenEmail));
@@ -45,6 +48,11 @@ public class ComplaintService {
         newComplaint.setDateRaised(LocalDateTime.now());
         newComplaint.setCitizen(citizen);
 
-        return complaintRepository.save(newComplaint);
+        Complaint savedComplaint = complaintRepository.save(newComplaint);
+        notificationService.sendNewComplaintNotification(savedComplaint);
+
+        // return complaintRepository.save(newComplaint);
+
+        return savedComplaint;
     }
 }

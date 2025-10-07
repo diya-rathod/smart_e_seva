@@ -123,3 +123,32 @@ p {
   /* Top, Right/Left, Bottom */
   padding: 30px 40px 100px; /* Neeche 100px ki extra padding */
 }
+
+/* For the blinking map marker */
+
+.blinking-marker .blinking-dot {
+    width: 20px;
+    height: 20px;
+    background-color: orange;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* For the blinking map marker */
+.blinking {
+    animation: pulse 1.5s infinite ease-in-out;
+    border-radius: 50%; /* Helps with the glowing effect */
+    display: block;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 165, 0, 0.7); /* Orange glow */
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(255, 165, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 165, 0, 0);
+    }
+}

@@ -48,21 +48,35 @@ public class SecurityConfig {
                 .cors(withDefaults()) // Apply CORS configuration from the bean
                 .csrf(csrf -> csrf.disable())
                 // Inside the securityFilterChain method...
+                
                 .authorizeHttpRequests(auth -> auth
-                    // Public APIs
-                    .requestMatchers("/api/v1/auth/**", "/api/v1/complaints/**").permitAll()
+                // Permit auth, complaints, AND notification endpoints
+                .requestMatchers("/api/v1/auth/**", "/api/v1/complaints/**", "/api/v1/notifications/**").permitAll()
+    
+                // Secure admin endpoints
+                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+    
+                // All other requests need to be authenticated
+                .anyRequest().authenticated()
+)
+                
+                
+                
+                // .authorizeHttpRequests(auth -> auth
+                //     // Public APIs
+                //     .requestMatchers("/api/v1/auth/**", "/api/v1/complaints/**").permitAll()
                     
-                    // Rule 1: ONLY Super Admin can access endpoints for registering other admins
-                    .requestMatchers("/api/v1/admin/register-admin").hasRole("SUPER_ADMIN")
+                //     // Rule 1: ONLY Super Admin can access endpoints for registering other admins
+                //     .requestMatchers("/api/v1/admin/register-admin").hasRole("SUPER_ADMIN")
                     
-                    // Rule 2: Other admin endpoints can be accessed by both ADMIN and SUPER_ADMIN
-                    .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
+                //     // Rule 2: Other admin endpoints can be accessed by both ADMIN and SUPER_ADMIN
+                //     .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
 
-                    .requestMatchers("/api/v1/agent/**").hasRole("AGENT")
+                //     .requestMatchers("/api/v1/agent/**").hasRole("AGENT")
                     
-                    // All other requests need to be authenticated
-                    .anyRequest().authenticated()
-                )
+                //     // All other requests need to be authenticated
+                //     .anyRequest().authenticated()
+                // )
                 // ... (rest of the configuration)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
