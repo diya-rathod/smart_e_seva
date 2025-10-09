@@ -125,6 +125,11 @@ p {
 }
 
 /* For the blinking map marker */
+.blinking {
+    animation: pulse 1.5s infinite ease-in-out;
+    border-radius: 50%; /* Helps with the glowing effect */
+    display: block;
+}
 
 .blinking-marker .blinking-dot {
     width: 20px;
@@ -135,11 +140,6 @@ p {
 }
 
 /* For the blinking map marker */
-.blinking {
-    animation: pulse 1.5s infinite ease-in-out;
-    border-radius: 50%; /* Helps with the glowing effect */
-    display: block;
-}
 
 @keyframes pulse {
     0% {

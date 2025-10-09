@@ -5,6 +5,7 @@ import { Routes, Route, Outlet } from 'react-router-dom';
 import RegisteredLayout from './components/dashboard/RegisteredLayout';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { Toaster } from 'react-hot-toast';
 
 // --- Visitor Pages ---
 import Home from './pages/Visitor/Home';
@@ -27,6 +28,7 @@ import RegisterCitizenPage from './pages/admin/RegisterCitizenPage';
 import RegisterAgentPage from './pages/admin/RegisterAgentPage';
 import RegisterAdminPage from './pages/admin/RegisterAdminPage';
 import ManageComplaintsPage from './pages/admin/ManageComplaintsPage';
+import AdminComplaintDetailsPage from './pages/admin/AdminComplaintDetailsPage';
 
 import './App.css';
 
@@ -45,8 +47,16 @@ const VisitorLayout = () => (
 
 function App() {
   return (
+    <>
+    <Toaster 
+        position="top-right" 
+        toastOptions={{
+          duration: 5000, // Notification 5 second tak dikhegi
+        }}
+      />
     <Routes>
       {/* Group 1: Visitor Routes jo Navbar/Footer use karte hain */}
+      
       <Route element={<VisitorLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -72,9 +82,11 @@ function App() {
           <Route path="/admin/register-agent" element={<RegisterAgentPage />} />
           <Route path="/admin/register-admin" element={<RegisterAdminPage />} />
           <Route path="/admin/manage-complaints" element={<ManageComplaintsPage />} />
+          <Route path="/admin/complaints/:id" element={<AdminComplaintDetailsPage />} />
           {/* Future admin routes will go here */}
         </Route>
     </Routes>
+   </> 
   );
 }
 

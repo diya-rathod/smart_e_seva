@@ -1,4 +1,8 @@
+//controller/NotificationController.java
+
 package com.smarteseva.backend.controller;
+
+import java.security.Principal; // <--- Import Zaroori Hai
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,13 +22,25 @@ public class NotificationController {
     private NotificationService notificationService;
 
     @GetMapping("/subscribe")
-    public SseEmitter subscribe() {
-        // Create a new SseEmitter for this client, with a timeout
+    // 1. Principal argument add karein
+    public SseEmitter subscribe(Principal principal) { 
+        
+        // Agar Principal null hai, toh handle karein (not logged in)
+        if (principal == null) {
+            // Ya toh Forbidden return karein, ya ek error emitter
+            return new SseEmitter(0L); 
+        }
+
+        // Logged-in user ka email nikalenge (Spring Security mein yehi username hota hai)
+        String userIdentifier = principal.getName(); 
+
+        // Create a new SseEmitter for this client
         SseEmitter emitter = new SseEmitter(24 * 60 * 60 * 1000L); // 24 hours timeout
 
-        // Add the emitter to our service
-        notificationService.addEmitter(emitter);
+        // 2. Service call ko fix karein: variable types remove karein aur userIdentifier pass karein
+        notificationService.addEmitter(userIdentifier, emitter);
 
+        // 3. Return statement ko fix karein
         return emitter;
     }
 }

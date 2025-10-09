@@ -1,6 +1,7 @@
 package com.smarteseva.backend.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.smarteseva.backend.dto.ComplaintResponseDTO;
 import com.smarteseva.backend.entity.Complaint;
 import com.smarteseva.backend.model.User;
 import com.smarteseva.backend.repository.ComplaintRepository;
@@ -28,18 +30,21 @@ public class AgentController {
     private UserRepository userRepository;
 
     @GetMapping("/my-complaints")
-    public ResponseEntity<List<Complaint>> getAssignedComplaints() {
-        // Get the currently logged-in agent's email
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String agentEmail = authentication.getName();
+    public ResponseEntity<List<ComplaintResponseDTO>> getAssignedComplaints() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String agentEmail = authentication.getName();
 
-        // Find the agent in the database
-        User agent = userRepository.findByEmail(agentEmail)
-                .orElseThrow(() -> new RuntimeException("Agent not found"));
+    User agent = userRepository.findByEmail(agentEmail)
+            .orElseThrow(() -> new RuntimeException("Agent not found"));
 
-        // Fetch complaints assigned to this agent
-        List<Complaint> complaints = complaintRepository.findByAgent(agent);
+    // 1. Database se poori Complaint entities get karein
+    List<Complaint> complaints = complaintRepository.findByAgent(agent);
+    
+    // 2. Un sabhi entities ko hamare "safe" DTOs mein convert karein
+    List<ComplaintResponseDTO> responseDtos = complaints.stream()
+            .map(ComplaintResponseDTO::fromEntity)
+            .collect(Collectors.toList());
 
-        return ResponseEntity.ok(complaints);
+    return ResponseEntity.ok(responseDtos);
     }
 }

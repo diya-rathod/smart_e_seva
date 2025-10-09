@@ -42,6 +42,11 @@ public class User {
 
     private String landmark;
 
+    private Double latitude; // Agent's current or registered location latitude
+    private Double longitude; // Agent's current or registered location longitude
+    private String availabilityStatus; // Values: "AVAILABLE", "ON_DUTY", "OFF_DUTY"
+    
+
     // --- NEW AGENT-SPECIFIC FIELDS ---
     @Column(unique = true)
     private String employeeId;

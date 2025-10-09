@@ -12,11 +12,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.smarteseva.backend.dto.AssignmentRequestDTO;
+import com.smarteseva.backend.dto.ComplaintResponseDTO;
 import com.smarteseva.backend.dto.RegisterAdminRequestDTO;
 import com.smarteseva.backend.dto.RegisterAgentRequestDTO;
 import com.smarteseva.backend.dto.RegisterRequestDTO;
@@ -146,5 +150,41 @@ public class AdminController {
     public ResponseEntity<List<Complaint>> getAllComplaints() {
     List<Complaint> complaints = complaintService.getAllComplaints();
     return ResponseEntity.ok(complaints);
-}
+    }
+
+    @GetMapping("/complaints/{id}")
+    public ResponseEntity<ComplaintResponseDTO> getComplaintById(@PathVariable Long id) {
+    // 1. Service se poori Complaint entity get karein
+    Complaint complaint = complaintService.getComplaintById(id);
+    
+    // 2. Us entity ko hamare "safe" DTO mein convert karein
+    ComplaintResponseDTO responseDto = ComplaintResponseDTO.fromEntity(complaint);
+    
+    // 3. Frontend ko sirf "safe" DTO bhejein
+    return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/agents")
+    public ResponseEntity<List<User>> getAllAgents() {
+    // We can add more filtering here later (e.g., for "Active" status)
+    List<User> agents = userRepository.findByRole("ROLE_AGENT");
+    return ResponseEntity.ok(agents);
+    }   
+
+    @GetMapping("/nearest-agent/{complaintId}")
+    public ResponseEntity<User> getNearestAgent(@PathVariable Long complaintId) {
+        User nearestAgent = complaintService.findNearestAvailableAgent(complaintId);
+        
+        // Agar koi available agent nahi mila, toh 204 No Content ya 404 Not Found return kar sakte hain
+        if (nearestAgent == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(nearestAgent);
+    }
+    
+    @PutMapping("/assign-agent")
+    public ResponseEntity<Complaint> assignAgentToComplaint(@RequestBody AssignmentRequestDTO assignmentDTO) {
+        Complaint updatedComplaint = complaintService.assignAgent(assignmentDTO);
+        return ResponseEntity.ok(updatedComplaint);
+    }
 }

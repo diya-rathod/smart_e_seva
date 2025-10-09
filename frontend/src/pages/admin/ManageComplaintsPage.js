@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
 // We can create a new CSS file for this page
 // import './ManageComplaintsPage.css'; 
 
@@ -52,13 +53,16 @@ const ManageComplaintsPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {complaints.map(complaint => (
-                                <tr key={complaint.id} style={{ borderBottom: '1px solid #dee2e6' }}>
-                                    <td style={{ padding: '12px' }}>{complaint.ticketId}</td>
-                                    <td style={{ padding: '12px' }}>{complaint.category}</td>
-                                    <td style={{ padding: '12px' }}>{complaint.status}</td>
-                                    <td style={{ padding: '12px' }}>
-                                        <button className="btn btn-secondary">View / Assign</button>
+                                {complaints.map(complaint => (
+                                <tr key={complaint.id}>
+                                    <td>{complaint.ticketId}</td>
+                                    <td>{complaint.category}</td>
+                                    <td>{complaint.status}</td>
+                                    <td>
+                                        {/* --- THIS BUTTON IS NOW A DYNAMIC LINK --- */}
+                                        <Link to={`/admin/complaints/${complaint.id}`} className="btn btn-secondary">
+                                            View / Assign
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}

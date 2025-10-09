@@ -1,3 +1,5 @@
+//RegisterAgentRequestDTO.java (Final Updated Code)
+
 package com.smarteseva.backend.dto;
 
 import lombok.Data;
@@ -14,6 +16,11 @@ public class RegisterAgentRequestDTO {
 
     // Work Details
     private String employeeId;
-    private String status; // "Active", "On-Work", "On-Leave"
+    private String status; // <-- Keep for Account Status (e.g., "Active", "Inactive")
     private String division; // Service Area
+    
+    // --- LOCATION AND AVAILABILITY ---
+    private Double latitude; 
+    private Double longitude;
+    private String availabilityStatus; // <-- For Assignment Logic (e.g., "AVAILABLE", "ON_DUTY")
 }

@@ -54,7 +54,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/auth/**", "/api/v1/complaints/**", "/api/v1/notifications/**").permitAll()
     
                 // Secure admin endpoints
-                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/admin/register-admin").hasAuthority("ROLE_SUPER_ADMIN")
+
+                .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
     
                 // All other requests need to be authenticated
                 .anyRequest().authenticated()
