@@ -10,4 +10,6 @@ public class CitizenDTO {
     private String mobileNumber;
     private String meterNumber;
     private String serviceAddress;
+    private String landmark;
+    private String dob; // DTO mein String rakhte hain
 }

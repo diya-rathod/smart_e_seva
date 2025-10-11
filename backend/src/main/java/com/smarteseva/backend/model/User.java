@@ -1,7 +1,11 @@
+//backend/src/main/java/com/smarteseva/backend/model/User.java
+
 package com.smarteseva.backend.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,47 +20,54 @@ import lombok.Data;
 @Data
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+ @Id
+ @GeneratedValue(strategy = GenerationType.IDENTITY)
+ private Long id;
 
-    private String name;
+ private String name;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+ @Column(unique = true, nullable = false)
+ private String email;
 
-    @Column(nullable = false)
-    private String password;
 
-    private String role; 
+ @JsonIgnore // FINAL FIX 1: Password hash ko 100% block karein
+ @Column(nullable = false)
+ private String password;
 
-    // --- COMMON & CITIZEN FIELDS ---
-    private String mobileNumber;
-    
-    @Column(unique = true)
-    private String meterNumber;
+ private String role; 
 
-    private LocalDate dob;
+ // --- COMMON & CITIZEN FIELDS ---
+ private String mobileNumber;
+ 
+ @Column(unique = true)
+ private String meterNumber;
 
-    private String serviceAddress;
+ @JsonIgnore // FINAL FIX 2: Sensitive/Unnecessary details block karein
+ private LocalDate dob;
 
-    private String landmark;
+ @JsonIgnore // FINAL FIX 3: Unnecessary details block karein
+ private String serviceAddress;
 
-    private Double latitude; // Agent's current or registered location latitude
-    private Double longitude; // Agent's current or registered location longitude
-    private String availabilityStatus; // Values: "AVAILABLE", "ON_DUTY", "OFF_DUTY"
-    
+ @JsonIgnore // FINAL FIX 4: Unnecessary details block karein
+ private String landmark;
 
-    // --- NEW AGENT-SPECIFIC FIELDS ---
-    @Column(unique = true)
-    private String employeeId;
+ private Double latitude; 
+ private Double longitude; 
+ private String availabilityStatus; 
+ 
 
-    private String division; // Service Area for Agent
+ // --- NEW AGENT-SPECIFIC FIELDS ---
+ @Column(unique = true)
+ private String employeeId;
 
-    // --- SYSTEM FIELDS ---
-    private String status; // Renamed from accountStatus for consistency
+ private String division; 
 
-    private String createdBy;
+ // --- SYSTEM FIELDS ---
+ private String status; 
 
-    private LocalDateTime createdAt;
+    @JsonIgnore // FINAL FIX 5: Internal audit field block karein
+ private String createdBy;
+
+    @JsonIgnore // FINAL FIX 6: Internal audit field block karein
+ private LocalDateTime createdAt;
 }

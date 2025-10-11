@@ -16,5 +16,5 @@ public class ComplaintRequestDTO {
     private Double latitude;
     private Double longitude;
     
-    // We will handle photoUrl later
+    // We will handle photoUrl later    
 }

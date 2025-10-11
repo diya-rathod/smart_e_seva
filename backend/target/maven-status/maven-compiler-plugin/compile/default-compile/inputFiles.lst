@@ -6,6 +6,7 @@ F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\Notifica
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\RegisterAgentRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\AgentController.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\AgentDTO.java
+F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\AgentResponseDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\UserController.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\RegisterAdminRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\repository\UserRepository.java
@@ -18,6 +19,7 @@ F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\service\ComplaintSe
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\service\JwtService.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\LoginRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\AssignmentRequestDTO.java
+F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\UserPublicDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\service\UserDetailsServiceImpl.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\AdminController.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\entity\Complaint.java

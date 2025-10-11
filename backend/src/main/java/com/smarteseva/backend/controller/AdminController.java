@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.smarteseva.backend.dto.AgentResponseDTO;
 import com.smarteseva.backend.dto.AssignmentRequestDTO;
 import com.smarteseva.backend.dto.ComplaintResponseDTO;
 import com.smarteseva.backend.dto.RegisterAdminRequestDTO;
@@ -135,6 +136,10 @@ public class AdminController {
     newAgent.setDivision(registerRequest.getDivision());
     newAgent.setStatus(registerRequest.getStatus());
 
+    newAgent.setLatitude(registerRequest.getLatitude()); 
+    newAgent.setLongitude(registerRequest.getLongitude());
+    newAgent.setAvailabilityStatus(registerRequest.getAvailabilityStatus());
+
     newAgent.setRole("ROLE_AGENT"); // Set the role to AGENT
 
     // Set audit fields
@@ -172,14 +177,19 @@ public class AdminController {
     }   
 
     @GetMapping("/nearest-agent/{complaintId}")
-    public ResponseEntity<User> getNearestAgent(@PathVariable Long complaintId) {
+    // FIX 1: Return type ko User se AgentResponseDTO mein change karein
+    public ResponseEntity<AgentResponseDTO> getNearestAgent(@PathVariable Long complaintId) {
         User nearestAgent = complaintService.findNearestAvailableAgent(complaintId);
         
-        // Agar koi available agent nahi mila, toh 204 No Content ya 404 Not Found return kar sakte hain
+        // Agar koi available agent nahi mila
         if (nearestAgent == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(nearestAgent);
+        
+        // FIX 2: User entity ko DTO mein convert karke return karein
+        AgentResponseDTO responseDto = AgentResponseDTO.fromEntity(nearestAgent);
+        
+        return ResponseEntity.ok(responseDto);
     }
     
     @PutMapping("/assign-agent")
