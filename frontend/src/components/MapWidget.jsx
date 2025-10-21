@@ -25,7 +25,7 @@ const LocationMarker = ({ onLocationSelect, initialCoords, isMovable }) => {
         if (initialCoords[0] && initialCoords[1]) {
             setPosition(initialCoords);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     }, []); // <-- Dependency array empty rakhein
 
     

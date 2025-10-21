@@ -1,36 +1,163 @@
-import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import Sidebar from './Sidebar';
-import Fab from '../ui/Fab'; // <-- Step 1: Ensure FAB is imported
+// src/components/dashboard/RegisteredLayout.js
+
+
+import React, { useState, useContext } from 'react';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { 
+    Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, 
+    ListItemText, Typography, IconButton, Fab, Divider, Tooltip, AppBar, Toolbar
+} from '@mui/material';
+import { 
+    Dashboard, Person, Help, AddCircle, Logout, Menu, Add as AddIcon, Notifications
+} from '@mui/icons-material';
+import AuthContext from '../../context/AuthContext';
 import './RegisteredLayout.css';
 
+const drawerWidthOpen = 240;
+const drawerWidthClosed = 70;
+
 const RegisteredLayout = () => {
-  const [isSidebarCollapsed, setSidebarCollapsed] = useState(true);
+    const { logout } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isFabHovered, setFabHovered] = useState(false);
 
-  const handleMouseEnter = () => {
-    setSidebarCollapsed(false);
-  };
+    const handleDrawerToggle = () => {
+        setSidebarOpen(!isSidebarOpen);
+    };
 
-  const handleMouseLeave = () => {
-    setSidebarCollapsed(true);
-  };
+    const menuItems = [
+        { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
+        { text: 'Raise Complaint', icon: <AddCircle />, path: '/raise-complaint' },
+        { text: 'Profile', icon: <Person />, path: '/profile' },
+        { text: 'Help', icon: <Help />, path: '/help' },
+    ];
 
-  return (
-    <div 
-      className={isSidebarCollapsed ? 'layout-container collapsed' : 'layout-container'}
-    >
-      <Sidebar 
-        isCollapsed={isSidebarCollapsed} 
-        handleMouseEnter={handleMouseEnter}
-        handleMouseLeave={handleMouseLeave}
-      />
-      <div className="main-content" style={{ padding: '20px', border: '2px solid red' }}> 
-         <Outlet />
-      </div>
+    const drawerContent = (
+        <div className="sidebar-inner-container">
+            <div>
+                <Box className="sidebar-header">
+                    {isSidebarOpen && (
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+                            Smart E-Seva
+                        </Typography>
+                    )}
+                    <IconButton onClick={handleDrawerToggle}>
+                        <Menu />
+                    </IconButton>
+                </Box>
+                <Divider />
+                <List>
+                    {menuItems.map((item) => (
+                        <ListItem key={item.text} disablePadding>
+                            <Tooltip title={!isSidebarOpen ? item.text : ''} placement="right">
+                                <ListItemButton
+                                    onClick={() => navigate(item.path)}
+                                    className={location.pathname === item.path ? 'active-link' : ''}
+                                >
+                                    <ListItemIcon>{item.icon}</ListItemIcon>
+                                    <ListItemText 
+                                        primary={item.text} 
+                                        className={!isSidebarOpen ? 'sidebar-closed' : ''} 
+                                    />
+                                </ListItemButton>
+                            </Tooltip>
+                        </ListItem>
+                    ))}
+                </List>
+            </div>
+            <Box sx={{ marginTop: 'auto' }}>
+                <List>
+                    <ListItem disablePadding>
+                        <Tooltip title={!isSidebarOpen ? "Logout" : ''} placement="right">
+                            <ListItemButton onClick={logout} sx={{ color: 'red' }}>
+                                <ListItemIcon><Logout sx={{ color: 'red' }} /></ListItemIcon>
+                                <ListItemText 
+                                    primary="Logout" 
+                                    className={!isSidebarOpen ? 'sidebar-closed' : ''} 
+                                />
+                            </ListItemButton>
+                        </Tooltip>
+                    </ListItem>
+                </List>
+            </Box>
+        </div>
+    );
+    
+    return (
+        <div className="layout-container">
+            <AppBar 
+                position="fixed"
+                sx={{ 
+                    // --- YEH HAI FIX ---
+                    width: `calc(100% - ${isSidebarOpen ? drawerWidthOpen : drawerWidthClosed}px)`,
+                    ml: isSidebarOpen ? `${drawerWidthOpen}px` : `${drawerWidthClosed}px`,
+                    transition: (theme) => theme.transitions.create(['width', 'margin'], {
+                        easing: theme.transitions.easing.sharp,
+                        duration: theme.transitions.duration.enteringScreen,
+                    }),
+                    // --- FIX END ---
+                }}
+            >
+                <Toolbar>
+                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                        Citizen Dashboard
+                    </Typography>
+                    <IconButton color="inherit">
+                        <Notifications />
+                    </IconButton>
+                </Toolbar>
+            </AppBar>
+            
+            <Drawer
+                variant="permanent"
+                className="sidebar-drawer"
+                sx={{
+                    width: isSidebarOpen ? drawerWidthOpen : drawerWidthClosed,
+                    '& .MuiDrawer-paper': {
+                        width: isSidebarOpen ? drawerWidthOpen : drawerWidthClosed,
+                        transition: (theme) => theme.transitions.create('width', {
+                            easing: theme.transitions.easing.sharp,
+                            duration: theme.transitions.duration.enteringScreen,
+                        }),
+                    },
+                }}
+                classes={{ paper: 'sidebar-paper' }}
+                onMouseEnter={() => setSidebarOpen(true)}
+                onMouseLeave={() => setSidebarOpen(false)}
+            >
+                {drawerContent}
+            </Drawer>
 
-      <Fab /> {/* <-- Step 2: Ensure FAB component is called here */}
-    </div>
-  );
+            <Box
+                component="main"
+                className="main-content"
+                sx={{ 
+                    // --- YEH BHI FIX HAI ---
+                    width: `calc(100% - ${isSidebarOpen ? drawerWidthOpen : drawerWidthClosed}px)`,
+                    paddingTop: '88px', // 64px (AppBar) + 24px (padding)
+                }}
+            >
+                <Outlet />
+            </Box>
+
+            <Fab 
+                variant={isFabHovered ? "extended" : "circular"}
+                color="primary" 
+                aria-label="add-complaint" 
+                className="extended-fab"
+                sx={{ position: 'fixed', bottom: 40, right: 40 }}
+                onMouseEnter={() => setFabHovered(true)}
+                onMouseLeave={() => setFabHovered(false)}
+                onClick={() => navigate('/raise-complaint')}
+            >
+                {isFabHovered ? <AddIcon sx={{ mr: 1 }} /> : <AddIcon />}
+                {isFabHovered && "Raise New Complaint"}
+            </Fab>
+        </div>
+    );
 };
 
 export default RegisteredLayout;
+

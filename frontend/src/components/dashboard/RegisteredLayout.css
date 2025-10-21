@@ -1,43 +1,77 @@
-/* frontend/src/components/dashboard/RegisteredLayout.css */
-
+/* --- Main Layout Container --- */
 .layout-container {
-    /* FIX 1: Display Flex zaroori hai */
-    display: flex; 
-    min-height: 100vh; 
-    width: 100%;
-    /* Position relative rakhte hain */
-    position: relative; 
+    display: flex;
+    min-height: 100vh;
 }
 
-/* Sidebar ke liye space banane ki zaroorat nahi, hum content ko move karenge */
+/* --- Sidebar (Drawer) Styling --- */
+.sidebar-drawer {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-paper {
+    overflow-x: hidden;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+}
+
+/* --- NEW: Sidebar Inner Container for Logout Button --- */
+.sidebar-inner-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* --- Main Content Area --- */
 .main-content {
-    background-color: var(--background-color, #f4f7f6); /* Background color add karein */
-    
-    /* FIX 2: Fixed position use karte hain, taaki woh zaroor dikhe */
-    position: absolute; 
-    top: 0;
-    right: 0;
-    bottom: 0;
-    
-    /* FIX 3: Margin-left se width control hogi */
-    margin-left: 260px; 
-    width: auto; /* Baki ki poori space le lega */
-    
-    /* FIX 4: Margin-right zero rakhein, taaki right side tak jaye */
-    margin-right: 0; 
-
-    /* FIX 5: Width ko 100% se adjust karte hain */
-    width: calc(100% - 260px); /* Total width minus sidebar width */
-    
-    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
-    
-    height: 100vh; 
-    overflow-y: auto; 
-    padding: 20px; 
+    flex-grow: 1;
+    padding: 24px;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(-45deg, #ffffff, #e3f2fd, #e6f7f5, #ffffff);
+    background-size: 400% 400%;
+    animation: moveGradient 15s ease infinite;
 }
 
-/* This rule pulls the content in when the sidebar is COLLAPSED */
-.layout-container.collapsed .main-content {
-    margin-left: 88px; 
-    width: calc(100% - 88px); /* Collapsed width ke hisaab se adjust karein */
+/* --- Sidebar Header & Toggle Button --- */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px 0 24px;
+    min-height: 64px;
 }
+
+/* --- Sidebar List Styling --- */
+.menu-item-text {
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-closed .menu-item-text {
+    opacity: 0;
+}
+
+.active-link {
+    background-color: #e3f2fd;
+    border-right: 3px solid #1976d2;
+}
+
+.active-link .MuiListItemIcon-root,
+.active-link .MuiListItemText-primary {
+    color: #1976d2;
+    font-weight: 600;
+}
+
+/* --- NEW: Floating Action Button (FAB) Styling --- */
+.extended-fab {
+    /* Smooth transition for expanding and shrinking */
+    transition: all 0.3s ease-in-out !important;
+}
+
+
+/* --- Gradient Animation --- */
+@keyframes moveGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
