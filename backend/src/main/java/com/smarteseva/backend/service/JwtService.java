@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,9 @@ public class JwtService {
 
     // You should keep this secret in your application.properties file
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
+
+    @Value("${jwt.expiration}") // Nayi line 1: Yeh properties file se value padhega
+    private long jwtExpiration;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -63,7 +67,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 30 min
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration)) // 30 min 60 * 24
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 

@@ -3,6 +3,7 @@
 package com.smarteseva.backend.service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map; // Iski zaroorat nahi
 import java.util.concurrent.ConcurrentHashMap; // Iski zaroorat nahi
 
@@ -91,4 +92,32 @@ public class NotificationService {
             }
         }
     }
+
+    public void sendVerificationCodeToCitizen(Complaint complaint) {
+        // Citizen ka identifier uska email hai
+        String citizenIdentifier = complaint.getCitizen().getEmail(); 
+        SseEmitter emitter = emitters.get(citizenIdentifier);
+
+        if (emitter != null) {
+            try {
+                // Sirf zaroori data bhejein: code aur ticketId
+                Map<String, String> data = new HashMap<>(); // Import HashMap
+                data.put("ticketId", complaint.getTicketId());
+                data.put("verificationCode", complaint.getVerificationCode());
+                
+                String eventData = objectMapper.writeValueAsString(data);
+                
+                // Event name "verification_code" use karein
+                emitter.send(SseEmitter.event()
+                        .name("verification_code") 
+                        .data(eventData)
+                        .id(String.valueOf(complaint.getId())));
+
+            } catch (IOException e) {
+                emitter.completeWithError(e);
+                emitters.remove(citizenIdentifier);
+            }
+        }
+    }
+
 }

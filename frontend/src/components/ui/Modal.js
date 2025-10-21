@@ -1,3 +1,5 @@
+// Modal.js
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './Modal.css';
@@ -8,10 +10,11 @@ const Modal = ({
   onConfirm, 
   title, 
   children,
-  // --- NEW PROPS ---
-  confirmText = "Confirm", // Default text for confirm button
-  cancelText = "Cancel",   // Default text for cancel button
-  hideCancelButton = false // Prop to hide the cancel button
+  confirmText = "Confirm",
+  cancelText = "Cancel",
+  hideCancelButton = false,
+  // --- YEH NAYA PROP ADD KIYA HAI ---
+  hideConfirmButton = false 
 }) => {
   if (!isOpen) {
     return null;
@@ -28,11 +31,15 @@ const Modal = ({
           {children}
         </div>
         <div className="modal-footer">
-          {/* Cancel button ko conditionally render karein */}
+          {/* Cancel button abhi bhi aese hi rahega */}
           {!hideCancelButton && (
             <button onClick={onClose} className="btn-secondary">{cancelText}</button>
           )}
-          <button onClick={onConfirm} className="btn-primary">{confirmText}</button>
+
+          {/* --- CONFIRM BUTTON KO BHI AB CONDITIONALLY RENDER KARENGE --- */}
+          {!hideConfirmButton && (
+            <button onClick={onConfirm} className="btn-primary">{confirmText}</button>
+          )}
         </div>
       </div>
     </div>,

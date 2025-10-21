@@ -1,17 +1,43 @@
-/* Final Layout CSS with Scrollable Content Area */
+/* frontend/src/components/dashboard/RegisteredLayout.css */
 
+.layout-container {
+    /* FIX 1: Display Flex zaroori hai */
+    display: flex; 
+    min-height: 100vh; 
+    width: 100%;
+    /* Position relative rakhte hain */
+    position: relative; 
+}
+
+/* Sidebar ke liye space banane ki zaroorat nahi, hum content ko move karenge */
 .main-content {
-  background-color: var(--background-color);
-  margin-left: 260px; /* Default margin for open sidebar */
-  transition: margin-left 0.3s ease-in-out;
-  
-  /* --- NEW SCROLLING LOGIC --- */
-  height: 100vh; /* Take full screen height */
-  overflow-y: auto; /* Make ONLY this area scrollable */
-  position: relative; /* This is for the FAB */
+    background-color: var(--background-color, #f4f7f6); /* Background color add karein */
+    
+    /* FIX 2: Fixed position use karte hain, taaki woh zaroor dikhe */
+    position: absolute; 
+    top: 0;
+    right: 0;
+    bottom: 0;
+    
+    /* FIX 3: Margin-left se width control hogi */
+    margin-left: 260px; 
+    width: auto; /* Baki ki poori space le lega */
+    
+    /* FIX 4: Margin-right zero rakhein, taaki right side tak jaye */
+    margin-right: 0; 
+
+    /* FIX 5: Width ko 100% se adjust karte hain */
+    width: calc(100% - 260px); /* Total width minus sidebar width */
+    
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+    
+    height: 100vh; 
+    overflow-y: auto; 
+    padding: 20px; 
 }
 
 /* This rule pulls the content in when the sidebar is COLLAPSED */
 .layout-container.collapsed .main-content {
-  margin-left: 88px; /* Width of the collapsed sidebar */
+    margin-left: 88px; 
+    width: calc(100% - 88px); /* Collapsed width ke hisaab se adjust karein */
 }

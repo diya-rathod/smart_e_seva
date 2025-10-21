@@ -49,37 +49,51 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 // Inside the securityFilterChain method...
                 
-                .authorizeHttpRequests(auth -> auth
-                // Permit auth, complaints, AND notification endpoints
-                .requestMatchers("/api/v1/auth/**", "/api/v1/complaints/**", "/api/v1/notifications/**").permitAll()
-    
-                // Secure admin endpoints
-                .requestMatchers("/api/v1/admin/register-admin").hasAuthority("ROLE_SUPER_ADMIN")
-
-                .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
-    
-                // All other requests need to be authenticated
-                .anyRequest().authenticated()
-)
-                
-                
-                
                 // .authorizeHttpRequests(auth -> auth
-                //     // Public APIs
-                //     .requestMatchers("/api/v1/auth/**", "/api/v1/complaints/**").permitAll()
-                    
-                //     // Rule 1: ONLY Super Admin can access endpoints for registering other admins
-                //     .requestMatchers("/api/v1/admin/register-admin").hasRole("SUPER_ADMIN")
-                    
-                //     // Rule 2: Other admin endpoints can be accessed by both ADMIN and SUPER_ADMIN
-                //     .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
 
-                //     .requestMatchers("/api/v1/agent/**").hasRole("AGENT")
-                    
-                //     // All other requests need to be authenticated
+                // .requestMatchers(request -> "OPTIONS".equals(request.getMethod())).permitAll()
+ 
+                // // FIX 1: CITIZEN/USERS RULE ko sabse upar rakhte hain (Priority #1)
+                //     .requestMatchers("/api/v1/users/**").hasAnyAuthority("ROLE_CITIZEN", "ROLE_ADMIN", "ROLE_SUPER_ADMIN", "ROLE_AGENT") 
+ 
+                // // FIX 2: AGENT RULE (Priority #2)
+                //     .requestMatchers("/api/v1/agent/**").hasAnyAuthority("ROLE_AGENT") 
+                
+                // // FIX 3: ADMIN RULE (Priority #3)
+                //     .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
+                //     .requestMatchers("/api/v1/admin/register-admin").hasAuthority("ROLE_SUPER_ADMIN")
+                //     .requestMatchers("/api/v1/complaints/**").authenticated()
+                
+                // // Public/Notifications (Priority #4)
+                //     .requestMatchers("/api/v1/auth/**").permitAll()
+                //     .requestMatchers("/api/v1/notifications/**").permitAll()
+ 
+                // // All other requests need to be authenticated
                 //     .anyRequest().authenticated()
                 // )
-                // ... (rest of the configuration)
+
+                .authorizeHttpRequests(auth -> auth
+
+    	// 1. OPTIONS requests ko hamesha allow karo (Pre-flight)
+    	.requestMatchers(request -> "OPTIONS".equals(request.getMethod())).permitAll()
+
+ 					// 2. Public endpoints (Auth aur SSE)
+ 					.requestMatchers("/api/v1/auth/**").permitAll() 
+ 					.requestMatchers("/api/v1/notifications/**").permitAll()
+
+    	// 3. Baaki saare role-based rules
+     .requestMatchers("/api/v1/users/**").hasAnyAuthority("ROLE_CITIZEN", "ROLE_ADMIN", "ROLE_SUPER_ADMIN", "ROLE_AGENT") 
+     .requestMatchers("/api/v1/agent/**").hasAnyAuthority("ROLE_AGENT") 
+     .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
+     .requestMatchers("/api/v1/admin/register-admin").hasAuthority("ROLE_SUPER_ADMIN")
+    
+    	// 4. Complaint waale endpoints ab secure hain (Sirf logged-in user hi kar sakta hai)
+ 					.requestMatchers("/api/v1/complaints/**").authenticated() 
+
+    	// 5. Baaki bachi hui koi bhi request ho, uske liye login zaroori hai
+     .anyRequest().authenticated()
+    )
+                
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
@@ -105,6 +119,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

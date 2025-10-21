@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
+import Modal from '../../components/ui/Modal';
+import AssignmentLogicComponent from './AssignmentLogicComponent';
 // We can create a new CSS file for this page
 // import './ManageComplaintsPage.css'; 
 
@@ -9,6 +11,8 @@ const ManageComplaintsPage = () => {
     const [complaints, setComplaints] = useState([]);
     const [loading, setLoading] = useState(true);
     const { auth } = useContext(AuthContext);
+
+    const [assignmentModal, setAssignmentModal] = useState({ isOpen: false, complaint: null });
 
     useEffect(() => {
         const fetchComplaints = async () => {
@@ -31,6 +35,29 @@ const ManageComplaintsPage = () => {
 
         fetchComplaints();
     }, [auth]); // Re-run if auth state changes
+
+    const handleAssignClick = (complaint) => {
+        // Sirf un complaints ko assign karne den jinko pehle assign nahi kiya gaya hai
+        if (complaint.status === 'New' && !complaint.agent) {
+            setAssignmentModal({ isOpen: true, complaint: complaint });
+        } else {
+             // Already assigned ya resolved complaint ko dobara assign nahi kar sakte
+             alert(`Complaint ${complaint.status} hai ya already assigned hai.`);
+        }
+    };
+
+
+    const handleAssignmentSuccess = (updatedComplaint) => {
+        // Complaint list ko update karein (for UI sync)
+        setComplaints(prev => prev.map(c => 
+            c.id === updatedComplaint.id ? updatedComplaint : c
+        ));
+        setAssignmentModal({ isOpen: false, complaint: null });
+    };
+    
+    const handleModalClose = () => {
+        setAssignmentModal({ isOpen: false, complaint: null });
+    };
 
     if (loading) {
         return <p>Loading complaints...</p>;
@@ -57,12 +84,30 @@ const ManageComplaintsPage = () => {
                                 <tr key={complaint.id}>
                                     <td>{complaint.ticketId}</td>
                                     <td>{complaint.category}</td>
-                                    <td>{complaint.status}</td>
                                     <td>
-                                        {/* --- THIS BUTTON IS NOW A DYNAMIC LINK --- */}
-                                        <Link to={`/admin/complaints/${complaint.id}`} className="btn btn-secondary">
-                                            View / Assign
-                                        </Link>
+                                        <span style={{ color: complaint.status === 'New' ? 'red' : 'green', fontWeight: 'bold' }}>
+                                            {complaint.status}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {/* View Link */}
+                                        <Link to={`/admin/complaints/${complaint.id}`} className="btn-link">View</Link>
+                                        
+                                        {/* Assign Button/Link */}
+                                        {complaint.status === 'New' && !complaint.agent && complaint.latitude && complaint.longitude ? (
+                                            <>
+                                                &nbsp;/&nbsp;
+                                                <span 
+                                                    onClick={() => handleAssignClick(complaint)} 
+                                                    style={{ cursor: 'pointer', color: '#007bff', fontWeight: 'bold' }}
+                                                >
+                                                    Assign
+                                                </span>
+                                            </>
+                                        ) : (
+                                            // Agar complaint already assigned hai toh Agent ka email dikhayein
+                                            complaint.agent ? ` (Assigned to: ${complaint.agent.email})` : null
+                                        )}
                                     </td>
                                 </tr>
                             ))}
@@ -70,6 +115,20 @@ const ManageComplaintsPage = () => {
                     </table>
                 )}
             </div>
+
+            {assignmentModal.isOpen && assignmentModal.complaint && (
+                <Modal 
+                    isOpen={assignmentModal.isOpen} 
+                    onClose={handleModalClose} 
+                    title={`Assign Agent to ${assignmentModal.complaint.ticketId}`}
+                >
+                    <AssignmentLogicComponent 
+                        complaint={assignmentModal.complaint} 
+                        onAssignmentSuccess={handleAssignmentSuccess} // Success handler
+                        hideConfirmButton={true}
+                    />
+                </Modal>
+            )}
         </div>
     );
 };

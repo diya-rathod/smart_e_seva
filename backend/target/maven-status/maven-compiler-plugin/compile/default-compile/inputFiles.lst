@@ -4,6 +4,7 @@ F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\ComplaintReques
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\service\NotificationService.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\NotificationController.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\RegisterAgentRequestDTO.java
+F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\VerificationRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\AgentController.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\AgentDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\AgentResponseDTO.java
@@ -17,6 +18,7 @@ F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\config\SecurityConf
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\RegisterRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\service\ComplaintService.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\service\JwtService.java
+F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\StatusUpdateRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\LoginRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\AssignmentRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\UserPublicDTO.java

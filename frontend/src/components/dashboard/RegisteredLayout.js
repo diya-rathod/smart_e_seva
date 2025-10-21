@@ -24,8 +24,8 @@ const RegisteredLayout = () => {
         handleMouseEnter={handleMouseEnter}
         handleMouseLeave={handleMouseLeave}
       />
-      <div className="main-content">
-        <Outlet />
+      <div className="main-content" style={{ padding: '20px', border: '2px solid red' }}> 
+         <Outlet />
       </div>
 
       <Fab /> {/* <-- Step 2: Ensure FAB component is called here */}

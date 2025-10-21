@@ -31,6 +31,7 @@ public class Complaint {
     private String landmark; // Added landmark
     private Double latitude;
     private Double longitude;
+    private String verificationCode;
 
     @ManyToOne
     @JoinColumn(name = "citizen_id") // Link to the user who raised it

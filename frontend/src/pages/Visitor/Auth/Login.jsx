@@ -105,7 +105,9 @@ const Login = () => {
         // Step 3: Role ke hisab se redirect karein
         if (role === 'ROLE_ADMIN' || role === 'ROLE_SUPER_ADMIN')  {
           navigate('/admin/dashboard');
-        } else {
+        }  else if (role === 'ROLE_AGENT') { // ⬅️ NEW AGENT REDIRECTION LOGIC ADDED
+            navigate('/agent/dashboard');
+        }else {
           navigate('/dashboard');
         }
       }
