@@ -56,9 +56,10 @@ public class JwtService {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public String generateToken(String userName, String role) {
+    public String generateToken(String userName, String role, boolean mustChangePassword) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
+        claims.put("mustChangePassword", mustChangePassword); // <-- Nayi information add ki
         return createToken(claims, userName);
     }
 

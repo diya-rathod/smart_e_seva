@@ -9,14 +9,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController; // Import
 
-import com.smarteseva.backend.dto.ComplaintResponseDTO; // Import
+import com.smarteseva.backend.dto.ChangePasswordRequest;
+import com.smarteseva.backend.dto.ComplaintResponseDTO;
 import com.smarteseva.backend.entity.Complaint;
 import com.smarteseva.backend.model.User;
 import com.smarteseva.backend.repository.ComplaintRepository;
-import com.smarteseva.backend.repository.UserRepository; // <-- NEW: Import Complaint Entity
+import com.smarteseva.backend.repository.UserRepository; // Import
+import com.smarteseva.backend.service.UserService;
 
 
 
@@ -27,6 +31,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ComplaintRepository complaintRepository;
@@ -65,4 +72,18 @@ public class UserController {
 
         return ResponseEntity.ok(responseDtos);
     }
+
+    @PostMapping("/change-password")
+       public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
+           Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+           String userEmail = authentication.getName();
+
+           try {
+               userService.changePassword(userEmail, request);
+               return ResponseEntity.ok("Password changed successfully");
+           } catch (RuntimeException e) {
+               // Simple error handling
+               return ResponseEntity.badRequest().body(e.getMessage());
+           }
+       }
 }

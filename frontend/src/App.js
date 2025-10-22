@@ -33,7 +33,8 @@ import ManageComplaintsPage from './pages/admin/ManageComplaintsPage';
 import AgentDashboardPage from './pages/agent/AgentDashboardPage';
 import AgentLayout from './components/agent/AgentLayout';
 import AgentComplaintDetailsPage from './pages/agent/AgentComplaintDetailsPage';
-
+import AdminProfile from './pages/admin/AdminProfile';
+import AgentProfile from './pages/agent/AgentProfile';
 
 import ProtectedRoute from './pages/Common/ProtectedRoute'; // ⬅️ FIX: Path updated to pages/common
 import NotFound from './pages/Common/NotFound.jsx';       // ⬅️ FIX: Path updated to pages/common
@@ -95,16 +96,16 @@ function App() {
           <Route path="/admin/register-admin" element={<RegisterAdminPage />} />
           <Route path="/admin/manage-complaints" element={<ManageComplaintsPage />} />
           <Route path="/admin/complaints/:id" element={<AdminComplaintDetailsPage />} />
+          <Route path="/admin/profile" element={<AdminProfile />} />
           {/* Future admin routes will go here */}
         </Route>
-        {/* <Route element={<AgentLayout />}> 
-            <Route path="/agent/dashboard" element={<AgentDashboardPage />} />
-        </Route> */}
+       
 
         <Route element={<AgentLayout />}>
           <Route path="/agent/dashboard" element={<AgentDashboardPage />} />
-          {/* FIX: Agent Complaint Details Page ka route yahan add hoga */}
+
           <Route path="/agent/complaint/:id" element={<AgentComplaintDetailsPage />} />
+          <Route path="/agent/profile" element={<AgentProfile />} />
         </Route>
       </Routes>
     </>

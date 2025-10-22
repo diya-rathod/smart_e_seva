@@ -39,9 +39,27 @@ public class AuthController {
         if (authentication.isAuthenticated()) {
             User user = userRepository.findByEmail(loginRequest.getEmail()).get();
     
-            // --- THIS LINE IS CHANGED ---
+            // --- THIS LINE IS CHANGED --- 
             // Pass both email and role to generate the token
-            String token = jwtService.generateToken(user.getEmail(), user.getRole());
+            // --- YEH POORA BLOCK REPLACE KARNA HAI ---
+
+      // 1. User ka role aur details nikalo
+      String role = user.getRole();
+      boolean mustChangePassword;
+
+      // 2. Check karo: Agar SUPERADMIN hai, to feature ko hamesha 'false' rakho
+      if ("ROLE_SUPER_ADMIN".equals(role)) {
+        mustChangePassword = false;
+      } else {
+        // Baaki sab roles ke liye database se asli value uthao
+        Boolean mustChange = user.getMustChangePassword();
+        mustChangePassword = (mustChange == null) ? true : mustChange;
+      }
+
+      // 3. Nayi information (mustChangePassword) ko token mein daalo
+      String token = jwtService.generateToken(user.getEmail(), role, mustChangePassword);
+      
+      // --- YAHAN TAK REPLACE KARNA HAI ---
             
             AuthResponseDTO authResponse = new AuthResponseDTO(token, user.getRole());
             return ResponseEntity.ok(authResponse);

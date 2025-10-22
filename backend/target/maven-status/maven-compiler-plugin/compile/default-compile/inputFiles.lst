@@ -1,10 +1,12 @@
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\util\GeographicUtil.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\model\User.java
+F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\ChangePasswordRequest.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\ComplaintRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\service\NotificationService.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\NotificationController.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\RegisterAgentRequestDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\VerificationRequestDTO.java
+F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\service\UserService.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\controller\AgentController.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\AgentDTO.java
 F:\smart_e_seva\backend\src\main\java\com\smarteseva\backend\dto\AgentResponseDTO.java

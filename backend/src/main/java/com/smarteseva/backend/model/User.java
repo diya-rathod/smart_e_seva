@@ -34,6 +34,9 @@ public class User {
  @Column(nullable = false)
  private String password;
 
+ @Column(name = "must_change_password") // Saari extra cheezein hata di
+ private Boolean mustChangePassword = true; // 'boolean' ko 'Boolean' (bada B) kar diya
+
  private String role; 
 
  // --- COMMON & CITIZEN FIELDS ---

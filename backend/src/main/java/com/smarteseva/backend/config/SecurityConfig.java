@@ -47,30 +47,6 @@ public class SecurityConfig {
         return http
                 .cors(withDefaults()) // Apply CORS configuration from the bean
                 .csrf(csrf -> csrf.disable())
-                // Inside the securityFilterChain method...
-                
-                // .authorizeHttpRequests(auth -> auth
-
-                // .requestMatchers(request -> "OPTIONS".equals(request.getMethod())).permitAll()
- 
-                // // FIX 1: CITIZEN/USERS RULE ko sabse upar rakhte hain (Priority #1)
-                //     .requestMatchers("/api/v1/users/**").hasAnyAuthority("ROLE_CITIZEN", "ROLE_ADMIN", "ROLE_SUPER_ADMIN", "ROLE_AGENT") 
- 
-                // // FIX 2: AGENT RULE (Priority #2)
-                //     .requestMatchers("/api/v1/agent/**").hasAnyAuthority("ROLE_AGENT") 
-                
-                // // FIX 3: ADMIN RULE (Priority #3)
-                //     .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
-                //     .requestMatchers("/api/v1/admin/register-admin").hasAuthority("ROLE_SUPER_ADMIN")
-                //     .requestMatchers("/api/v1/complaints/**").authenticated()
-                
-                // // Public/Notifications (Priority #4)
-                //     .requestMatchers("/api/v1/auth/**").permitAll()
-                //     .requestMatchers("/api/v1/notifications/**").permitAll()
- 
-                // // All other requests need to be authenticated
-                //     .anyRequest().authenticated()
-                // )
 
                 .authorizeHttpRequests(auth -> auth
 
