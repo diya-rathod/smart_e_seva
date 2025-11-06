@@ -1,5 +1,0 @@
-# Created at 2025-10-05T21:16:14.636
-Boot Manifest-JAR contains absolute paths in classpath 'F:\smart_e_seva\backend\target\test-classes'
-Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-'other' has different root
-

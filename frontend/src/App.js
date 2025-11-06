@@ -35,10 +35,17 @@ import AgentLayout from './components/agent/AgentLayout';
 import AgentComplaintDetailsPage from './pages/agent/AgentComplaintDetailsPage';
 import AdminProfile from './pages/admin/AdminProfile';
 import AgentProfile from './pages/agent/AgentProfile';
+import ComplaintsMapPage from './pages/admin/ComplaintsMapPage';
 
 import ProtectedRoute from './pages/Common/ProtectedRoute'; // ⬅️ FIX: Path updated to pages/common
 import NotFound from './pages/Common/NotFound.jsx';       // ⬅️ FIX: Path updated to pages/common
-
+import NewComplaintsPage from './pages/admin/NewComplaintsPage';
+import ManageCitizensPage from './pages/admin/ManageCitizensPage';
+import ManageAgentsPage from './pages/admin/ManageAgentsPage';
+import ManageAdminsPage from './pages/admin/ManageAdminsPage';
+import AdminCitizenDetailsPage from './pages/admin/AdminCitizenDetailsPage'; // <-- Naya Import
+import AdminAgentDetailsPage from './pages/admin/AdminAgentDetailsPage'; // <-- Naya Import
+import AdminAdminDetailsPage from './pages/admin/AdminAdminDetailsPage';
 import './App.css';
 
 /**
@@ -97,6 +104,14 @@ function App() {
           <Route path="/admin/manage-complaints" element={<ManageComplaintsPage />} />
           <Route path="/admin/complaints/:id" element={<AdminComplaintDetailsPage />} />
           <Route path="/admin/profile" element={<AdminProfile />} />
+          <Route path="/admin/new-complaints" element={<NewComplaintsPage />} />
+          <Route path="/admin/manage-citizens" element={<ManageCitizensPage />} />
+          <Route path="/admin/manage-agents" element={<ManageAgentsPage />} />
+          <Route path="/admin/manage-admins" element={<ManageAdminsPage />} />
+          <Route path="/admin/live-map" element={<ComplaintsMapPage />} />
+          <Route path="/admin/citizen/:id" element={<AdminCitizenDetailsPage />} /> 
+          <Route path="/admin/agent/:id" element={<AdminAgentDetailsPage />} />
+          <Route path="/admin/admin/:id" element={<AdminAdminDetailsPage />} />
           {/* Future admin routes will go here */}
         </Route>
        

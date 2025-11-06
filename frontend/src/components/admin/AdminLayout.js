@@ -10,9 +10,14 @@ import {
     SupportAgent as RegisterAgentIcon, // Register Agent Icon
     ListAlt as ManageComplaintsIcon, // Manage Complaints Icon
     AdminPanelSettings as RegisterAdminIcon, // Register Admin Icon
+    AssignmentLate as NewComplaintsIcon,
+    People as ManageUsersIcon,
+    AdminPanelSettings as ManageAdminsIcon,
+    AssignmentInd as AssignAgentIcon, // <-- Naya Icon
     Logout, 
     Menu, 
-    Notifications, 
+    Notifications,
+    Map as MapIcon, 
     AccountCircle // Profile Icon
 } from '@mui/icons-material';
 import AuthContext from '../../context/AuthContext'; // Path check kar lena
@@ -35,14 +40,22 @@ const AdminLayout = () => { // Component ka naam badal diya
     // --- ADMIN KE SIDEBAR LINKS ---
     const menuItems = [
         { text: 'Dashboard', icon: <Dashboard />, path: '/admin/dashboard' },
+        { text: 'New Complaints', icon: <NewComplaintsIcon />, path: '/admin/new-complaints' },
         { text: 'Manage Complaints', icon: <ManageComplaintsIcon />, path: '/admin/manage-complaints' },
         { text: 'Register Citizen', icon: <RegisterCitizenIcon />, path: '/admin/register-citizen' },
         { text: 'Register Agent', icon: <RegisterAgentIcon />, path: '/admin/register-agent' },
+        { text: 'Manage Citizens', icon: <ManageUsersIcon />, path: '/admin/manage-citizens' },
+        { text: 'Manage Agents', icon: <ManageUsersIcon />, path: '/admin/manage-agents' },
+        { text: 'Live Map', icon: <MapIcon />, path: '/admin/live-map' }, // <-- Naya Link
         
         // Conditional link for Super Admin
         ...(auth?.role === 'ROLE_SUPER_ADMIN' ? 
-            [{ text: 'Register Admin', icon: <RegisterAdminIcon />, path: '/admin/register-admin' }] 
+            [
+            { text: 'Register Admin', icon: <RegisterAdminIcon />, path: '/admin/register-admin' },
+            { text: 'Manage Admins', icon: <ManageAdminsIcon />, path: '/admin/manage-admins' }
+            ] 
             : []
+            
         )
     ];
 
@@ -118,16 +131,40 @@ const AdminLayout = () => { // Component ka naam badal diya
                     >
                         <Toolbar>
                             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                                Admin Dashboard {/* <-- Title Badla */}
+                                Admin Dashboard
                             </Typography>
+                            
+                            {/* --- YEH HAI NAYA CONDITIONAL LOGIC --- */}
+                            {location.pathname === '/admin/live-map' ? (
+                                // Agar Live Map page par hain, to yeh icons dikhao
+                                <>
+                                    <Tooltip title="New Complaints"> 
+                                        <IconButton color="inherit" onClick={() => navigate('/admin/new-complaints')}>
+                                            <NewComplaintsIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    
+                                </>
+                            ) : (
+                                // Baaki sabhi pages par, yeh icons dikhao
+                                <>
+                                    
+                                    <Tooltip title="Live Complaints Map"> 
+                                        <IconButton color="inherit" onClick={() => navigate('/admin/live-map')}>
+                                            <MapIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </>
+                            )}
+                            
+                            {/* Profile icon hamesha dikhega */}
                             <Tooltip title="Notifications">
-                                <IconButton color="inherit">
-                                    <Notifications />
-                                </IconButton>
-                            </Tooltip>
-                            {/* Admin ke liye Profile page ka path check kar lena */}
+                                        <IconButton color="inherit">
+                                            <Notifications />
+                                        </IconButton>
+                                    </Tooltip>
                             <Tooltip title="Profile Settings"> 
-                                <IconButton color="inherit" onClick={() => navigate('/admin/profile')}> {/* <-- Path update karna pad sakta hai */}
+                                <IconButton color="inherit" onClick={() => navigate('/admin/profile')}>
                                     <AccountCircle />
                                 </IconButton>
                             </Tooltip>

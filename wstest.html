@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+    <h1>WebSocket Live Tracking Test</h1>
+    <p>Check the browser console (F12) for messages.</p>
+    <div id="messages"></div>
+
+    <script>
+        // --- YAHAN COMPLAINT ID BADALNA MAT BHOOLNA ---
+        const COMPLAINT_ID_TO_TRACK = 5; // <-- KISI REAL, IN-PROGRESS COMPLAINT KI ID DAALO
+
+        // 1. Connection banao
+        const socket = new SockJS('http://localhost:8080/ws');
+        const stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+            console.log('CONNECTED: ' + frame);
+            
+            // 2. Sahi channel ko subscribe karo
+            const topic = `/topic/complaint/${COMPLAINT_ID_TO_TRACK}/location`;
+            console.log('Subscribing to:', topic);
+
+            stompClient.subscribe(topic, function (message) {
+                // 3. Jab message aaye, use console mein dikhao
+                const locationUpdate = JSON.parse(message.body);
+                console.log('<<< MESSAGE RECEIVED:', locationUpdate);
+                
+                // Screen par bhi dikha do
+                document.getElementById('messages').innerHTML += 
+                    '<p>Received: ' + message.body + '</p>';
+            });
+        }, function(error) {
+            console.error('STOMP error:', error);
+        });
+    </script>
+</body>
+</html>

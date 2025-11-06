@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.smarteseva.backend.entity.Complaint;
 import com.smarteseva.backend.model.User;
+import java.util.Optional;
 
 
 @Repository
@@ -17,4 +18,6 @@ public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
     List<Complaint> findByAgent(User agent);
     List<Complaint> findByStatus(String status);
     List<Complaint> findByCitizen(User citizen);
+    List<Complaint> findByAgentAndStatus(User agent, String status);
+    Optional<Complaint> findByTicketId(String ticketId); // <-- YEH NAYI LINE
 }

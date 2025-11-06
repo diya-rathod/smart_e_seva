@@ -47,29 +47,78 @@ public class SecurityConfig {
         return http
                 .cors(withDefaults()) // Apply CORS configuration from the bean
                 .csrf(csrf -> csrf.disable())
+                .securityMatcher("/api/v1/**")
 
+                // .authorizeHttpRequests(auth -> auth
+
+                // // 1. OPTIONS requests ko hamesha allow karo (Pre-flight)
+                // .requestMatchers(request ->
+                // "OPTIONS".equals(request.getMethod())).permitAll()
+
+                // // 2. Public endpoints (Auth aur SSE)
+                // .requestMatchers("/api/v1/auth/**").permitAll()
+                // .requestMatchers("/api/v1/notifications/**").permitAll()
+
+                // .requestMatchers("/api/v1/admin/users/**").hasAnyAuthority("ROLE_ADMIN",
+                // "ROLE_SUPER_ADMIN")
+
+                // .requestMatchers("/api/v1/admin/register-admin").hasAuthority("ROLE_SUPER_ADMIN")
+                // // 3. Baaki saare role-based rules
+                // .requestMatchers("/api/v1/users/**").hasAnyAuthority("ROLE_CITIZEN",
+                // "ROLE_ADMIN", "ROLE_SUPER_ADMIN", "ROLE_AGENT")
+                // .requestMatchers("/api/v1/agent/**").hasAnyAuthority("ROLE_AGENT")
+
+                // .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN",
+                // "ROLE_SUPER_ADMIN")
+
+                // // 4. Complaint waale endpoints ab secure hain (Sirf logged-in user hi kar
+                // // sakta
+                // // hai)
+                // .requestMatchers("/api/v1/complaints/**").authenticated()
+
+                // // 5. Baaki bachi hui koi bhi request ho, uske liye login zaroori hai
+                // .anyRequest().authenticated())
                 .authorizeHttpRequests(auth -> auth
 
-    	// 1. OPTIONS requests ko hamesha allow karo (Pre-flight)
-    	.requestMatchers(request -> "OPTIONS".equals(request.getMethod())).permitAll()
+                        // 1. OPTIONS requests (hamesha sabse pehle)
+                        // .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers(request -> "OPTIONS".equals(request.getMethod())).permitAll()
 
- 					// 2. Public endpoints (Auth aur SSE)
- 					.requestMatchers("/api/v1/auth/**").permitAll() 
- 					.requestMatchers("/api/v1/notifications/**").permitAll()
+                        // 2. Public endpoints (login, sse, etc.)
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/notifications/**").permitAll()
 
-    	// 3. Baaki saare role-based rules
-     .requestMatchers("/api/v1/users/**").hasAnyAuthority("ROLE_CITIZEN", "ROLE_ADMIN", "ROLE_SUPER_ADMIN", "ROLE_AGENT") 
-     .requestMatchers("/api/v1/agent/**").hasAnyAuthority("ROLE_AGENT") 
-     .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
-     .requestMatchers("/api/v1/admin/register-admin").hasAuthority("ROLE_SUPER_ADMIN")
-    
-    	// 4. Complaint waale endpoints ab secure hain (Sirf logged-in user hi kar sakta hai)
- 					.requestMatchers("/api/v1/complaints/**").authenticated() 
+                        // --- ADMIN RULES (Specific se General) ---
+                        // 3. Sabse Specific Rule: Sirf SUPER_ADMIN ke liye
 
-    	// 5. Baaki bachi hui koi bhi request ho, uske liye login zaroori hai
-     .anyRequest().authenticated()
-    )
-                
+                        .requestMatchers("/api/v1/admin/register-admin").hasRole("SUPER_ADMIN")
+
+                        .requestMatchers("/api/v1/admin/users/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
+
+                        .requestMatchers("/api/v1/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
+
+                        // 4. Dusra Specific Rule: Admin aur SUPER_ADMIN ke liye
+
+                        // 5. General Admin Rule: Baaki bache hue /admin/** routes ke liye
+
+                        // --- BAAKI RULES ---
+                        // 6. Agent ke liye rule
+                        .requestMatchers("/api/v1/agent/**").hasRole("AGENT")
+
+                        // 7. Baaki saare user endpoints ('/me', '/my-complaints', etc.)
+                        .requestMatchers("/api/v1/users/**").authenticated()
+
+                        // 8. Baaki bachi hui koi bhi request ho, uske liye login zaroori hai
+                        .anyRequest().authenticated())
+
+                // .authorizeSimpMessageMatchers(message -> { // STOMP messages ke liye rules
+                //     message
+                //             // CONNECT message ko allow karo bina authentication ke (testing ke liye)
+                //             .simpTypeMatchers(SimpMessageType.CONNECT).permitAll()
+                //             // Baaki sabhi messages ke liye authentication zaroori hai
+                //             .anyMessage().authenticated();
+                // })
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
@@ -93,7 +142,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

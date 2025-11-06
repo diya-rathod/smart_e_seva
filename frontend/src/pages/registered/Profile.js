@@ -101,7 +101,7 @@ const Profile = () => {
       <Grid container spacing={3}>
 
         {/* --- LEFT COLUMN (Forms) --- */}
-        <Grid item xs={12} md={8}>
+        <Grid xs={12} md={8}>
           {/* 1. Personal Information Card (Ab Read-Only) */}
           <Card>
             <CardHeader
@@ -111,7 +111,7 @@ const Profile = () => {
             <Divider />
             <CardContent>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                   <TextField
                     fullWidth
                     label="Full Name"
@@ -121,7 +121,7 @@ const Profile = () => {
                     InputProps={{ readOnly: true }} // <-- READ ONLY
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid xs={12} md={6}>
                   <TextField
                     fullWidth
                     label="Email Address"
@@ -131,7 +131,7 @@ const Profile = () => {
                     InputProps={{ readOnly: true }}
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid xs={12} md={6}>
                   <TextField
                     fullWidth
                     label="Phone Number"
@@ -141,7 +141,7 @@ const Profile = () => {
                     InputProps={{ readOnly: true }} // <-- READ ONLY
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                   <TextField
                     fullWidth
                     label="Meter Number"
@@ -173,7 +173,7 @@ const Profile = () => {
               <Divider />
               <CardContent>
                 <Grid container spacing={2}>
-                  <Grid item xs={12}>
+                  <Grid xs={12}>
                     <TextField
                       fullWidth
                       type="password"
@@ -184,7 +184,7 @@ const Profile = () => {
                       required
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <TextField
                       fullWidth
                       type="password"
@@ -195,7 +195,7 @@ const Profile = () => {
                       required
                     />
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid xs={12} md={6}>
                     <TextField
                       fullWidth
                       type="password"
@@ -220,7 +220,7 @@ const Profile = () => {
         </Grid>
 
         {/* --- RIGHT COLUMN (Picture & Notifications) --- */}
-        <Grid item xs={12} md={4}>
+        <Grid xs={12} md={4}>
           {/* 3. Profile Picture Card */}
           <Card>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

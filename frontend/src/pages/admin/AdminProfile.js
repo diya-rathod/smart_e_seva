@@ -89,24 +89,24 @@ const AdminProfile = () => {
 
             <Grid container spacing={3}>
                 {/* --- LEFT COLUMN --- */}
-                <Grid item xs={12} md={8}>
+                <Grid xs={12} md={8}>
                     {/* 1. Personal Information */}
                     <Card>
                         <CardHeader title="Personal Information" />
                         <Divider />
                         <CardContent>
                             <Grid container spacing={2}>
-                                <Grid item xs={12}>
+                                <Grid xs={12}>
                                     <TextField fullWidth label="Full Name" value={profile.name} disabled InputProps={{ readOnly: true }} />
                                 </Grid>
-                                <Grid item xs={12} md={6}>
+                                <Grid xs={12} md={6}>
                                     <TextField fullWidth label="Email Address" value={profile.email} disabled InputProps={{ readOnly: true }} />
                                 </Grid>
-                                <Grid item xs={12} md={6}>
+                                <Grid xs={12} md={6}>
                                     <TextField fullWidth label="Phone Number" value={profile.mobileNumber} disabled InputProps={{ readOnly: true }} />
                                 </Grid>
                                 {/* Admin specific fields agar hain to yahan add kar sakte hain (read-only) */}
-                                {/* Example: <Grid item xs={12}><TextField fullWidth label="Admin ID" value={profile.adminId} disabled /></Grid> */}
+                                {/* Example: <Grid xs={12}><TextField fullWidth label="Admin ID" value={profile.adminId} disabled /></Grid> */}
                             </Grid>
                         </CardContent>
                     </Card>
@@ -125,9 +125,9 @@ const AdminProfile = () => {
                             <Divider />
                             <CardContent>
                                 <Grid container spacing={2}>
-                                    <Grid item xs={12}><TextField fullWidth required type="password" label="Current Password" name="currentPassword" value={passwords.currentPassword} onChange={handlePasswordChange} /></Grid>
-                                    <Grid item xs={12} md={6}><TextField fullWidth required type="password" label="New Password" name="newPassword" value={passwords.newPassword} onChange={handlePasswordChange} /></Grid>
-                                    <Grid item xs={12} md={6}><TextField fullWidth required type="password" label="Confirm New Password" name="confirmPassword" value={passwords.confirmPassword} onChange={handlePasswordChange} /></Grid>
+                                    <Grid xs={12}><TextField fullWidth required type="password" label="Current Password" name="currentPassword" value={passwords.currentPassword} onChange={handlePasswordChange} /></Grid>
+                                    <Grid xs={12} md={6}><TextField fullWidth required type="password" label="New Password" name="newPassword" value={passwords.newPassword} onChange={handlePasswordChange} /></Grid>
+                                    <Grid xs={12} md={6}><TextField fullWidth required type="password" label="Confirm New Password" name="confirmPassword" value={passwords.confirmPassword} onChange={handlePasswordChange} /></Grid>
                                 </Grid>
                             </CardContent>
                             <Divider />
@@ -140,10 +140,10 @@ const AdminProfile = () => {
                 </Grid>
 
                 {/* --- RIGHT COLUMN --- */}
-                <Grid item xs={12} md={4}>
+                <Grid xs={12} md={4}>
                     {/* 3. Profile Picture */}
                     <Card>
-                        <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <CardContent sx={{ display: 'flex', flexDirection: 'column', aligs: 'center' }}>
                             <Avatar sx={{ width: 100, height: 100, mb: 2, fontSize: '3rem' }}>
                                 {profile.name ? profile.name.charAt(0).toUpperCase() : 'A'}
                             </Avatar>

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.smarteseva.backend.dto.AgentLocationUpdateDTO;
 import com.smarteseva.backend.dto.ComplaintResponseDTO;
 import com.smarteseva.backend.dto.StatusUpdateRequestDTO;
 import com.smarteseva.backend.dto.VerificationRequestDTO;
@@ -23,6 +24,7 @@ import com.smarteseva.backend.model.User;
 import com.smarteseva.backend.repository.ComplaintRepository;
 import com.smarteseva.backend.repository.UserRepository;
 import com.smarteseva.backend.service.ComplaintService; // Status DTO
+import com.smarteseva.backend.service.UserService;
 
 @RestController
 @RequestMapping("/api/v1/agent")
@@ -37,6 +39,9 @@ public class AgentController {
 
     @Autowired
     private ComplaintService complaintService;
+
+    @Autowired
+    private UserService userService;
     
 
     @GetMapping("/my-complaints")
@@ -115,5 +120,21 @@ public class AgentController {
         ComplaintResponseDTO responseDto = ComplaintResponseDTO.fromEntity(updatedComplaint);
         
         return ResponseEntity.ok(responseDto);
+    }
+
+    @PutMapping("/location")
+    public ResponseEntity<String> updateLocation(@RequestBody AgentLocationUpdateDTO locationDTO) {
+        try {
+            // Logged-in agent ka email nikalo
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String agentEmail = authentication.getName();
+
+            // Service ko call karke location update karo
+            userService.updateAgentLocation(agentEmail, locationDTO);
+            
+            return ResponseEntity.ok("Location updated successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

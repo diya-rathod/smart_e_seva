@@ -1,12 +1,13 @@
 //frontend/src/pages/agent/AgentComplaintDetailsPage.js
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import Modal from '../../components/ui/Modal'; // Path corrected
-import { FiMap } from 'react-icons/fi'; // Icon for Navigation
+import { Button, Box, CircularProgress, Card, CardContent, Typography, Divider, IconButton } from '@mui/material'; // <-- MUI Components
+import { FiMap, FiPlayCircle, FiStopCircle} from 'react-icons/fi'; // Icon for Navigation
 
 const API_BASE_URL = 'http://localhost:8080/api/v1';
 
@@ -78,7 +79,8 @@ const AgentComplaintDetailsPage = () => {
     const [currentLocation, setCurrentLocation] = useState(null); // Live location state
     const [isVerificationModalOpen, setVerificationModalOpen] = useState(false); // NEW STATE for Modal
     const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
-
+    const [isTracking, setIsTracking] = useState(false); // Kya tracking chalu hai?
+    const watchIdRef = useRef(null); // watchPosition ki
     const config = { headers: { 'Authorization': `Bearer ${auth.token}` } };
 
 
@@ -165,6 +167,70 @@ const AgentComplaintDetailsPage = () => {
         setConfirmModalOpen(true);
     };
 
+    const updateLocationAPI = async (latitude, longitude) => {
+        if (!auth.token) return;
+        try {
+            const config = { headers: { 'Authorization': `Bearer ${auth.token}` } };
+            await axios.put(`${API_BASE_URL}/agent/location`, { latitude, longitude }, config);
+            console.log('Location updated:', latitude, longitude); // Log kar sakte hain
+        } catch (error) {
+            console.error("Failed to update location via API:", error);
+            // Yahan toast dikha sakte hain agar zaroori ho
+        }
+    };
+
+    // Function jo location tracking shuru karega
+    const startTracking = () => {
+        if (!("geolocation" in navigator)) {
+            toast.error("Geolocation is not supported by your browser.");
+            return;
+        }
+
+        setIsTracking(true);
+        toast.success("Live location tracking started!");
+
+        // watchPosition ko call karo aur ID save karo
+        watchIdRef.current = navigator.geolocation.watchPosition(
+            (position) => {
+                // Har baar nayi location milne par API call karo
+                const { latitude, longitude } = position.coords;
+                updateLocationAPI(latitude, longitude);
+            },
+            (error) => {
+                // Agar location fetch karne mein error aaye
+                console.error("Error watching position:", error);
+                toast.error(`Location tracking error: ${error.message}`);
+                stopTracking(); // Tracking band kar do
+            },
+            {
+                enableHighAccuracy: true, // Best possible location
+                timeout: 10000,          // 10 second timeout
+                maximumAge: 0,           // Hamesha nayi location chahiye
+                distanceFilter: 10       // Location tabhi update hogi jab agent 10 meter move karega (optional)
+            }
+        );
+    };
+
+    // Function jo location tracking band karega
+    const stopTracking = () => {
+        if (watchIdRef.current !== null) {
+            navigator.geolocation.clearWatch(watchIdRef.current);
+            watchIdRef.current = null; // ID ko reset karo
+            setIsTracking(false);
+            toast.info("Live location tracking stopped.");
+            console.log("Tracking stopped.");
+        }
+    };
+
+    useEffect(() => {
+        // Yeh function tab chalega jab component screen se hatega
+        return () => {
+            stopTracking();
+        };
+    }, []);
+
+    // --- NAYE FUNCTIONS END ---
+
     const confirmAndGenerateCode = async () => {
         if (statusUpdating) return;
         setStatusUpdating(true);
@@ -190,6 +256,7 @@ const AgentComplaintDetailsPage = () => {
     const handleVerificationSuccess = (updatedComplaint) => {
         setComplaint(updatedComplaint); // UI update karein
         setVerificationModalOpen(false);
+        stopTracking();
     };
 
     // --- Render Logic ---
@@ -222,6 +289,33 @@ const AgentComplaintDetailsPage = () => {
                     {currentLocation === false && (
                         <p style={{ color: 'red', fontSize: '0.9em' }}>Could not fetch your live location. Map will show complaint destination only.</p>
                     )}
+                    {(complaint.status === 'Assigned' || complaint.status === 'In-Progress') && (
+                        isTracking ? (
+                            // Agar tracking chalu hai, to Stop button dikhao
+                            <Button 
+                                variant="contained" 
+                                color="error" 
+                                onClick={stopTracking}
+                                startIcon={<FiStopCircle />}
+                            >
+                                Stop Tracking
+                            </Button>
+                        ) : (
+                            // Agar tracking band hai, to Start button dikhao
+                            <Button 
+                                variant="contained" 
+                                color="success" 
+                                onClick={startTracking}
+                                startIcon={<FiPlayCircle />}
+                            >
+                                Start Journey
+                            </Button>
+                        )
+                    )}
+                    {/* --- NAYA BUTTON LOGIC END --- */}
+
+                    {/* ... error message ... */}
+                    
                 </div>
 
                 <hr />

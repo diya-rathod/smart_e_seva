@@ -20,57 +20,58 @@ import lombok.Data;
 @Data
 public class User {
 
- @Id
- @GeneratedValue(strategy = GenerationType.IDENTITY)
- private Long id;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
 
- private String name;
+   private String name;
 
- @Column(unique = true, nullable = false)
- private String email;
+   @Column(unique = true, nullable = false)
+   private String email;
 
+   @JsonIgnore // FINAL FIX 1: Password hash ko 100% block karein
+   @Column(nullable = false)
+   private String password;
 
- @JsonIgnore // FINAL FIX 1: Password hash ko 100% block karein
- @Column(nullable = false)
- private String password;
+   @Column(name = "must_change_password") // Saari extra cheezein hata di
+   private Boolean mustChangePassword = true; // 'boolean' ko 'Boolean' (bada B) kar diya
 
- @Column(name = "must_change_password") // Saari extra cheezein hata di
- private Boolean mustChangePassword = true; // 'boolean' ko 'Boolean' (bada B) kar diya
+   private String role;
 
- private String role; 
+   // --- COMMON & CITIZEN FIELDS ---
+   private String mobileNumber;
 
- // --- COMMON & CITIZEN FIELDS ---
- private String mobileNumber;
- 
- @Column(unique = true)
- private String meterNumber;
+   @Column(unique = true)
+   private String meterNumber;
 
- @JsonIgnore // FINAL FIX 2: Sensitive/Unnecessary details block karein
- private LocalDate dob;
+   @JsonIgnore // FINAL FIX 2: Sensitive/Unnecessary details block karein
+   private LocalDate dob;
 
- @JsonIgnore // FINAL FIX 3: Unnecessary details block karein
- private String serviceAddress;
+   @JsonIgnore // FINAL FIX 3: Unnecessary details block karein
+   private String serviceAddress;
 
- @JsonIgnore // FINAL FIX 4: Unnecessary details block karein
- private String landmark;
+   @JsonIgnore // FINAL FIX 4: Unnecessary details block karein
+   private String landmark;
 
- private Double latitude; 
- private Double longitude; 
- private String availabilityStatus; 
- 
+   private Double latitude;
+   private Double longitude;
+   private String availabilityStatus;
 
- // --- NEW AGENT-SPECIFIC FIELDS ---
- @Column(unique = true)
- private String employeeId;
+   // --- NEW AGENT-SPECIFIC FIELDS ---
+   @Column(unique = true)
+   private String employeeId;
 
- private String division; 
+   private String division;
 
- // --- SYSTEM FIELDS ---
- private String status; 
+   private Double liveLatitude;
+   private Double liveLongitude;
 
-    @JsonIgnore // FINAL FIX 5: Internal audit field block karein
- private String createdBy;
+   // --- SYSTEM FIELDS ---
+   private String status;
 
-    @JsonIgnore // FINAL FIX 6: Internal audit field block karein
- private LocalDateTime createdAt;
+   @JsonIgnore // FINAL FIX 5: Internal audit field block karein
+   private String createdBy;
+
+   @JsonIgnore // FINAL FIX 6: Internal audit field block karein
+   private LocalDateTime createdAt;
 }
