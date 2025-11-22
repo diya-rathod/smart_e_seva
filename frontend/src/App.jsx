@@ -1,12 +1,7 @@
-import './App.css';
-
 function App() {
   return (
-    <div>
-      <h1>Hello World! Kya aap mujhe dekh sakte hain?</h1>
-      <p>Agar yeh text dikh raha hai, to App.jsx kaam kar raha hai.</p>
-    </div>
+    <h1 className="text-4xl font-bold text-blue-500 text-center mt-10">
+      Tailwind Working Perfectly 😎
+    </h1>
   );
 }
-
-export default App;

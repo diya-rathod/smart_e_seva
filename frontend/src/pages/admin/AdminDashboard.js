@@ -176,3 +176,76 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
+
+
+
+
+// import React, { useContext, useEffect } from 'react';
+// import { Link } from 'react-router-dom';
+// import AuthContext from '../../context/AuthContext';
+// import ComplaintsMap from './ComplaintsMap';
+// import * as anime from 'animejs';
+
+// const AdminDashboard = () => {
+//     const { auth } = useContext(AuthContext);
+//     const userRole = auth?.role;
+
+//     // 2. useEffect animation ko component load hone ke baad chalayega
+//     useEffect(() => {
+//         anime.default({
+//             targets: '.statistic-number', // Is class wale sabhi elements ko animate karein
+//             innerHTML: [0, (el) => el.getAttribute('data-value')], // 0 se element ke data-value tak
+//             round: 1, // Number ko round figure mein rakhein
+//             easing: 'easeOutExpo', // Smooth animation effect
+//             duration: 2000 // Animation ka time
+//         });
+//     }, []); // Khaali array [] ka matlab hai ki yeh sirf ek baar chalega
+
+//     return (
+//         <div>
+//             <h1>Admin Dashboard</h1>
+
+//             {/* 3. Naye Summary Cards */}
+//             <div className="summary-cards-admin">
+//                 <div className="summary-card-admin">
+//                     <h3>Total Complaints</h3>
+//                     {/* Hum abhi ke liye dummy values use kar rahe hain */}
+//                     <p className="statistic-number" data-value="25">0</p>
+//                 </div>
+//                 <div className="summary-card-admin">
+//                     <h3>New Complaints Today</h3>
+//                     <p className="statistic-number" data-value="4">0</p>
+//                 </div>
+//                 <div className="summary-card-admin">
+//                     <h3>Active Agents</h3>
+//                     <p className="statistic-number" data-value="8">0</p>
+//                 </div>
+//             </div>
+            
+//             <div style={{ marginTop: '40px', marginBottom: '40px' }}>
+//                 <p>Live view of incoming complaints on the map.</p>
+//                 <ComplaintsMap />
+//             </div>
+
+//             <div className="quick-actions-section">
+//                 <h2>Quick Actions</h2>
+//                 <div style={{ display: 'flex', gap: '20px' }}>
+//                     <Link to="/admin/register-citizen" className="btn btn-primary">
+//                         + Register New Citizen
+//                     </Link>
+//                     <Link to="/admin/register-agent" className="btn btn-primary">
+//                         + Register New Agent
+//                     </Link>
+//                     {userRole === 'ROLE_SUPER_ADMIN' && (
+//                         <Link to="/admin/register-admin" className="btn btn-primary" style={{ backgroundColor: '#6f42c1' }}>
+//                             + Register New Admin
+//                         </Link>
+//                     )}
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default AdminDashboard;  

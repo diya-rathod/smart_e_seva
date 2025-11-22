@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* App.css File */
 
 /* Step A: Make the page background light gray */
@@ -152,3 +156,56 @@ p {
         box-shadow: 0 0 0 0 rgba(255, 165, 0, 0);
     }
 }
+
+/* Add this class to your App.css file */
+.text-gradient-aqua {
+  background-image: linear-gradient(45deg, #1CC8EE 30%, #4C77FF 90%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+/* --- INNOVATION: Subtle Geometric Background Pattern --- */
+.bg-grid-pattern {
+  /* Very light dots on a light gray background */
+  background-color: #f8f9fa; /* Soft Light Gray */
+  background-image: radial-gradient(#d3d3d3 0.5px, transparent 0.5px);
+  background-size: 15px 15px; /* Dot spacing */
+}
+
+
+
+
+/* Yeh class aap Home component mein apply karenge */
+
+/* Styling for Admin Dashboard Summary Cards
+.summary-cards-admin {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.summary-card-admin {
+  background-color: var(--surface-color);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.summary-card-admin h3 {
+  margin: 0 0 10px 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6c757d;
+}
+
+.summary-card-admin .statistic-number {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+} */
