@@ -6,7 +6,7 @@ import AuthContext from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 const AgentDashboardPage = () => {
   const { auth } = useContext(AuthContext);

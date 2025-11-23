@@ -7,7 +7,7 @@
 // import AuthContext from '../../context/AuthContext';
 // import ComplaintsMap from './ComplaintsMap'; // Map component
 
-// const API_BASE_URL = 'http://localhost:8080/api/v1';
+// const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 // const AdminDashboard = () => {
 //     const { auth } = useContext(AuthContext);
@@ -75,7 +75,7 @@ import { Assignment, People, Engineering, ReportProblem } from '@mui/icons-mater
 import axios from 'axios';
 import AuthContext from '../../context/AuthContext';
 
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 const StatCard = ({ title, value, icon, color }) => (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 2, height: '100%' }}>

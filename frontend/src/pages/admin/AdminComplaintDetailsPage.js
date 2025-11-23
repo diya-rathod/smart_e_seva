@@ -10,7 +10,7 @@ import Modal from '../../components/ui/Modal'; // <-- Modal import
 import AssignmentLogicComponent from './AssignmentLogicComponent'; // <-- Assignment logic import
 import toast from 'react-hot-toast'; // <-- Toast import
 
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 const AdminComplaintDetailsPage = () => {
     const { id } = useParams();

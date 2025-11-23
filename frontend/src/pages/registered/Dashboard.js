@@ -88,7 +88,7 @@ import Modal from '../../components/ui/Modal';
 import './Dashboard.css';
 import { FiFileText, FiClock, FiCheckCircle } from 'react-icons/fi';
 
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 
 // --- Verification Code Display Component (Modal) ---

@@ -22,7 +22,7 @@ L.Icon.Default.mergeOptions({
     shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 const ComplaintDetails = () => {
     const { ticketId } = useParams();
@@ -55,7 +55,7 @@ const ComplaintDetails = () => {
     // --- 2. WebSocket Connection Logic ---
     // useEffect(() => {
     //     if (complaint && complaint.agent && complaint.status !== 'Resolved') {
-    //         const socket = new SockJS('http://localhost:8080/ws');
+    //         const socket = new SockJS('https://smart-eseva-backend.onrender.com/ws');
     //         const stompClient = Stomp.over(socket);
     //         stompClientRef.current = stompClient;
 
@@ -82,7 +82,7 @@ const ComplaintDetails = () => {
             // 1. Naya STOMP client banao
             const client = new Client({
                 // Broker URL ki zaroorat nahi jab SockJS use kar rahe hain
-                webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+                webSocketFactory: () => new SockJS('https://smart-eseva-backend.onrender.com/ws'),
                 debug: function (str) {
                     console.log('STOMP DEBUG: ' + str); // Detailed logging
                 },

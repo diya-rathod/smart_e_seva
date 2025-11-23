@@ -22,7 +22,7 @@
 //         const fetchInitialComplaints = async () => {
 //             try {
 //                 const config = { headers: { 'Authorization': `Bearer ${auth.token}` } };
-//                 const response = await axios.get('http://localhost:8080/api/v1/admin/all-complaints', config);
+//                 const response = await axios.get('https://smart-eseva-backend.onrender.com/api/v1/admin/all-complaints', config);
 //                 setComplaints(response.data);
 //             } catch (error) {
 //                 console.error("Failed to fetch initial complaints:", error);
@@ -32,7 +32,7 @@
 //         fetchInitialComplaints();
 
 //         // 2. Fir, live notifications ke liye connect karein
-//         const eventSource = new EventSource("http://localhost:8080/api/v1/notifications/subscribe");
+//         const eventSource = new EventSource("https://smart-eseva-backend.onrender.com/api/v1/notifications/subscribe");
         
 //         eventSource.onopen = () => {
 //             console.log("SSE Connection established for Admin.");
@@ -89,7 +89,7 @@ export const ComplaintProvider = ({ children }) => {
         console.log("Citizen/Agent detected, initializing SSE notifications...");
 
         // --- TOKEN KO URL MEIN ADD KIYA ---
-        const sseUrl = `http://localhost:8080/api/v1/notifications/subscribe?token=${auth.token}`;
+        const sseUrl = `https://smart-eseva-backend.onrender.com/api/v1/notifications/subscribe?token=${auth.token}`;
         
         // Ab, live notifications ke liye connect karein
         const eventSource = new EventSource(sseUrl);

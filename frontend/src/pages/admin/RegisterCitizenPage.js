@@ -41,7 +41,7 @@
 //             };
 
 //             // Call the secure API endpoint
-//             await axios.post('http://localhost:8080/api/v1/admin/register-citizen', formData, config);
+//             await axios.post('https://smart-eseva-backend.onrender.com/api/v1/admin/register-citizen', formData, config);
             
 //             toast.success('Citizen registered successfully!');
 //             navigate('/admin/dashboard'); // Redirect to admin dashboard on success
@@ -143,7 +143,7 @@ const RegisterCitizenPage = () => {
                 throw new Error("Admin not authenticated!");
             }
             const config = { headers: { 'Authorization': `Bearer ${auth.token}` } };
-            await axios.post('http://localhost:8080/api/v1/admin/register-citizen', formData, config);
+            await axios.post('https://smart-eseva-backend.onrender.com/api/v1/admin/register-citizen', formData, config);
             setModalState({ isOpen: true, title: 'Success!', message: 'Citizen registered successfully!', isSuccess: true });
         } catch (error) {
             console.error('Registration failed:', error);

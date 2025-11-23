@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import AuthContext from '../../context/AuthContext'; // Path check kar lena
 
 // API base URL
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 // Modal ko screen ke center mein rakhne ke liye style
 const style = {

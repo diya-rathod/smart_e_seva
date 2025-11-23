@@ -24,7 +24,7 @@
 //                 const config = {
 //                     headers: { 'Authorization': `Bearer ${auth.token}` }
 //                 };
-//                 const response = await axios.get('http://localhost:8080/api/v1/admin/all-complaints', config);
+//                 const response = await axios.get('https://smart-eseva-backend.onrender.com/api/v1/admin/all-complaints', config);
 //                 setComplaints(response.data);
 //             } catch (error) {
 //                 console.error("Failed to fetch complaints:", error);
@@ -148,7 +148,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import AuthContext from '../../context/AuthContext';
 
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 const ManageComplaintsPage = () => {
     const { auth } = useContext(AuthContext);

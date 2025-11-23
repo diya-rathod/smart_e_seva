@@ -51,7 +51,7 @@
 
 //         try {
 //             const config = { headers: { 'Authorization': `Bearer ${auth.token}` } };
-//             await axios.post('http://localhost:8080/api/v1/admin/register-agent', formData, config);
+//             await axios.post('https://smart-eseva-backend.onrender.com/api/v1/admin/register-agent', formData, config);
             
 //             // On success, open the success modal
 //             setModalState({ isOpen: true, title: 'Success!', message: 'Agent registered successfully!', isSuccess: true });
@@ -249,7 +249,7 @@ const RegisterAgentPage = () => {
 
     try {
         const config = { headers: { 'Authorization': `Bearer ${auth.token}` } };
-        await axios.post('http://localhost:8080/api/v1/admin/register-agent', formData, config);
+        await axios.post('https://smart-eseva-backend.onrender.com/api/v1/admin/register-agent', formData, config);
 
         setModalState({ isOpen: true, title: 'Success!', message: 'Agent registered successfully!', isSuccess: true });
 

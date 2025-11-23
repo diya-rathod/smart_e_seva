@@ -15,7 +15,7 @@
         const COMPLAINT_ID_TO_TRACK = 5; // <-- KISI REAL, IN-PROGRESS COMPLAINT KI ID DAALO
 
         // 1. Connection banao
-        const socket = new SockJS('http://localhost:8080/ws');
+        const socket = new SockJS('https://smart-eseva-backend.onrender.com/ws');
         const stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function (frame) {

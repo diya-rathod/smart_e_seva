@@ -4,7 +4,7 @@ import axios from 'axios';
 import AuthContext from '../../context/AuthContext';
 import ComplaintsMap from './ComplaintsMap'; // Wahi purana map component
 
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 const ComplaintsMapPage = () => {
     const { auth } = useContext(AuthContext);

@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import AuthContext from '../../context/AuthContext';
 
 // API base URL
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 const Profile = () => {
   const { auth } = useContext(AuthContext);

@@ -16,7 +16,7 @@ const AssignmentLogicComponent = ({ complaint, onAssignmentSuccess }) => {
             setLoading(true);
             try {
                 const config = { headers: { 'Authorization': `Bearer ${auth.token}` } };
-                const response = await axios.get(`http://localhost:8080/api/v1/admin/nearest-agent/${complaint.id}`, config);
+                const response = await axios.get(`https://smart-eseva-backend.onrender.com/api/v1/admin/nearest-agent/${complaint.id}`, config);
 
                 setNearestAgent(response.data);
                 toast.success(`Nearest Agent found: ${response.data.name}`);
@@ -52,7 +52,7 @@ const AssignmentLogicComponent = ({ complaint, onAssignmentSuccess }) => {
             const config = { headers: { 'Authorization': `Bearer ${auth.token}`, 'Content-Type': 'application/json' } };
 
             // FIX 1: API se milne waale response ko 'response' variable mein save karo
-            const response = await axios.put('http://localhost:8080/api/v1/admin/assign-agent', assignmentDTO, config);
+            const response = await axios.put('https://smart-eseva-backend.onrender.com/api/v1/admin/assign-agent', assignmentDTO, config);
 
             toast.success(`Complaint ${complaint.ticketId} assigned to ${nearestAgent.name}!`);
 

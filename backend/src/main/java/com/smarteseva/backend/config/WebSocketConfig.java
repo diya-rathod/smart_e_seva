@@ -13,7 +13,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // Yeh woh "gate" hai jahan frontend connect karega
-        // Example URL: http://localhost:8080/ws
+        // Example URL: https://smart-eseva-backend.onrender.com/ws
         registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 

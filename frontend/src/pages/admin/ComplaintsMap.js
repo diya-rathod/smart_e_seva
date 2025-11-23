@@ -16,7 +16,7 @@
 
 //     useEffect(() => {
 //         // Connect to the backend SSE endpoint
-//         const eventSource = new EventSource("http://localhost:8080/api/v1/notifications/subscribe");
+//         const eventSource = new EventSource("https://smart-eseva-backend.onrender.com/api/v1/notifications/subscribe");
 
 //         // Listen for 'new_complaint' events
 //         eventSource.addEventListener("new_complaint", (event) => {

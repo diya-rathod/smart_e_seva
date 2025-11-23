@@ -9,7 +9,7 @@ import Modal from '../../components/ui/Modal'; // Path corrected
 import { Button, Box, CircularProgress, Card, CardContent, Typography, Divider, IconButton } from '@mui/material'; // <-- MUI Components
 import { FiMap, FiPlayCircle, FiStopCircle} from 'react-icons/fi'; // Icon for Navigation
 
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 // --- Verification Modal Component (Nested) ---
 const VerificationModal = ({ complaintId, ticketId, onVerifySuccess, onModalClose }) => {
