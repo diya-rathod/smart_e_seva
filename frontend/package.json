@@ -24,8 +24,8 @@
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.26.0",
     "react-scripts": "^5.0.1",
-    "sockjs-client": "^1.6.1",
     "shadcn-ui": "^0.9.5",
+    "sockjs-client": "^1.6.1",
     "tailwind-variants": "^0.2.0"
   },
   "devDependencies": {
