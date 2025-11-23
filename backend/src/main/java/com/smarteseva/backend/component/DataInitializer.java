@@ -22,18 +22,26 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("---------------------------------------------");
-        System.out.println("🚀 DATA INITIALIZER STARTED...");
+        System.out.println("🚀 DATA INITIALIZER: Checking Admin Status...");
         
         String adminEmail = "admin@smarteseva.com";
         
         try {
-            // 1. Check karo user hai ya nahi
             Optional<User> existingUser = userRepository.findByEmail(adminEmail);
             
             if (existingUser.isPresent()) {
-                System.out.println("⚠️ Admin User ALREADY EXISTS in Database!");
-                System.out.println("📧 Email: " + existingUser.get().getEmail());
-                System.out.println("🔑 Hashed Pass: " + existingUser.get().getPassword());
+                System.out.println("⚠️ Admin User Found. Updating Status to 'Active'...");
+                User admin = existingUser.get();
+                
+                // YAHAN CHANGE KIYA HAI: Status ko "Active" set kar rahe hain
+                admin.setStatus("Active"); 
+                
+                // Agar koi boolean field bhi hai to use bhi true kar do (Safe side)
+                // admin.setEnabled(true); 
+
+                userRepository.save(admin);
+                System.out.println("✅ UPDATE: Admin user status set to 'Active'.");
+                
             } else {
                 System.out.println("🛠️ Creating New Admin User...");
                 
@@ -42,16 +50,16 @@ public class DataInitializer implements CommandLineRunner {
                 admin.setPassword(passwordEncoder.encode("admin123"));
                 admin.setRole("ROLE_SUPER_ADMIN");
                 admin.setName("Super Admin");
-                // admin.setMobileNumber("9999999999"); // Agar required ho to uncomment karein
+                
+                // Naya user banate waqt hi Active set karo
+                admin.setStatus("Active");
                 
                 userRepository.save(admin);
                 
-                System.out.println("✅ SUCCESS: Created ADMIN user.");
-                System.out.println("📧 Login Email: " + adminEmail);
-                System.out.println("🔑 Login Pass: admin123");
+                System.out.println("✅ SUCCESS: Created NEW Admin with status 'Active'.");
             }
         } catch (Exception e) {
-            System.out.println("❌ ERROR in DataInitializer: " + e.getMessage());
+            System.out.println("❌ ERROR: " + e.getMessage());
             e.printStackTrace();
         }
         System.out.println("---------------------------------------------");
