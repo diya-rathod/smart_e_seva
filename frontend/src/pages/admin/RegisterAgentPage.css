@@ -1,0 +1,102 @@
+/* frontend/src/pages/admin/RegisterAgentPage.css */
+
+/* General Card and Form Layout */
+.page-content-card {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.register-agent-form .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns for a balanced look */
+    gap: 20px 30px;
+    margin-bottom: 20px;
+}
+
+.register-agent-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.register-agent-form label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.register-agent-form input[type="text"],
+.register-agent-form input[type="email"],
+.register-agent-form input[type="password"],
+.register-agent-form input[type="date"] {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+.register-agent-form input:focus {
+    border-color: #007bff; /* Focus color */
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+/* --- Map and Location Styling --- */
+
+/* Map Container */
+.map-container-wrapper {
+    /* Map ke liye height set karein */
+    height: 500px; 
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* Map ko full width de dein */
+    grid-column: 1 / -1; 
+}
+
+/* Address Display Area */
+.address-display {
+    padding: 10px 15px;
+    background-color: #f0f8ff; /* Light blue background for emphasis */
+    border-left: 5px solid #007bff; /* Primary color highlight */
+    margin-top: 15px;
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+
+.address-display p {
+    margin: 0;
+}
+.address-display p:first-child {
+    color: #0056b3;
+}
+.address-display p:last-child {
+    color: #6c757d;
+}
+
+/* Submit Button */
+.register-agent-form .btn-primary {
+    grid-column: 1 / -1;
+    padding: 12px;
+    font-size: 1.1em;
+    font-weight: 600;
+    background-color: #28a745; /* Green for 'Register' action */
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register-agent-form .btn-primary:hover {
+    background-color: #218838;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .register-agent-form .form-grid {
+        grid-template-columns: 1fr; /* Single column on mobile */
+    }
+}

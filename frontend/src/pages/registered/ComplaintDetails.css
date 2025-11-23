@@ -1,0 +1,226 @@
+/* Styling for Complaint Details Page */
+.complaint-details-container h1 {
+  font-size: 2.2rem;
+  margin-bottom: 30px;
+  color: #333;
+  word-break: break-all; /* Prevents long ticket IDs from overflowing */
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* Main content takes 2/3, sidebar takes 1/3 */
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.details-main, .details-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.details-section {
+  background-color: var(--surface-color);
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+}
+
+.details-section h2 {
+  font-size: 1.4rem;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.details-section p {
+  line-height: 1.7;
+  color: #555;
+}
+
+.details-section img {
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.map-placeholder {
+  height: 150px;
+  background-color: #f8f9fa;
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+
+/* --- NEW Flipkart-Style Status Timeline --- */
+.status-timeline ul {
+  list-style: none;
+  padding: 0;
+  position: relative;
+  /* The vertical connecting line */
+  border-left: 2px solid #e9ecef;
+  margin-left: 12px; /* Space for the icons */
+}
+
+.status-timeline li {
+  position: relative;
+  padding: 0 0 30px 30px; /* Space between steps and for icon */
+  display: flex;
+  gap: 15px;
+}
+
+.timeline-icon {
+  position: absolute;
+  left: -13px; /* Center the icon on the line */
+  top: 0;
+  background-color: var(--surface-color); /* To hide the line behind the icon */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.timeline-icon .dot {
+  width: 12px;
+  height: 12px;
+  background-color: #ccc;
+  border-radius: 50%;
+}
+
+.timeline-content .timeline-step {
+  font-weight: 600;
+  color: #6c757d; /* Default color for future steps */
+  display: block;
+}
+.timeline-content .timeline-date {
+  font-size: 0.85rem;
+  color: #adb5bd;
+}
+
+/* Completed Step Styling */
+.status-timeline li.completed .timeline-icon {
+  color: var(--primary-color);
+}
+.status-timeline li.completed .timeline-content .timeline-step {
+  color: #333;
+}
+.status-timeline li.completed .timeline-content .timeline-date {
+  color: #6c757d;
+}
+/* The green progress line */
+.status-timeline li.completed::before {
+  content: '';
+  position: absolute;
+  left: -2px; /* On top of the main line */
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background-color: var(--primary-color);
+}
+.status-timeline li:last-child::before {
+  height: 0; /* No progress line for the last step */
+}
+
+
+/* Active Step Styling */
+.status-timeline li.active .timeline-icon {
+  color: var(--primary-color);
+  /* Pulsing animation */
+  animation: pulse 2s infinite;
+}
+.status-timeline li.active .timeline-icon .dot {
+  background-color: var(--primary-color);
+}
+.status-timeline li.active .timeline-content .timeline-step {
+  color: var(--primary-color);
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+
+/* The vertical line */
+.status-timeline ul::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  bottom: 5px;
+  width: 2px;
+  background-color: #e9ecef;
+}
+
+.status-timeline li {
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  color: #6c757d;
+}
+
+/* The circle dot */
+.status-timeline li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ccc;
+  border: 2px solid #e9ecef;
+}
+
+.status-timeline li.completed {
+  color: #333;
+}
+.status-timeline li.completed::before {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.status-timeline li.active {
+  color: var(--secondary-color);
+  font-weight: 600;
+}
+.status-timeline li.active::before {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+
+/* --- Agent & Updates Log --- */
+.agent-details p, .updates-log p {
+  margin: 10px 0;
+}
+.agent-details strong {
+  color: #333;
+}
+
+.updates-log ul {
+  list-style: none;
+  padding: 0;
+}
+.updates-log li {
+  padding: 10px 0;
+  color: #555;
+}
+.updates-log li:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+.updates-log li strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 3px;
+}

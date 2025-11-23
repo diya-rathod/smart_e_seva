@@ -1,0 +1,100 @@
+/* Styling for Help & Support Page */
+
+.help-container h1 {
+  font-size: 2.2rem;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* Each section is a card, just like the Profile page */
+.help-section {
+  background-color: var(--surface-color);
+  border-radius: 12px;
+  padding: 30px 35px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  border: 1px solid var(--border-color);
+}
+
+.help-section h2 {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: #333;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* --- FAQs Section Styling --- */
+.faq-item {
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+.faq-item:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.faq-item h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+.faq-item p {
+  color: #666;
+  line-height: 1.7;
+}
+
+/* --- Contact Form Styling --- */
+.contact-form p {
+  margin-top: 0;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.contact-form textarea {
+  min-height: 120px;
+  resize: vertical; /* Allow vertical resizing */
+}
+.contact-form textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+  outline: none;
+}
+
+.contact-form .btn {
+  display: block; /* Make button a block element */
+  margin-left: auto; /* Push to the right */
+  min-width: 150px;
+}
+
+/* --- Emergency Contacts Styling --- */
+.emergency-contacts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.emergency-contacts li {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #444;
+  padding: 15px 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.emergency-contacts li:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.emergency-contacts li:hover {
+  background-color: #f8f9fa;
+}
+
+.emergency-contacts li strong {
+  float: right; /* Pushes the number to the right */
+  color: var(--primary-color);
+  font-weight: 700;
+}

@@ -1,0 +1,53 @@
+.fab {
+  position: absolute; /* Absolute to the scrolling .main-content */
+  bottom: 40px;
+  right: 40px;
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
+  background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(13, 110, 253, 0.4);
+  z-index: 100;
+  text-decoration: none;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.fab:hover {
+  width: 240px;
+  border-radius: 16px;
+  justify-content: flex-start;
+  box-shadow: 0 8px 25px rgba(13, 110, 253, 0.5);
+  padding: 0 22px;
+}
+
+.fab .fab-icon {
+  position: absolute;
+  top: 50%;
+  left: 34px;
+  transform: translate(-50%, -50%);
+  font-size: 1.8rem;
+  transition: all 0.3s ease;
+}
+
+.fab:hover .fab-icon {
+  left: 34px;
+}
+
+.fab .fab-text {
+  position: absolute;
+  left: 68px;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.2s ease 0.1s;
+}
+
+.fab:hover .fab-text {
+  opacity: 1;
+}

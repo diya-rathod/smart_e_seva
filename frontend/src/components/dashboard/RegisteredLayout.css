@@ -1,0 +1,77 @@
+/* --- Main Layout Container --- */
+.layout-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* --- Sidebar (Drawer) Styling --- */
+.sidebar-drawer {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar-paper {
+    overflow-x: hidden;
+    background-color: #ffffff;
+    border-right: 1px solid #e0e0e0;
+}
+
+/* --- NEW: Sidebar Inner Container for Logout Button --- */
+.sidebar-inner-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* --- Main Content Area --- */
+.main-content {
+    flex-grow: 1;
+    padding: 24px;
+    transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(-45deg, #ffffff, #e3f2fd, #e6f7f5, #ffffff);
+    background-size: 400% 400%;
+    animation: moveGradient 15s ease infinite;
+}
+
+/* --- Sidebar Header & Toggle Button --- */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px 0 24px;
+    min-height: 64px;
+}
+
+/* --- Sidebar List Styling --- */
+.menu-item-text {
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-closed .menu-item-text {
+    opacity: 0;
+}
+
+.active-link {
+    background-color: #e3f2fd;
+    border-right: 3px solid #1976d2;
+}
+
+.active-link .MuiListItemIcon-root,
+.active-link .MuiListItemText-primary {
+    color: #1976d2;
+    font-weight: 600;
+}
+
+/* --- NEW: Floating Action Button (FAB) Styling --- */
+.extended-fab {
+    /* Smooth transition for expanding and shrinking */
+    transition: all 0.3s ease-in-out !important;
+}
+
+
+/* --- Gradient Animation --- */
+@keyframes moveGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
