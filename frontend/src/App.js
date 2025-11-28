@@ -284,6 +284,7 @@ import AgentDashboardPage from './pages/agent/AgentDashboardPage';
 import AgentLayout from './components/agent/AgentLayout';
 import AgentComplaintDetailsPage from './pages/agent/AgentComplaintDetailsPage';
 import AgentProfile from './pages/agent/AgentProfile';
+import AgentHistoryPage from './pages/agent/AgentHistoryPage';
 
 import './App.css';
 
@@ -354,6 +355,7 @@ function App() {
           <Route path="/agent/dashboard" element={<AgentDashboardPage />} />
           <Route path="/agent/complaint/:id" element={<AgentComplaintDetailsPage />} />
           <Route path="/agent/profile" element={<AgentProfile />} />
+          <Route path="history" element={<AgentHistoryPage />} />
         </Route>
       </Routes>
     </ThemeProvider>

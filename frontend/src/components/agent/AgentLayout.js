@@ -12,7 +12,7 @@ import {
     Logout, 
     Menu as MenuIcon, // Alias diya kyuki Menu component bhi import kiya hai
     Notifications, 
-    AccountCircle 
+    AccountCircle, History 
 } from '@mui/icons-material';
 import AuthContext from '../../context/AuthContext'; 
 import ForcePasswordChangeModal from '../common/ForcePasswordChangeModal'; 
@@ -75,6 +75,7 @@ const AgentLayout = () => {
     // --- AGENT SIDEBAR LINKS ---
     const menuItems = [
         { text: 'Dashboard', icon: <Dashboard />, path: '/agent/dashboard' },
+        { text: 'Job History', icon: <History />, path: '/agent/history' },
     ];
 
     const drawerContent = (
