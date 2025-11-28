@@ -218,6 +218,7 @@ import axios from 'axios';
 import AuthContext from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import './ComplaintDetails.css'; 
+import agentMarkerImg from '../../assets/agent-marker.png';
 
 // --- MAP IMPORTS ---
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
@@ -241,12 +242,17 @@ const agentIcon = new L.Icon({
     // iconUrl: 'https://cdn-icons-png.flaticon.com/512/9131/9131546.png', 
     
     // OPTION 2: Agar Zepto jaisa Scooter chahiye to niche wali line uncomment karein:
-    iconUrl: 'https://cdn-icons-png.flaticon.com/512/555/555526.png',
+    // iconUrl: 'https://cdn-icons-png.flaticon.com/512/555/555526.png',
 
-    iconSize: [50, 50], // Icon ka size thoda bada rakha hai taaki clear dikhe
-    iconAnchor: [25, 25], // Center point (taaki location exact beech mein ho)
-    popupAnchor: [0, -25], // Popup thoda upar khulega
-    shadowUrl: null // Custom icon me shadow ki zarurat nahi hoti
+    // iconUrl: 'https://cdn-icons-png.flaticon.com/512/2554/2554936.png',
+    // iconUrl: 'https://cdn-icons-png.flaticon.com/512/6276/6276315.png',
+
+    iconUrl: agentMarkerImg, // Ab hum imported image use kar rahe hain (No link issues)
+    
+    iconSize: [60, 60],   // Size thoda bada rakha hai taki superhero clear dikhe
+    iconAnchor: [30, 60], // Center point
+    popupAnchor: [0, -60], 
+    shadowUrl: null
 });
 
 const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
