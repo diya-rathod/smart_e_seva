@@ -55,7 +55,15 @@ public class NotificationService {
             try {
                 // Hum pura notification object bhej rahe hain taaki frontend par ID bhi mile
                 String json = objectMapper.writeValueAsString(notif);
-                emitter.send(SseEmitter.event().name("notification").data(json));
+                // emitter.send(SseEmitter.event().name("notification").data(json));
+
+                String eventName = "notification"; // Default
+                if ("OTP".equals(type)) {
+                    eventName = "verification_code"; // Purana frontend listener iska wait kar raha hai
+                } else if ("ASSIGNMENT".equals(type)) {
+                    eventName = "agent_assigned"; // Agent dashboard iska wait kar raha hai
+                }
+                emitter.send(SseEmitter.event().name(eventName).data(json));
             } catch (IOException e) {
                 emitters.remove(recipientEmail);
             }
