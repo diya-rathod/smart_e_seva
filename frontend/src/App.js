@@ -355,7 +355,7 @@ function App() {
           <Route path="/agent/dashboard" element={<AgentDashboardPage />} />
           <Route path="/agent/complaint/:id" element={<AgentComplaintDetailsPage />} />
           <Route path="/agent/profile" element={<AgentProfile />} />
-          <Route path="history" element={<AgentHistoryPage />} />
+          <Route path="/agent/history" element={<AgentHistoryPage />} />
         </Route>
       </Routes>
     </ThemeProvider>

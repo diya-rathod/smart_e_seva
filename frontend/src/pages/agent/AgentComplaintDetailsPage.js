@@ -398,229 +398,367 @@
 
 
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AuthContext from '../../context/AuthContext';
 import toast from 'react-hot-toast';
-import Modal from '../../components/ui/Modal';
-import { Button } from '@mui/material'; 
-import { FiMap, FiPlayCircle, FiStopCircle } from 'react-icons/fi';
+import Modal from '../../components/ui/Modal'; 
+import { 
+    Box, Button, Typography, Card, CardContent, Grid, Chip, 
+    Container, Paper, Divider, IconButton, CircularProgress 
+} from '@mui/material';
+import { 
+    Map, PlayCircle, StopCircle, CheckCircle, Navigation, 
+    Phone, Email, Person, LocationOn 
+} from '@mui/icons-material';
 
-// --- NEW IMPORTS FOR WEBSOCKET ---
+// --- WebSocket Imports ---
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 
 const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
-const WS_URL = 'https://smart-eseva-backend.onrender.com/ws'; // WebSocket URL
+const WS_URL = 'https://smart-eseva-backend.onrender.com/ws';
 
-// --- Verification Modal Component (Same as before) ---
-const VerificationModal = ({ complaintId, ticketId, onVerifySuccess, onModalClose }) => {
+// --- 1. Verification Modal (Styled) ---
+const VerificationModal = ({ ticketId, onVerifySuccess, onModalClose, complaintId }) => {
     const { auth } = useContext(AuthContext);
     const [code, setCode] = useState('');
     const [verifying, setVerifying] = useState(false);
 
     const handleVerification = async (e) => {
         e.preventDefault();
-        if (code.length !== 6) { toast.error("Please enter the 6-digit code."); return; }
+        if (code.length !== 6) {
+            toast.error("Please enter the 6-digit code.");
+            return;
+        }
         setVerifying(true);
         try {
-            const config = { headers: { 'Authorization': `Bearer ${auth.token}`, 'Content-Type': 'application/json' } };
-            const response = await axios.put(`${API_BASE_URL}/agent/verify-resolve/${complaintId}`, { code: code }, config);
-            toast.success(`Complaint ${ticketId} resolved!`);
-            onVerifySuccess(response.data);
+            const config = { headers: { 'Authorization': `Bearer ${auth.token}` } };
+            const response = await axios.put(`${API_BASE_URL}/agent/verify-resolve/${complaintId}`, { code }, config);
+            
+            toast.success(`Ticket ${ticketId} Closed Successfully!`);
+            onVerifySuccess(response.data); 
         } catch (error) {
             toast.error(error.response?.data || "Verification failed.");
-        } finally { setVerifying(false); }
+        } finally {
+            setVerifying(false);
+        }
     };
 
     return (
-        <Modal isOpen={true} onClose={onModalClose} title={`Final Verification: ${ticketId}`} hideConfirmButton={true}>
-            <form onSubmit={handleVerification}>
-                <p>Enter 6-digit verification code from citizen.</p>
-                <input type="text" value={code} onChange={(e) => setCode(e.target.value)} maxLength="6" placeholder="Enter Code" required disabled={verifying} style={{ padding: '10px', width: '100%', marginBottom: '15px', textAlign: 'center' }} />
-                <button type="submit" disabled={verifying} style={{ padding: '10px', width: '100%', backgroundColor: '#28a745', color: 'white', border: 'none' }}>{verifying ? 'Verifying...' : 'VERIFY & RESOLVE'}</button>
-            </form>
+        <Modal isOpen={true} onClose={onModalClose} title="Citizen Verification" hideConfirmButton={true}>
+            <Box textAlign="center" p={2}>
+                <Typography variant="body1" mb={2}>
+                    Ask the citizen for the <strong>6-digit OTP</strong> sent to their app.
+                </Typography>
+                <form onSubmit={handleVerification}>
+                    <input
+                        type="text"
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        maxLength="6"
+                        placeholder="• • • • • •"
+                        required
+                        disabled={verifying}
+                        style={{ 
+                            padding: '15px', width: '80%', fontSize: '1.5em', textAlign: 'center', 
+                            letterSpacing: '8px', border: '2px solid #ddd', borderRadius: '10px', marginBottom: '20px' 
+                        }}
+                    />
+                    <Button 
+                        type="submit" 
+                        variant="contained" 
+                        color="success" 
+                        fullWidth 
+                        size="large"
+                        disabled={verifying}
+                        startIcon={<CheckCircle />}
+                    >
+                        {verifying ? 'Verifying...' : 'VERIFY & CLOSE JOB'}
+                    </Button>
+                </form>
+            </Box>
         </Modal>
     );
 };
 
+// --- 2. Main Page Component ---
 const AgentComplaintDetailsPage = () => {
     const { auth } = useContext(AuthContext);
     const { id } = useParams();
+    const navigate = useNavigate();
+    
     const [complaint, setComplaint] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [statusUpdating, setStatusUpdating] = useState(false);
     const [currentLocation, setCurrentLocation] = useState(null);
+    
+    // UI States
     const [isVerificationModalOpen, setVerificationModalOpen] = useState(false);
     const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
-    
-    // --- TRACKING STATES ---
+    const [statusUpdating, setStatusUpdating] = useState(false);
+
+    // Tracking States
     const [isTracking, setIsTracking] = useState(false);
     const watchIdRef = useRef(null);
-    const stompClientRef = useRef(null); // Ref for WebSocket Client
+    const stompClientRef = useRef(null);
 
     const config = { headers: { 'Authorization': `Bearer ${auth.token}` } };
 
+    // --- A. Fetch Data ---
     useEffect(() => {
         const fetchDetails = async () => {
-            if (!auth.token || !id) { setLoading(false); return; }
+            if (!auth.token || !id) return;
             try {
                 const response = await axios.get(`${API_BASE_URL}/agent/complaints/${id}`, config);
                 setComplaint(response.data);
-            } catch (error) { console.error(error); } finally { setLoading(false); }
+            } catch (error) {
+                toast.error("Failed to load details.");
+                navigate('/agent/dashboard');
+            } finally { setLoading(false); }
         };
         fetchDetails();
-    }, [auth.token, id]);
 
-    // Simple Location Fetch (One time)
-    useEffect(() => {
+        // One-time location fetch for Navigation
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
-                (position) => setCurrentLocation({ lat: position.coords.latitude, lng: position.coords.longitude }),
-                (error) => console.error("Loc error", error),
+                (pos) => setCurrentLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+                (err) => console.warn("Location error", err),
                 { enableHighAccuracy: true }
             );
         }
-    }, []);
+    }, [id, auth.token]);
 
+    // --- B. Navigation Logic ---
     const handleNavigate = () => {
-        if (!complaint?.latitude) return toast.error("Complaint location missing.");
+        if (!complaint?.latitude) return toast.error("Location missing.");
         const dest = `${complaint.latitude},${complaint.longitude}`;
         const src = currentLocation ? `${currentLocation.lat},${currentLocation.lng}` : '';
-        window.open(`https://www.google.com/maps/dir/?api=1&origin=${src}&destination=${dest}`, "_blank");
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${src}&destination=${dest}&travelmode=driving`;
+        window.open(url, "_blank");
     };
 
-    // --- MAIN TRACKING FUNCTION ---
+    // --- C. Live Tracking Logic (WebSocket) ---
     const startTracking = () => {
-        if (!("geolocation" in navigator)) return toast.error("Geolocation not supported.");
+        if (!("geolocation" in navigator)) return toast.error("GPS not supported.");
         
-        // 1. WebSocket Connect Logic
         const client = new Client({
             webSocketFactory: () => new SockJS(WS_URL),
             reconnectDelay: 5000,
             onConnect: () => {
-                console.log("Agent WS Connected for Tracking");
                 setIsTracking(true);
-                toast.success("Journey Started & Live Tracking Active!");
+                toast.success("Journey Started - Live Tracking ON");
                 
-                // 2. Start Geolocation Watch inside WS Connect
                 watchIdRef.current = navigator.geolocation.watchPosition(
-                    (position) => {
-                        const { latitude, longitude } = position.coords;
-                        
-                        // A. Send to WebSocket (For User Map) - FAST
-                        const locationData = { lat: latitude, lng: longitude };
+                    (pos) => {
+                        const { latitude, longitude } = pos.coords;
+                        // Send to WebSocket
                         client.publish({
                             destination: `/topic/complaint/${complaint.id}/location`,
-                            body: JSON.stringify(locationData)
+                            body: JSON.stringify({ lat: latitude, lng: longitude })
                         });
-
-                        // B. Send to Database (Optional - for history) - SLOW
-                        updateLocationAPI(latitude, longitude);
+                        // Optional: DB Update (Throttled)
+                        // updateLocationAPI(latitude, longitude); 
                     },
-                    (error) => console.error("Watch Error", error),
-                    { enableHighAccuracy: true, maximumAge: 0 }
+                    (err) => console.error(err),
+                    { enableHighAccuracy: true }
                 );
-            },
-            onStompError: (frame) => console.error("WS Error", frame)
+            }
         });
-
         client.activate();
         stompClientRef.current = client;
     };
 
-    const stopTracking = () => {
-        // 1. Stop Geolocation
-        if (watchIdRef.current !== null) {
+    // BUG FIX: Added 'showToast' param to prevent crash on unmount
+    const stopTracking = (showToast = true) => {
+        if (watchIdRef.current) {
             navigator.geolocation.clearWatch(watchIdRef.current);
             watchIdRef.current = null;
         }
-        // 2. Stop WebSocket
         if (stompClientRef.current) {
             stompClientRef.current.deactivate();
             stompClientRef.current = null;
         }
-        setIsTracking(false);
-        toast.info("Journey Ended.");
+        if (isTracking) {
+            setIsTracking(false);
+            if (showToast) toast.success("Journey Ended"); // Changed from toast.info to toast.success
+        }
     };
 
-    // Database Update Helper
-    const updateLocationAPI = async (latitude, longitude) => {
-        try {
-            await axios.put(`${API_BASE_URL}/agent/location`, { latitude, longitude }, config);
-        } catch (error) { console.error("API Update failed", error); }
-    };
-
-    // Cleanup on Unmount
+    // Auto-stop tracking when leaving page
     useEffect(() => {
-        return () => stopTracking();
-    }, []);
+        return () => stopTracking(false);
+    }, [isTracking]);
 
-    const handleCodeGeneration = () => setConfirmModalOpen(true);
-    
-    const confirmAndGenerateCode = async () => {
+
+    // --- D. Resolve Flow ---
+    const initiateResolve = () => setConfirmModalOpen(true);
+
+    const generateCodeAndOpenModal = async () => {
         setConfirmModalOpen(false);
         setStatusUpdating(true);
         try {
             await axios.get(`${API_BASE_URL}/agent/generate-code/${complaint.id}`, config);
-            toast.success("Code sent to citizen!");
+            toast.success("OTP sent to Citizen!");
             setVerificationModalOpen(true);
-        } catch (error) { toast.error("Error generating code."); } 
-        finally { setStatusUpdating(false); }
+        } catch (error) {
+            toast.error("Failed to generate OTP.");
+        } finally {
+            setStatusUpdating(false);
+        }
     };
 
-    const handleVerificationSuccess = (updatedComplaint) => {
+    const handleSuccess = (updatedComplaint) => {
         setComplaint(updatedComplaint);
         setVerificationModalOpen(false);
-        stopTracking();
+        stopTracking(false);
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (!complaint) return <div>Complaint not found.</div>;
+    if (loading) return <Box p={4} textAlign="center"><CircularProgress /></Box>;
+    if (!complaint) return <Typography>No Data</Typography>;
 
     const isResolved = complaint.status === 'Resolved';
-    const isAssignedOrNew = complaint.status === 'Assigned' || complaint.status === 'New' || complaint.status === 'In-Progress';
+    const getStatusColor = () => isResolved ? '#2e7d32' : '#ed6c02';
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h1>Complaint: {complaint.ticketId}</h1>
-            <div style={{ padding: '15px', border: '1px solid #ccc', borderRadius: '8px' }}>
-                <p><strong>Category:</strong> {complaint.category}</p>
-                <p><strong>Address:</strong> {complaint.location}, {complaint.landmark}</p>
-                <p><strong>Status:</strong> <span style={{color: isResolved ? 'green' : 'orange'}}>{complaint.status}</span></p>
+        <Container maxWidth="md" sx={{ mt: 4, mb: 8 }}>
+            
+            {/* 1. Header Card */}
+            <Paper elevation={3} sx={{ p: 3, mb: 3, borderRadius: '12px', borderLeft: `6px solid ${getStatusColor()}` }}>
+                <Grid container justifyContent="space-between" alignItems="center">
+                    <Grid item>
+                        <Chip label={complaint.ticketId} sx={{ fontWeight: 'bold', mb: 1 }} />
+                        <Typography variant="h5" fontWeight="bold">{complaint.category}</Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h6" sx={{ color: getStatusColor(), fontWeight: 'bold' }}>
+                            {complaint.status.toUpperCase()}
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </Paper>
 
-                <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
-                    <Button variant="contained" color="primary" onClick={handleNavigate} startIcon={<FiMap />}>
-                        Navigate
-                    </Button>
+            <Grid container spacing={3}>
+                {/* 2. Details Column */}
+                <Grid item xs={12} md={7}>
+                    <Card sx={{ borderRadius: '12px', height: '100%' }}>
+                        <CardContent>
+                            <Typography variant="h6" gutterBottom><LocationOn /> Location Details</Typography>
+                            <Divider sx={{ mb: 2 }} />
+                            <Typography variant="body1" paragraph>
+                                {complaint.location}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                <strong>Landmark:</strong> {complaint.landmark || 'N/A'}
+                            </Typography>
+                            
+                            <Box mt={3}>
+                                <Typography variant="h6" gutterBottom><Person /> Citizen Details</Typography>
+                                <Divider sx={{ mb: 2 }} />
+                                <Box display="flex" alignItems="center" gap={1} mb={1}>
+                                    <Email color="action" /> 
+                                    <Typography>{complaint.citizen?.email}</Typography>
+                                </Box>
+                                <Box display="flex" alignItems="center" gap={1}>
+                                    <Phone color="action" />
+                                    {/* Click to Call */}
+                                    <a href={`tel:${complaint.citizen?.mobileNumber}`} style={{ textDecoration: 'none', color: '#007bff' }}>
+                                        {complaint.citizen?.mobileNumber || 'N/A'}
+                                    </a>
+                                </Box>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                </Grid>
 
-                    {!isResolved && (
-                         isTracking ? 
-                         <Button variant="contained" color="error" onClick={stopTracking} startIcon={<FiStopCircle />}>Stop Journey</Button> 
-                         : 
-                         <Button variant="contained" color="success" onClick={startTracking} startIcon={<FiPlayCircle />}>Start Journey</Button>
-                    )}
-                </div>
+                {/* 3. Action Column */}
+                <Grid item xs={12} md={5}>
+                    <Card sx={{ borderRadius: '12px', height: '100%', bgcolor: '#f8f9fa' }}>
+                        <CardContent>
+                            <Typography variant="h6" gutterBottom>Agent Actions</Typography>
+                            <Divider sx={{ mb: 2 }} />
 
-                <div style={{ marginTop: '20px' }}>
-                    {!isResolved && isAssignedOrNew && (
-                        <Button variant="contained" style={{backgroundColor: '#28a745'}} onClick={handleCodeGeneration}>
-                            MARK AS RESOLVED (Get Code)
-                        </Button>
-                    )}
-                </div>
-            </div>
+                            {/* Navigation */}
+                            <Button 
+                                variant="outlined" 
+                                fullWidth 
+                                startIcon={<Navigation />} 
+                                onClick={handleNavigate}
+                                sx={{ mb: 2, py: 1.5 }}
+                            >
+                                Open in Google Maps
+                            </Button>
 
+                            {/* Tracking Controls */}
+                            {!isResolved && (
+                                isTracking ? (
+                                    <Button 
+                                        variant="contained" 
+                                        color="error" 
+                                        fullWidth 
+                                        startIcon={<StopCircle />} 
+                                        onClick={() => stopTracking(true)}
+                                        sx={{ mb: 2, py: 1.5 }}
+                                    >
+                                        Stop Tracking
+                                    </Button>
+                                ) : (
+                                    <Button 
+                                        variant="contained" 
+                                        color="primary" 
+                                        fullWidth 
+                                        startIcon={<PlayCircle />} 
+                                        onClick={startTracking}
+                                        sx={{ mb: 2, py: 1.5 }}
+                                    >
+                                        Start Journey
+                                    </Button>
+                                )
+                            )}
+
+                            {/* Resolve Button */}
+                            {!isResolved && (
+                                <Button 
+                                    variant="contained" 
+                                    color="success" 
+                                    fullWidth 
+                                    size="large"
+                                    onClick={initiateResolve}
+                                    disabled={statusUpdating}
+                                    sx={{ mt: 2, py: 1.5, fontWeight: 'bold' }}
+                                >
+                                    MARK AS RESOLVED
+                                </Button>
+                            )}
+
+                            {isResolved && (
+                                <Box textAlign="center" mt={2} p={2} bgcolor="#e8f5e9" borderRadius="8px">
+                                    <CheckCircle color="success" sx={{ fontSize: 40 }} />
+                                    <Typography variant="subtitle1" fontWeight="bold" color="success.main">
+                                        Job Completed
+                                    </Typography>
+                                </Box>
+                            )}
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
+
+            {/* Modals */}
             {isVerificationModalOpen && (
-                <VerificationModal complaintId={complaint.id} ticketId={complaint.ticketId} onVerifySuccess={handleVerificationSuccess} onModalClose={() => setVerificationModalOpen(false)} />
+                <VerificationModal 
+                    complaintId={complaint.id} 
+                    ticketId={complaint.ticketId}
+                    onVerifySuccess={handleSuccess} 
+                    onModalClose={() => setVerificationModalOpen(false)} 
+                />
             )}
 
             {isConfirmModalOpen && (
-                <Modal isOpen={true} onClose={() => setConfirmModalOpen(false)} title="Confirm Action" onConfirm={confirmAndGenerateCode} confirmText="Yes, Generate Code">
-                    <p>Have you reached the location? This will send an OTP to the user.</p>
+                <Modal isOpen={true} onClose={() => setConfirmModalOpen(false)} title="Confirm Arrival" onConfirm={generateCodeAndOpenModal} confirmText="Yes, Generate OTP">
+                    <Typography>Have you reached the location and fixed the issue?</Typography>
                 </Modal>
             )}
-        </div>
+        </Container>
     );
 };
 

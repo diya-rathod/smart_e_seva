@@ -1,8 +1,106 @@
+// import React, { useState, useEffect, useContext } from 'react';
+// import axios from 'axios';
+// import AuthContext from '../../context/AuthContext';
+// import { Box, Typography, Card, CardContent, Chip, Grid, Container, Paper, Divider } from '@mui/material';
+// import { History, EventNote, LocationOn } from '@mui/icons-material';
+
+// const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
+
+// const AgentHistoryPage = () => {
+//     const { auth } = useContext(AuthContext);
+//     const [history, setHistory] = useState([]);
+//     const [loading, setLoading] = useState(true);
+
+//     useEffect(() => {
+//         const fetchHistory = async () => {
+//             try {
+//                 const res = await axios.get(`${API_BASE_URL}/agent/history`, {
+//                     headers: { 'Authorization': `Bearer ${auth.token}` }
+//                 });
+//                 setHistory(res.data);
+//             } catch (error) {
+//                 console.error("Error fetching history:", error);
+//             } finally {
+//                 setLoading(false);
+//             }
+//         };
+//         fetchHistory();
+//     }, [auth.token]);
+
+//     if (loading) return <p style={{textAlign:'center', marginTop:'20px'}}>Loading History...</p>;
+
+//     return (
+//         <Container maxWidth="md" sx={{ mt: 4, mb: 10 }}>
+//             {/* Header */}
+//             <Paper elevation={1} sx={{ p: 2, mb: 3, borderLeft: '5px solid #0056b3', display: 'flex', alignItems: 'center', gap: 2 }}>
+//                 <History sx={{ fontSize: 40, color: '#0056b3' }} />
+//                 <Box>
+//                     <Typography variant="h5" fontWeight="bold">Job History</Typography>
+//                     <Typography variant="body2" color="text.secondary">
+//                         Total Resolved Jobs: <strong>{history.length}</strong>
+//                     </Typography>
+//                 </Box>
+//             </Paper>
+
+//             {history.length === 0 ? (
+//                 <Paper sx={{ p: 4, textAlign: 'center', color: 'gray' }}>
+//                     <Typography>No completed jobs found yet.</Typography>
+//                 </Paper>
+//             ) : (
+//                 <Grid container spacing={2}>
+//                     {history.map((job) => (
+//                         <Grid item xs={12} key={job.id}>
+//                             <Card sx={{ borderRadius: '10px', boxShadow: 1 }}>
+//                                 <CardContent>
+//                                     <Grid container justifyContent="space-between" alignItems="flex-start">
+//                                         <Grid item xs={8}>
+//                                             <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#333' }}>
+//                                                 {job.category}
+//                                             </Typography>
+//                                             <Typography variant="caption" sx={{ display: 'block', color: 'gray', mb: 1 }}>
+//                                                 Ticket: {job.ticketId}
+//                                             </Typography>
+                                            
+//                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: '#555' }}>
+//                                                 <LocationOn sx={{ fontSize: 16 }} />
+//                                                 <Typography variant="body2" noWrap>
+//                                                     {job.location ? job.location.substring(0, 40) : 'N/A'}...
+//                                                 </Typography>
+//                                             </Box>
+//                                         </Grid>
+                                        
+//                                         <Grid item xs={4} sx={{ textAlign: 'right' }}>
+//                                             <Chip label="Resolved" size="small" sx={{ bgcolor: '#e6fffa', color: '#00796b', fontWeight: 'bold', mb: 1 }} />
+//                                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5, color: 'gray' }}>
+//                                                 <EventNote sx={{ fontSize: 14 }} />
+//                                                 <Typography variant="caption">
+//                                                     {new Date(job.dateRaised).toLocaleDateString()}
+//                                                 </Typography>
+//                                             </Box>
+//                                         </Grid>
+//                                     </Grid>
+//                                 </CardContent>
+//                             </Card>
+//                         </Grid>
+//                     ))}
+//                 </Grid>
+//             )}
+//         </Container>
+//     );
+// };
+
+// export default AgentHistoryPage;
+
+
+
+
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../../context/AuthContext';
-import { Box, Typography, Card, CardContent, Chip, Grid, Container, Paper, Divider } from '@mui/material';
-import { History, EventNote, LocationOn } from '@mui/icons-material';
+// Crash se bachne ke liye icons hata diye hain, simple text rakha hai
+import { 
+    Box, Card, CardContent, Typography, Grid, Container, Paper, Chip 
+} from '@mui/material';
 
 const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
@@ -10,6 +108,7 @@ const AgentHistoryPage = () => {
     const { auth } = useContext(AuthContext);
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -17,9 +116,15 @@ const AgentHistoryPage = () => {
                 const res = await axios.get(`${API_BASE_URL}/agent/history`, {
                     headers: { 'Authorization': `Bearer ${auth.token}` }
                 });
-                setHistory(res.data);
-            } catch (error) {
-                console.error("Error fetching history:", error);
+                // Safety check: Agar data array nahi hai to crash mat hona
+                if (Array.isArray(res.data)) {
+                    setHistory(res.data);
+                } else {
+                    setHistory([]); 
+                }
+            } catch (err) {
+                console.error("History Error:", err);
+                setError("Could not load history.");
             } finally {
                 setLoading(false);
             }
@@ -27,56 +132,50 @@ const AgentHistoryPage = () => {
         fetchHistory();
     }, [auth.token]);
 
-    if (loading) return <p style={{textAlign:'center', marginTop:'20px'}}>Loading History...</p>;
+    if (loading) return <h3 style={{textAlign:'center', marginTop: '20px'}}>Loading...</h3>;
+    
+    // Error dikhane ke liye
+    if (error) return <h3 style={{textAlign:'center', color:'red', marginTop: '20px'}}>{error}</h3>;
 
     return (
         <Container maxWidth="md" sx={{ mt: 4, mb: 10 }}>
-            {/* Header */}
-            <Paper elevation={1} sx={{ p: 2, mb: 3, borderLeft: '5px solid #0056b3', display: 'flex', alignItems: 'center', gap: 2 }}>
-                <History sx={{ fontSize: 40, color: '#0056b3' }} />
-                <Box>
-                    <Typography variant="h5" fontWeight="bold">Job History</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Total Resolved Jobs: <strong>{history.length}</strong>
-                    </Typography>
-                </Box>
+            <Paper elevation={3} sx={{ p: 2, mb: 3, bgcolor: '#e3f2fd' }}>
+                <Typography variant="h5" fontWeight="bold" color="primary">
+                    Job History
+                </Typography>
+                <Typography variant="body2">
+                    Total Completed Jobs: {history.length}
+                </Typography>
             </Paper>
 
             {history.length === 0 ? (
-                <Paper sx={{ p: 4, textAlign: 'center', color: 'gray' }}>
-                    <Typography>No completed jobs found yet.</Typography>
+                <Paper sx={{ p: 4, textAlign: 'center' }}>
+                    <Typography>No history found.</Typography>
                 </Paper>
             ) : (
                 <Grid container spacing={2}>
                     {history.map((job) => (
-                        <Grid item xs={12} key={job.id}>
-                            <Card sx={{ borderRadius: '10px', boxShadow: 1 }}>
+                        <Grid item xs={12} key={job.id || Math.random()}>
+                            <Card sx={{ borderRadius: '10px' }}>
                                 <CardContent>
-                                    <Grid container justifyContent="space-between" alignItems="flex-start">
-                                        <Grid item xs={8}>
-                                            <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#333' }}>
-                                                {job.category}
+                                    <Grid container justifyContent="space-between">
+                                        <Grid item>
+                                            <Typography variant="h6" fontWeight="bold">
+                                                {job.category || "Unknown Category"}
                                             </Typography>
-                                            <Typography variant="caption" sx={{ display: 'block', color: 'gray', mb: 1 }}>
+                                            <Typography variant="body2" color="text.secondary">
                                                 Ticket: {job.ticketId}
                                             </Typography>
-                                            
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, color: '#555' }}>
-                                                <LocationOn sx={{ fontSize: 16 }} />
-                                                <Typography variant="body2" noWrap>
-                                                    {job.location ? job.location.substring(0, 40) : 'N/A'}...
-                                                </Typography>
-                                            </Box>
+                                            <Typography variant="caption" display="block">
+                                                {job.location}
+                                            </Typography>
                                         </Grid>
-                                        
-                                        <Grid item xs={4} sx={{ textAlign: 'right' }}>
-                                            <Chip label="Resolved" size="small" sx={{ bgcolor: '#e6fffa', color: '#00796b', fontWeight: 'bold', mb: 1 }} />
-                                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 0.5, color: 'gray' }}>
-                                                <EventNote sx={{ fontSize: 14 }} />
-                                                <Typography variant="caption">
-                                                    {new Date(job.dateRaised).toLocaleDateString()}
-                                                </Typography>
-                                            </Box>
+                                        <Grid item textAlign="right">
+                                            <Chip label="Resolved" color="success" size="small" />
+                                            <Typography variant="caption" display="block" sx={{ mt: 1 }}>
+                                                {/* Date crash fix */}
+                                                {job.dateRaised ? new Date(job.dateRaised).toLocaleDateString() : "N/A"}
+                                            </Typography>
                                         </Grid>
                                     </Grid>
                                 </CardContent>

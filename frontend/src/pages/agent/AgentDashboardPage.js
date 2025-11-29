@@ -180,9 +180,8 @@
 // const tableCellStyle = { padding: '10px', textAlign: 'left', borderBottom: '1px solid #eee' };
 // const cardStyle = { padding: '20px', border: '1px solid #ccc', borderRadius: '8px', flex: 1, boxShadow: '0 2px 4px rgba(0,0,0,0.05)' };
 
-
+    
 // export default AgentDashboardPage;
-
 
 
 
@@ -192,49 +191,50 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from '../../context/AuthContext';
 import toast from 'react-hot-toast';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
     Box, Card, CardContent, Typography, Grid, Switch, FormControlLabel, 
-    Chip, Button, Container, Paper, Divider 
+    Chip, Container, Paper, Avatar, IconButton, Divider, Button
 } from '@mui/material';
 import { 
-    Assignment, PendingActions, CheckCircle, LocationOn, Engineering 
+    Assignment, PendingActions, CheckCircle, LocationOn, 
+    Engineering, Refresh, ArrowForward
 } from '@mui/icons-material';
 
 const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
 const AgentDashboardPage = () => {
   const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [assignedComplaints, setAssignedComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [agentDetails, setAgentDetails] = useState({});
-  const [isAvailable, setIsAvailable] = useState(false); // Toggle State
+  const [isAvailable, setIsAvailable] = useState(false);
   const [statusLoading, setStatusLoading] = useState(false);
 
   const config = { headers: { 'Authorization': `Bearer ${auth.token}` } };
 
-  // --- 1. Fetch Data ---
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!auth.token) return;
-      try {
-        const userRes = await axios.get(`${API_BASE_URL}/users/me`, config);
-        setAgentDetails(userRes.data);
-        // Status Check: Available matlab ON DUTY
-        setIsAvailable(userRes.data.availabilityStatus === 'AVAILABLE');
+  const fetchData = async () => {
+    if (!auth.token) return;
+    try {
+      setLoading(true);
+      const userRes = await axios.get(`${API_BASE_URL}/users/me`, config);
+      setAgentDetails(userRes.data);
+      setIsAvailable(userRes.data.availabilityStatus === 'AVAILABLE');
 
-        const complaintsRes = await axios.get(`${API_BASE_URL}/agent/my-complaints`, config);
-        setAssignedComplaints(complaintsRes.data);
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      const complaintsRes = await axios.get(`${API_BASE_URL}/agent/my-complaints`, config);
+      setAssignedComplaints(complaintsRes.data);
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [auth.token]);
 
-  // --- 2. Toggle Status Handler ---
   const handleStatusToggle = async () => {
     setStatusLoading(true);
     try {
@@ -249,156 +249,202 @@ const AgentDashboardPage = () => {
     }
   };
 
-  if (loading) return <p style={{textAlign:'center', marginTop: '20px'}}>Loading...</p>;
+  if (loading) return <p style={{textAlign:'center', marginTop: '20px'}}>Loading Dashboard...</p>;
 
-  // Counts Calculation
   const pendingCount = assignedComplaints.filter(c => c.status !== 'Resolved').length;
   const resolvedCount = assignedComplaints.filter(c => c.status === 'Resolved').length;
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4, mb: 10 }}>
-      
-      {/* --- HEADER SECTION (Govt Blue Theme) --- */}
-      <Paper elevation={3} sx={{ p: 3, mb: 3, borderRadius: '12px', background: '#0056b3', color: 'white' }}>
-        <Grid container alignItems="center" justifyContent="space-between">
-            <Grid item>
-                <Typography variant="h5" fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Engineering /> {agentDetails.name}
-                </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                    Division: {agentDetails.division} | ID: {agentDetails.employeeId}
-                </Typography>
-            </Grid>
-            <Grid item>
-                {/* On/Off Duty Switch */}
-                <Box sx={{ bgcolor: 'white', p: 0.5, px: 2, borderRadius: '20px', color: 'black' }}>
-                    <FormControlLabel
-                        control={
-                            <Switch 
-                                checked={isAvailable} 
-                                onChange={handleStatusToggle} 
-                                disabled={statusLoading}
-                                color="success" 
-                            />
-                        }
-                        label={
-                            <Typography fontWeight="bold" fontSize="0.9rem" color={isAvailable ? 'green' : 'text.secondary'}>
-                                {isAvailable ? "ON DUTY" : "OFF DUTY"}
+    <Box sx={{ backgroundColor: '#f5f7fa', minHeight: '100vh', pb: 5 }}>
+        
+        {/* --- 1. PROFESSIONAL HEADER --- */}
+        <Paper elevation={0} sx={{ 
+            background: 'white', 
+            p: 3, 
+            borderBottom: '1px solid #e0e0e0',
+            mb: 4
+        }}>
+            <Container maxWidth="lg">
+                <Grid container alignItems="center" justifyContent="space-between">
+                    <Grid item display="flex" alignItems="center" gap={2}>
+                        <Avatar sx={{ bgcolor: '#0056b3', width: 60, height: 60, fontSize: '1.5rem' }}>
+                            {agentDetails.name ? agentDetails.name.charAt(0) : 'A'}
+                        </Avatar>
+                        <Box>
+                            <Typography variant="h5" fontWeight="bold" color="#333">
+                                {agentDetails.name}
                             </Typography>
-                        }
-                        sx={{ m: 0 }}
-                    />
-                </Box>
-            </Grid>
-        </Grid>
-      </Paper>
+                            <Box display="flex" gap={1} alignItems="center">
+                                <Chip label={agentDetails.division} size="small" color="primary" variant="outlined"/>
+                                <Typography variant="body2" color="text.secondary">
+                                    ID: {agentDetails.employeeId}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </Grid>
 
-      {/* --- WORKLOAD STATS (No Earnings) --- */}
-      <Grid container spacing={2} sx={{ mb: 4 }}>
-        <Grid item xs={4}>
-            <StatCard 
-                icon={<Assignment color="primary" fontSize="large"/>} 
-                title="Assigned" 
-                value={assignedComplaints.length} 
-            />
-        </Grid>
-        <Grid item xs={4}>
-            <StatCard 
-                icon={<PendingActions color="error" fontSize="large"/>} 
-                title="Pending" 
-                value={pendingCount} 
-            />
-        </Grid>
-        <Grid item xs={4}>
-            <StatCard 
-                icon={<CheckCircle color="success" fontSize="large"/>} 
-                title="Resolved" 
-                value={resolvedCount} 
-            />
-        </Grid>
-      </Grid>
-
-      {/* --- JOB LIST (Clean Cards) --- */}
-      <Typography variant="h6" fontWeight="bold" sx={{ mb: 2, color: '#333' }}>
-        Current Job List
-      </Typography>
-
-      {assignedComplaints.length === 0 ? (
-        <Paper sx={{ p: 4, textAlign: 'center', color: 'gray', border: '1px dashed #ccc' }}>
-            <Typography>No jobs assigned currently.</Typography>
-        </Paper>
-      ) : (
-        <Grid container spacing={2}>
-            {assignedComplaints.map((complaint) => (
-                <Grid item xs={12} key={complaint.id}>
-                    <Card sx={{ 
-                        borderRadius: '10px', 
-                        borderLeft: `5px solid ${getStatusColor(complaint.status)}`,
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)' 
-                    }}>
-                        <CardContent sx={{ pb: '16px !important' }}>
-                            <Grid container justifyContent="space-between">
-                                <Grid item xs={8}>
-                                    <Chip 
-                                        label={complaint.ticketId} 
-                                        size="small" 
-                                        variant="outlined" 
-                                        sx={{ mb: 1, fontSize: '0.7rem' }} 
+                    <Grid item>
+                         <Paper elevation={0} sx={{ border: '1px solid #ddd', p: 0.5, px: 2, borderRadius: '30px' }}>
+                            <FormControlLabel
+                                control={
+                                    <Switch 
+                                        checked={isAvailable} 
+                                        onChange={handleStatusToggle} 
+                                        disabled={statusLoading}
+                                        color="success" 
                                     />
-                                    <Typography variant="subtitle1" fontWeight="bold">
-                                        {complaint.category}
+                                }
+                                label={
+                                    <Typography fontWeight="bold" fontSize="0.9rem" color={isAvailable ? 'green' : 'text.disabled'}>
+                                        {isAvailable ? "ON DUTY" : "OFF DUTY"}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
-                                        <LocationOn sx={{ fontSize: 16, mr: 0.5, color: 'gray' }} />
-                                        {complaint.location ? complaint.location.substring(0, 50) + '...' : 'Location N/A'}
-                                    </Typography>
-                                </Grid>
-                                
-                                <Grid item xs={4} sx={{ textAlign: 'right', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                                    <Typography 
-                                        variant="caption" 
-                                        fontWeight="bold" 
-                                        sx={{ color: getStatusColor(complaint.status) }}
-                                    >
-                                        {complaint.status.toUpperCase()}
-                                    </Typography>
-                                    
-                                    <Button 
-                                        variant="contained" 
-                                        size="small" 
-                                        component={Link} 
-                                        to={`/agent/complaint/${complaint.id}`}
-                                        sx={{ borderRadius: '20px', fontSize: '0.75rem', textTransform: 'none', bgcolor: '#0056b3' }}
-                                    >
-                                        View Job
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </Card>
+                                }
+                                sx={{ m: 0 }}
+                            />
+                        </Paper>
+                    </Grid>
                 </Grid>
-            ))}
-        </Grid>
-      )}
-    </Container>
+            </Container>
+        </Paper>
+
+        <Container maxWidth="lg">
+            
+            {/* --- 2. STATS CARDS (BIGGER & BETTER) --- */}
+            <Grid container spacing={3} sx={{ mb: 4 }}>
+                <Grid item xs={12} sm={4}>
+                    <StatCard 
+                        icon={<Assignment sx={{ fontSize: 40, color: '#1976d2' }} />} 
+                        title="Total Assigned" 
+                        value={assignedComplaints.length}
+                        color="#e3f2fd"
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <StatCard 
+                        icon={<PendingActions sx={{ fontSize: 40, color: '#ed6c02' }} />} 
+                        title="Pending Jobs" 
+                        value={pendingCount} 
+                        color="#fff3e0"
+                    />
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <StatCard 
+                        icon={<CheckCircle sx={{ fontSize: 40, color: '#2e7d32' }} />} 
+                        title="Jobs Resolved" 
+                        value={resolvedCount} 
+                        color="#e8f5e9"
+                    />
+                </Grid>
+            </Grid>
+
+            {/* --- 3. JOB LIST SECTION --- */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h6" fontWeight="bold" sx={{ color: '#333' }}>
+                    Current Active Jobs
+                </Typography>
+                <Button startIcon={<Refresh />} onClick={fetchData} size="small">
+                    Refresh List
+                </Button>
+            </Box>
+
+            {assignedComplaints.length === 0 ? (
+                <Paper sx={{ p: 6, textAlign: 'center', color: 'gray', borderRadius: '12px', border: '1px dashed #ccc' }}>
+                    <Typography variant="h6">No jobs assigned currently.</Typography>
+                    <Typography variant="body2">Relax! You are all caught up.</Typography>
+                </Paper>
+            ) : (
+                <Grid container spacing={2}>
+                    {assignedComplaints.map((complaint) => (
+                        <Grid item xs={12} key={complaint.id}>
+                            <Card 
+                                sx={{ 
+                                    borderRadius: '12px', 
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                                    borderLeft: `6px solid ${getStatusColor(complaint.status)}`,
+                                    transition: '0.2s',
+                                    '&:hover': { boxShadow: '0 5px 15px rgba(0,0,0,0.1)' }
+                                }}
+                            >
+                                <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
+                                    <Grid container alignItems="center" spacing={2}>
+                                        
+                                        {/* Left: Ticket & Status */}
+                                        <Grid item xs={12} md={3}>
+                                            <Chip 
+                                                label={complaint.ticketId} 
+                                                sx={{ mb: 1, fontWeight: 'bold', borderRadius: '6px' }} 
+                                            />
+                                            <Typography 
+                                                variant="subtitle2" 
+                                                fontWeight="bold" 
+                                                sx={{ color: getStatusColor(complaint.status) }}
+                                            >
+                                                ● {complaint.status.toUpperCase()}
+                                            </Typography>
+                                        </Grid>
+
+                                        {/* Middle: Details */}
+                                        <Grid item xs={12} md={6}>
+                                            <Typography variant="h6" fontWeight="bold" gutterBottom>
+                                                {complaint.category}
+                                            </Typography>
+                                            <Box display="flex" alignItems="flex-start" gap={1}>
+                                                <LocationOn sx={{ color: 'gray', fontSize: 20, mt: 0.3 }} />
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {complaint.location || 'Location details not available'}
+                                                </Typography>
+                                            </Box>
+                                        </Grid>
+
+                                        {/* Right: Action Button */}
+                                        <Grid item xs={12} md={3} sx={{ textAlign: { xs: 'left', md: 'right' } }}>
+                                            <Button 
+                                                variant="contained" 
+                                                disableElevation
+                                                endIcon={<ArrowForward />}
+                                                onClick={() => navigate(`/agent/complaint/${complaint.id}`)}
+                                                sx={{ 
+                                                    borderRadius: '8px', 
+                                                    textTransform: 'none', 
+                                                    bgcolor: '#0056b3',
+                                                    '&:hover': { bgcolor: '#004494' }
+                                                }}
+                                            >
+                                                View Details
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            )}
+        </Container>
+    </Box>
   );
 };
 
 // --- HELPER COMPONENTS ---
-const StatCard = ({ icon, title, value }) => (
-    <Card sx={{ borderRadius: '12px', textAlign: 'center', p: 1, boxShadow: 1 }}>
-        <Box sx={{ mt: 1 }}>{icon}</Box>
-        <Typography variant="h4" fontWeight="bold" sx={{ mt: 1 }}>{value}</Typography>
-        <Typography variant="caption" color="text.secondary" fontWeight="bold">{title}</Typography>
+
+const StatCard = ({ icon, title, value, color }) => (
+    <Card sx={{ height: '100%', display: 'flex', alignItems: 'center', p: 2, borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)' }}>
+        <Avatar sx={{ bgcolor: color, width: 60, height: 60, mr: 2 }}>
+            {icon}
+        </Avatar>
+        <Box>
+            <Typography variant="h4" fontWeight="bold" color="#333">{value}</Typography>
+            <Typography variant="body2" color="text.secondary">{title}</Typography>
+        </Box>
     </Card>
 );
 
 const getStatusColor = (status) => {
     switch(status) {
-        case 'Resolved': return '#28a745'; 
-        case 'In-Progress': return '#ff9800'; 
-        case 'Assigned': return '#2196f3';
-        default: return '#757575'; 
+        case 'Resolved': return '#2e7d32'; // Green
+        case 'In-Progress': return '#ed6c02'; // Orange
+        case 'Assigned': return '#0288d1'; // Blue
+        default: return '#757575'; // Grey
     }
 };
 
