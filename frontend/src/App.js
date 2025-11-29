@@ -247,12 +247,12 @@ import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from './context/ThemeContext'; 
 
 // --- Visitor Pages ---
-import Home from './pages/Visitor/Home';
-import About from './pages/Visitor/About';
-import HowItWorks from './pages/Visitor/HowItWorks';
-import Contact from './pages/Visitor/Contact';
-import TrackComplaint from './pages/Visitor/TrackComplaint';
-import Login from './pages/Visitor/Auth/Login';
+import Home from './pages/visitor/Home';
+import About from './pages/visitor/About';
+import HowItWorks from './pages/visitor/HowItWorks';
+import Contact from './pages/visitor/Contact';
+import TrackComplaint from './pages/visitor/TrackComplaint';
+import Login from './pages/visitor/Auth/Login';
 
 // --- Registered User Pages ---
 import CitizenDashboard from './pages/registered/Dashboard';

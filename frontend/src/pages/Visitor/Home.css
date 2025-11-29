@@ -1,230 +1,236 @@
-/* Hero Section Styling */
+/* =========================================
+   1. THEME VARIABLES (Sabse Important)
+   ========================================= */
+:root {
+  /* Light Theme Colors */
+  --bg-main: #F8FAFC;
+  --bg-card: #FFFFFF;
+  --text-primary: #1E293B; /* Dark Slate for readability */
+  --text-secondary: #64748B; /* Muted Blue-Grey */
+  --border-color: #E2E8F0;
+  --accent-primary: #10B981; /* Emerald Green */
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  
+  /* Hero Gradient (Light) */
+  --hero-gradient: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+}
+
+/* Dark Theme Colors (Jab parent element par 'dark' class ho) */
+[data-theme='dark'], body.dark {
+  --bg-main: #0F172A; /* Deep Blue Black */
+  --bg-card: #1E293B; /* Lighter Slate */
+  --text-primary: #F8FAFC; /* Almost White */
+  --text-secondary: #94A3B8; /* Light Grey */
+  --border-color: #334155;
+  --accent-primary: #34D399; /* Lighter Green for Dark Mode */
+  --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+
+  /* Hero Gradient (Dark) */
+  --hero-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+/* Global Reset for Clean Fonts */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif; /* Make sure to import Inter or Roboto */
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* =========================================
+   2. HERO SECTION
+   ========================================= */
 .hero-section {
   display: flex;
   align-items: center;
-  gap: 2rem;
-  padding: 4rem 5rem;
+  justify-content: space-between;
+  gap: 4rem; /* Thoda gap badhaya */
+  padding: 6rem 10%; /* Horizontal spacing better kar di */
+  min-height: 85vh;
   width: 100%;
-  box-sizing: border-box;
-  justify-content: space-between; /* Puts space between text and image */
-  /* --- NEW ANIMATED GRADIENT CODE --- */
-  background: linear-gradient(-45deg, #ffffff, #e3f2fd, #e6f7f5, #ffffff);
-  background-size: 400% 400%;
-  animation: moveGradient 15s ease infinite;
-}
-.hero-content {
-    max-width: 600px;
-    text-align: left;
-     flex: 1; /* Takes up available space */
-}
-.hero-content h1 {
-  font-size: 3.2rem;
-  color: var(--primary-text-color);
-  margin-bottom: 1.5rem;
-  font-weight: 700;
-  line-height: 1.3;
+  
+  /* Dynamic Background */
+  background: var(--hero-gradient);
+  position: relative;
+  overflow: hidden;
 }
 
-/* --- ADD THIS NEW STYLE --- */
+.hero-content {
+  flex: 1;
+  max-width: 650px;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  font-weight: 800; /* Extra Bold for Impact */
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  line-height: 1.2; /* Congestion fix: Line height tight but clean */
+  letter-spacing: -0.02em; /* Modern font spacing */
+}
+
+.hero-content p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+  line-height: 1.7; /* Congestion fix: Paragraphs need breathing room */
+  max-width: 90%;
+}
+
+/* Buttons */
+.report-button {
+  background-color: var(--accent-primary);
+  color: #fff; /* Always white text on button */
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 50px; /* Pill shape looks more modern */
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+
+.report-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+}
+
+/* Image Styling */
 .hero-image {
   flex: 1;
-  max-width: 500px;
+  display: flex;
+  justify-content: center;
+  position: relative;
 }
+
 .hero-image img {
   width: 100%;
+  max-width: 550px;
   height: auto;
-
-  /* This new mask fades the image from all four sides */
-  mask-image: radial-gradient(ellipse 70% 80% at 90% 90%, black 60%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 80% 90% at 90% 90%, black 60%, transparent 100%);
-
-  /* This keeps the slow floating animation */
-  animation: floatAnimation 5s ease-in-out infinite;
-}
-.hero-content p {
-    font-size: 1.1rem; /* Adjusted font size */
-    color: var(--secondary-text-color);
-    margin-bottom: 2.5rem;
-}
-.report-button {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.9rem 2.2rem; /* Adjusted padding */
-    border-radius: 8px; /* Gently rounded corners */
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 187, 106, 0.3);
-}
-.report-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(102, 187, 106, 0.4);
+  /* Smooth Fade Mask */
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  animation: floatAnimation 6s ease-in-out infinite;
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15)); /* Shadow image ke peeche */
 }
 
-
-
-
-
-/* Cards Section Styling */
+/* =========================================
+   3. CARDS SECTION (SERVICES)
+   ========================================= */
 .cards-section {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    padding: 5rem 5rem;
-    background-color: var(--background-color);
-     text-align: center; /* Center the section title */
+  padding: 5rem 10%;
+  background-color: var(--bg-main); /* Matches theme background */
 }
 
-
+.section-title {
+  text-align: center;
+  margin-bottom: 4rem;
+}
 
 .section-title h2 {
   font-size: 2.5rem;
-  color: var(--primary-text-color);
+  color: var(--text-primary);
   margin-bottom: 1rem;
+  font-weight: 700;
 }
 
 .section-title p {
   font-size: 1.1rem;
-  color: var(--secondary-text-color);
-  margin-bottom: 4rem;
+  color: var(--text-secondary);
 }
-
-
-
-.info-card {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    text-align: left;
-    flex-basis: 320px;
-    transition: all 0.3s ease;
-}
-.info-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
-}
-.icon-wrapper {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: var(--primary-color-light);
-    color: var(--primary-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-.info-card h3 {
-    color: var(--primary-text-color);
-    margin-top: 0;
-}
-.info-card p {
-    color: var(--secondary-text-color);
-    line-height: 1.6;
-}
-
-
 
 .cards-container {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive Grid */
   gap: 2rem;
 }
 
 .info-card {
-  background-color: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  text-align: left;
-  flex-basis: 320px;
-
-  /* Animation properties */
-  opacity: 0; /* Start hidden */
-  animation: fadeInUp 0.5s ease-out forwards;
-}
-
-/* Staggered animation delay */
-.info-card:nth-child(1) {
-  animation-delay: 0.2s;
-}
-.info-card:nth-child(2) {
-  animation-delay: 0.4s;
-}
-.info-card:nth-child(3) {
-  animation-delay: 0.6s;
+  background-color: var(--bg-card); /* Dynamic Card Background */
+  padding: 2.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color); /* Subtle border */
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+  
+  /* Animation */
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out forwards;
 }
 
 .info-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+  transform: translateY(-10px);
+  border-color: var(--accent-primary); /* Hover pe border green hoga */
 }
 
-/* ... Keep all your .icon-wrapper, .info-card h3, and .info-card p styles as they are ... */
-
-
-
-/* ... .icon-wrapper ka purana style ... */
+/* Icon Styling */
 .icon-wrapper {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px; /* Soft square instead of circle looks fresher */
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 1.5rem;
+  font-size: 1.5rem;
 }
 
-/* --- YEH NAYE STYLES ADD KAREIN --- */
-.icon-wrapper.icon-green {
-  background-color: var(--primary-color-light);
-  color: var(--primary-color);
-}
-.icon-wrapper.icon-blue {
-  background-color: var(--blue-color-light);
-  color: var(--blue-color);
-}
-.icon-wrapper.icon-yellow {
-  background-color: var(--yellow-color-light);
-  color: var(--yellow-color);
-}
-/* --- END --- */
+/* Icon Specific Colors */
+.icon-green { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+.icon-blue  { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+.icon-yellow{ background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
 
-@keyframes moveGradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+.info-card h3 {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
 }
 
+.info-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* =========================================
+   4. ANIMATIONS
+   ========================================= */
 @keyframes floatAnimation {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
 }
-
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger Delays */
+.info-card:nth-child(1) { animation-delay: 0.1s; }
+.info-card:nth-child(2) { animation-delay: 0.2s; }
+.info-card:nth-child(3) { animation-delay: 0.3s; }
+
+/* Mobile Responsive Fixes */
+@media (max-width: 768px) {
+  .hero-section {
+    flex-direction: column-reverse;
+    text-align: center;
+    padding: 4rem 5%;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-image img {
+    max-width: 80%;
+    margin-bottom: 2rem;
   }
 }
