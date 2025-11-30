@@ -1,57 +1,64 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import './Sidebar.css';
-import { FiGrid, FiUser, FiHelpCircle, FiLogOut } from 'react-icons/fi';
+// src/components/dashboard/Sidebar.js
+import React from "react";
+import { NavLink } from "react-router-dom";
+import {
+  FiGrid,
+  FiPlusCircle,
+  FiUser,
+  FiHelpCircle,
+  FiLogOut,
+} from "react-icons/fi";
+import "./Sidebar.css";
 
-// Yahan props (isCollapsed, handleMouseEnter, handleMouseLeave) receive ho rahe hain
-const Sidebar = ({ isCollapsed, handleMouseEnter, handleMouseLeave }) => {
+const Sidebar = ({ isOpen, onHoverIn, onHoverOut, onLogout }) => {
   return (
-    // Aur hover listeners ab aakhirkaar sahi jagah, yaani sidebar ke main div par lag gaye hain
-    <div 
-      className={isCollapsed ? 'sidebar collapsed' : 'sidebar'}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+    <div
+      className={`sidebar-container ${isOpen ? "expanded" : "collapsed"}`}
+      onMouseEnter={onHoverIn}
+      onMouseLeave={onHoverOut}
     >
-      <div className="sidebar-header">
-        <div className="logo-container">
-          <div className="logo-icon">S</div>
-          <span className="logo-text">Smart E-Seva</span>
-        </div>
+      {/* LOGO AREA */}
+      <div className="sidebar-logo">
+        <div className="logo-circle">⚡</div>
+        {isOpen && <div className="logo-text">Smart E-Seva</div>}
       </div>
 
-      <div className="user-profile">
-        <div className="profile-pic"></div>
-        <div className="profile-details">
-          <span className="profile-name">Diya Rathod</span>
-          <span className="profile-role">Citizen</span>
-        </div>
-      </div>
-
+      {/* NAVIGATION */}
       <ul className="sidebar-nav">
         <li>
-          <NavLink to="/dashboard" className="nav-link">
+          <NavLink to="/dashboard" className="nav-item">
             <FiGrid className="nav-icon" />
-            <span className="nav-text">My Complaints</span>
+            {isOpen && <span>Dashboard</span>}
           </NavLink>
         </li>
+
         <li>
-          <NavLink to="/profile" className="nav-link">
+          <NavLink to="/raise-complaint" className="nav-item">
+            <FiPlusCircle className="nav-icon" />
+            {isOpen && <span>Raise Complaint</span>}
+          </NavLink>
+        </li>
+
+        <li>
+          <NavLink to="/profile" className="nav-item">
             <FiUser className="nav-icon" />
-            <span className="nav-text">Profile & Settings</span>
+            {isOpen && <span>Profile</span>}
           </NavLink>
         </li>
+
         <li>
-          <NavLink to="/help" className="nav-link">
+          <NavLink to="/help" className="nav-item">
             <FiHelpCircle className="nav-icon" />
-            <span className="nav-text">Support / Help</span>
+            {isOpen && <span>Help</span>}
           </NavLink>
         </li>
       </ul>
 
-      <div className="sidebar-footer">
-        <button className="logout-button">
-          <FiLogOut className="nav-icon" />
-          <span className="nav-text">Logout</span>
+      {/* LOGOUT */}
+      <div className="sidebar-logout">
+        <button className="logout-btn" onClick={onLogout}>
+          <FiLogOut className="nav-icon logout-icon" />
+          {isOpen && <span>Logout</span>}
         </button>
       </div>
     </div>
