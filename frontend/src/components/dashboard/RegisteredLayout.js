@@ -182,10 +182,10 @@
 
 
 
-
+// src/components/dashboard/RegisteredLayout.js
 // src/components/dashboard/RegisteredLayout.js
 
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react'; // 1. useEffect added
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { 
     Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, 
@@ -197,27 +197,104 @@ import {
 import AuthContext from '../../context/AuthContext';
 import ForcePasswordChangeModal from '../common/ForcePasswordChangeModal';
 import './RegisteredLayout.css';
+import toast from 'react-hot-toast'; // 2. Toast added for Popup
 
 const drawerWidthOpen = 240;
 const drawerWidthClosed = 70;
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1'; // Live URL defined
 
 const RegisteredLayout = () => {
-    const { auth,logout } = useContext(AuthContext);
+    const { auth, logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [isFabHovered, setFabHovered] = useState(false);
 
+    // SSE State to manage connection
+    const [sseConnection, setSseConnection] = useState(null);
+
     const handleDrawerToggle = () => {
         setSidebarOpen(!isSidebarOpen);
     };
 
-  const menuItems = [
-    { text: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
-    { text: "Raise Complaint", icon: <AddCircle />, path: "/raise-complaint" },
-    { text: "Profile", icon: <Person />, path: "/profile" },
-    { text: "Help", icon: <Help />, path: "/help" },
-  ];
+    // --- 3. NEW: LISTENER LOGIC ADDED HERE (Backend se OTP sunne ke liye) ---
+    useEffect(() => {
+        // Agar user login nahi hai, to connect mat karo
+        if (!auth.token) return;
+
+        const sseUrl = `${API_BASE_URL}/notifications/subscribe?token=${auth.token}`;
+        
+        // Purana connection close karo agar exist karta hai
+        if (sseConnection) {
+            sseConnection.close();
+        }
+
+        const eventSource = new EventSource(sseUrl);
+        setSseConnection(eventSource);
+
+        eventSource.onopen = () => {
+            console.log("Registered Layout: Notification Service Connected ✅");
+        };
+
+        // Backend bhej raha hai "verification_code", hum yahan sun rahe hain
+        eventSource.addEventListener("verification_code", (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                console.log("OTP Received:", data);
+
+                // Custom Toast UI (Bada Popup)
+                toast((t) => (
+                    <div style={{minWidth: '250px', textAlign: 'center'}}>
+                        <h3 style={{margin: '0 0 10px', color: '#2e7d32'}}>Work Completed! 🎉</h3>
+                        <p style={{fontSize: '0.9rem', marginBottom: '10px'}}>
+                            Agent has resolved Ticket: <strong>{data.ticketId}</strong>
+                        </p>
+                        <div style={{
+                            background: '#f8f9fa', 
+                            padding: '15px', 
+                            borderRadius: '8px', 
+                            border: '2px dashed #28a745',
+                            fontWeight: 'bold', 
+                            fontSize: '1.5rem', 
+                            letterSpacing: '3px',
+                            color: '#333'
+                        }}>
+                            {data.verificationCode}
+                        </div>
+                        <p style={{fontSize: '0.8rem', color: 'red', marginTop: '10px'}}>
+                            Share this code with the agent ONLY if work is done.
+                        </p>
+                        <button onClick={() => toast.dismiss(t.id)} style={{
+                            marginTop: '10px', padding: '8px 16px', border: 'none', 
+                            background: '#007bff', color: 'white', borderRadius: '4px', cursor: 'pointer'
+                        }}>
+                            Close
+                        </button>
+                    </div>
+                ), { duration: 30000, position: 'top-center' }); // 30 seconds tak rahega
+
+            } catch (e) {
+                console.error("Error parsing OTP notification", e);
+            }
+        });
+
+        eventSource.onerror = (err) => {
+            eventSource.close();
+        };
+
+        // Cleanup on unmount
+        return () => {
+            eventSource.close();
+        };
+    }, [auth.token]);
+    // ---------------------------------------------------------------
+
+    const menuItems = [
+        { text: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
+        { text: "Raise Complaint", icon: <AddCircle />, path: "/raise-complaint" },
+        { text: "Profile", icon: <Person />, path: "/profile" },
+        { text: "Help", icon: <Help />, path: "/help" },
+    ];
 
     const drawerContent = (
         <div className="sidebar-inner-container">
@@ -271,14 +348,10 @@ const RegisteredLayout = () => {
     );
     
     return (
-        <> {/* <-- Naya Fragment Shuru */}
-
-            {/* --- YEH HAI NAYI CONDITION --- */}
+        <> 
             {auth?.mustChangePassword ? (
-                // Agar password change karna zaroori hai, to sirf modal dikhao
                 <ForcePasswordChangeModal />
             ) : (
-                // Agar nahi, to poora normal layout dikhao
                 <div className="layout-container">
                     <AppBar 
                         position="fixed"
@@ -329,22 +402,16 @@ const RegisteredLayout = () => {
                         {drawerContent}
                     </Drawer>
 
-      {/* MAIN CONTENT */}
-      <Box
-        component="main"
-        sx={{
-          width: `calc(100% - ${
-            isSidebarOpen ? drawerWidthOpen : drawerWidthClosed
-          }px)`,
-          ml: isSidebarOpen ? `${drawerWidthOpen}px` : `${drawerWidthClosed}px`,
-          pt: "88px",
-          pb: "40px",
-          px: { xs: 2, md: 4 },
-          transition: "all 0.2s ease",
-        }}
-      >
-        <Outlet />
-      </Box>
+                    <Box
+                        component="main"
+                        className="main-content"
+                        sx={{ 
+                            width: `calc(100% - ${isSidebarOpen ? drawerWidthOpen : drawerWidthClosed}px)`,
+                            paddingTop: '88px', 
+                        }}
+                    >
+                        <Outlet />
+                    </Box>
 
                     <Fab 
                         variant={isFabHovered ? "extended" : "circular"}
@@ -360,9 +427,7 @@ const RegisteredLayout = () => {
                         {isFabHovered && "Raise New Complaint"}
                     </Fab>
                 </div>
-            )}
-            
-
+            )} 
         </> 
     );
 };
