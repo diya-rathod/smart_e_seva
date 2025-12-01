@@ -1,126 +1,232 @@
 package com.smarteseva.backend.service;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map; // Iski zaroorat nahi
+import java.util.concurrent.ConcurrentHashMap; // Iski zaroorat nahi
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smarteseva.backend.entity.Complaint;
-import com.smarteseva.backend.entity.Notification;
-import com.smarteseva.backend.repository.NotificationRepository;
+
+
 
 @Service
+
 public class NotificationService {
 
-    @Autowired
-    private NotificationRepository notificationRepository;
+
+
+    // FIX 1 & 2: emitters ko String key (userEmail) ke liye Map se replace karein
 
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
+
+   
+
+    // FIX 3: ObjectMapper ko initialize karein
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public void addEmitter(String userEmail, SseEmitter emitter) {
-        // DEBUG LOG 1: Kaun Connect hua?
-        System.out.println(">>> DEBUG: Adding User to Map: [" + userEmail + "]");
-        
-        emitters.put(userEmail, emitter);
-        
-        emitter.onCompletion(() -> {
-            System.out.println(">>> DEBUG: Connection Closed for: " + userEmail);
-            emitters.remove(userEmail);
-        });
-        emitter.onTimeout(() -> {
-            System.out.println(">>> DEBUG: Connection Timeout for: " + userEmail);
-            emitters.remove(userEmail);
-        });
+
+
+
+
+    // --- Existing addEmitter ko update karein takki woh ID use karein ---
+
+    // (Aapko Controller mein isko call karte waqt user ka email ya ID bhejna hoga)
+
+    public void addEmitter(String userIdentifier, SseEmitter emitter) {
+
+        emitters.put(userIdentifier, emitter);
+
+
+
+        emitter.onCompletion(() -> emitters.remove(userIdentifier));
+
+        emitter.onTimeout(() -> emitters.remove(userIdentifier));
+
+
+
+        // Initial dummy event bhejte hain
+
+        try {
+
+            emitter.send(SseEmitter.event().name("CONNECT").data("Connection Established"));
+
+        } catch (IOException e) {
+
+            emitters.remove(userIdentifier);
+
+        }
+
     }
 
-    public void createAndSendNotification(Long recipientId, String recipientEmail, String message, String type) {
-        Notification notif = new Notification();
-        notif.setRecipientId(recipientId);
-        notif.setMessage(message);
-        notif.setType(type);
-        notif.setTimestamp(LocalDateTime.now());
-        notif.setRead(false);
-        notificationRepository.save(notif);
 
-        SseEmitter emitter = emitters.get(recipientEmail);
-        if (emitter != null) {
+
+    // --- sendNewComplaintNotification ko update karein (Broadcast logic agar zaroori hai) ---
+
+    public void sendNewComplaintNotification(Complaint complaint) {
+
+        // Ab hum Map ki values par iterate karenge
+
+        for (Map.Entry<String, SseEmitter> entry : emitters.entrySet()) {
+
+            // NOTE: Yahan aapko filter karna padega ki kaun Admin hai.
+
+            // Hum assume karte hain ki Admin ki ID mein "admin" word hai, ya aap use database se check kar sakte hain.
+
+            // For now, yeh sabhi connected users ko bhejega, jo theek nahi hai.
+
+            // For Admin broadcast, aapko ek alag 'adminEmitters' map use karna chahiye ya yahan filtering karni chahiye.
+
+
+
+            SseEmitter emitter = entry.getValue();
+
+
+
             try {
-                String json = objectMapper.writeValueAsString(notif);
-                String eventName = "ASSIGNMENT".equals(type) ? "agent_assigned" : "notification";
-                emitter.send(SseEmitter.event().name(eventName).data(json));
+
+                 // Complaint object ko Stringify karein
+
+                String eventData = objectMapper.writeValueAsString(complaint);
+
+               
+
+                emitter.send(SseEmitter.event()
+
+                        .name("new_complaint")  //Event name for the frontend to listen to
+
+                        .data(eventData)); // Send the new complaint data as JSON
+
             } catch (IOException e) {
-                emitters.remove(recipientEmail);
+
+                 emitter.completeWithError(e);
+
+                 emitters.remove(entry.getKey());
+
             }
+
         }
+
     }
 
-    // --- OTP METHOD (WITH HEAVY DEBUGGING) ---
-    public void sendVerificationCodeToCitizen(Complaint complaint) {
-        if (complaint.getCitizen() == null) {
-            System.out.println(">>> ERROR: Complaint has no Citizen attached!");
-            return;
-        }
 
-        String email = complaint.getCitizen().getEmail();
-        String code = complaint.getVerificationCode();
-        String ticketId = complaint.getTicketId();
 
-        // Log 2: Kisko bhejne ki koshish kar rahe hain?
-        System.out.println(">>> DEBUG: Trying to send OTP to Email: [" + email + "]");
-        
-        // Log 3: Kya wo Map mein maujood hai?
-        boolean isOnline = emitters.containsKey(email);
-        System.out.println(">>> DEBUG: Is User Online in Map? " + isOnline);
-        
-        if(!isOnline) {
-            System.out.println(">>> DEBUG: Available Users in Map are: " + emitters.keySet());
-        }
 
-        // DB Save
-        String message = "Service Complete! OTP: " + code;
-        createAndSendNotification(complaint.getCitizen().getId(), email, message, "OTP");
 
-        // Live Send
-        SseEmitter emitter = emitters.get(email);
-        if (emitter != null) {
-            try {
-                Map<String, String> otpData = new HashMap<>();
-                otpData.put("ticketId", ticketId);
-                otpData.put("verificationCode", code);
-                
-                String json = objectMapper.writeValueAsString(otpData);
+    // --- Agent Assignment Notification (FIXED) ---
 
-                // Yahan Event bhej rahe hain
-                emitter.send(SseEmitter.event().name("verification_code").data(json));
-                
-                System.out.println(">>> SUCCESS: OTP Packet Sent to Frontend for " + email);
-            } catch (IOException e) {
-                System.out.println(">>> ERROR: Sending failed: " + e.getMessage());
-                emitters.remove(email);
-            }
-        } else {
-            System.out.println(">>> FAILURE: Emitter is NULL via get()");
-        }
-    }
-
-    // ... baaki methods same ...
     public void sendAgentAssignmentNotification(Complaint complaint) {
-        if(complaint.getAgent() != null) {
-             createAndSendNotification(complaint.getAgent().getId(), complaint.getAgent().getEmail(), "Job Assigned", "ASSIGNMENT");
+
+        if (complaint.getAgent() == null) {
+
+            return;
+
         }
+
+
+
+        String agentIdentifier = complaint.getAgent().getEmail();
+
+       
+
+        // FIX 1 & 2: emitters.get(agentIdentifier) ab Map se kaam karega
+
+        SseEmitter emitter = emitters.get(agentIdentifier);
+
+
+
+        if (emitter != null) {
+
+            try {
+
+                // FIX 3: objectMapper ab available hai
+
+                String eventData = objectMapper.writeValueAsString(complaint);
+
+               
+
+                emitter.send(SseEmitter.event()
+
+                        .name("agent_assigned")
+
+                        .data(eventData)
+
+                        .id(String.valueOf(complaint.getId())));
+
+
+
+            } catch (IOException e) {
+
+                emitter.completeWithError(e);
+
+                emitters.remove(agentIdentifier);
+
+            }
+
+        }
+
     }
-    public List<Notification> getNotificationsForUser(Long userId) {
-        return notificationRepository.findByRecipientIdOrderByTimestampDesc(userId);
+
+
+
+    public void sendVerificationCodeToCitizen(Complaint complaint) {
+
+        // Citizen ka identifier uska email hai
+
+        String citizenIdentifier = complaint.getCitizen().getEmail();
+
+        SseEmitter emitter = emitters.get(citizenIdentifier);
+
+
+
+        if (emitter != null) {
+
+            try {
+
+                // Sirf zaroori data bhejein: code aur ticketId
+
+                Map<String, String> data = new HashMap<>(); // Import HashMap
+
+                data.put("ticketId", complaint.getTicketId());
+
+                data.put("verificationCode", complaint.getVerificationCode());
+
+               
+
+                String eventData = objectMapper.writeValueAsString(data);
+
+               
+
+                // Event name "verification_code" use karein
+
+                emitter.send(SseEmitter.event()
+
+                        .name("verification_code")
+
+                        .data(eventData)
+
+                        .id(String.valueOf(complaint.getId())));
+
+
+
+            } catch (IOException e) {
+
+                emitter.completeWithError(e);
+
+                emitters.remove(citizenIdentifier);
+
+            }
+
+        }
+
     }
-    public void markAsRead(Long notificationId) {
-        notificationRepository.findById(notificationId).ifPresent(n -> { n.setRead(true); notificationRepository.save(n); });
-    }
+
+
+
 }
