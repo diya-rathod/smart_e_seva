@@ -7,7 +7,7 @@ import {
     Divider, Button, Grid, Chip 
 } from '@mui/material'; // <-- MUI imports
 import Modal from '../../components/ui/Modal'; // <-- Modal import
-import AssignmentLogicComponent from './AssignmentLogicComponent'; // <-- Assignment logic import
+import AssignmentLogicComponent from '../../components/admin/AssignmentLogicComponent';
 import toast from 'react-hot-toast'; // <-- Toast import
 
 const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';

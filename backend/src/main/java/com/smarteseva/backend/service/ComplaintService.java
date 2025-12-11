@@ -390,30 +390,73 @@ public class ComplaintService {
         return code; 
     }
 
+    // public Complaint verifyAndResolveComplaint(Long complaintId, String code) {
+    //     Complaint complaint = complaintRepository.findById(complaintId)
+    //             .orElseThrow(() -> new RuntimeException("Complaint not found with id: " + complaintId));
+        
+    //     if (!complaint.getStatus().equals("In-Progress")) {
+    //         throw new RuntimeException("Complaint must be In-Progress to resolve.");
+    //     }
+        
+    //     if (!complaint.getVerificationCode().equals(code)) {
+    //         throw new RuntimeException("Invalid verification code.");
+    //     }
+
+    //     complaint.setStatus("Resolved"); 
+    //     complaint.setVerificationCode(null); 
+    //     Complaint resolvedComplaint = complaintRepository.save(complaint);
+        
+    //     User agent = resolvedComplaint.getAgent();
+    //     if (agent != null) {
+    //         agent.setAvailabilityStatus("AVAILABLE");
+    //         userRepository.save(agent);
+    //     }
+
+    //     return resolvedComplaint;
+    // }
+
+
+
     public Complaint verifyAndResolveComplaint(Long complaintId, String code) {
         Complaint complaint = complaintRepository.findById(complaintId)
                 .orElseThrow(() -> new RuntimeException("Complaint not found with id: " + complaintId));
         
+        // 1. Status Check
         if (!complaint.getStatus().equals("In-Progress")) {
             throw new RuntimeException("Complaint must be In-Progress to resolve.");
         }
         
+        // 2. Code Check
         if (!complaint.getVerificationCode().equals(code)) {
             throw new RuntimeException("Invalid verification code.");
         }
 
+        // 3. Complaint ko Resolved Mark karo
         complaint.setStatus("Resolved"); 
         complaint.setVerificationCode(null); 
         Complaint resolvedComplaint = complaintRepository.save(complaint);
         
-        User agent = resolvedComplaint.getAgent();
-        if (agent != null) {
-            agent.setAvailabilityStatus("AVAILABLE");
-            userRepository.save(agent);
+        // 4. --- FIX: AGENT KO FREE KARO (Robust Way) ---
+        if (resolvedComplaint.getAgent() != null) {
+            // Agent ki ID nikalo
+            Long agentId = resolvedComplaint.getAgent().getId();
+            
+            // Database se Agent ko fresh fetch karo (taaki purana data update na ho)
+            User agent = userRepository.findById(agentId).orElse(null);
+            
+            if (agent != null) {
+                System.out.println("DEBUG: Freeing Agent: " + agent.getEmail()); // Debug Log
+                
+                agent.setAvailabilityStatus("AVAILABLE"); // Status wapas AVAILABLE set karo
+                userRepository.save(agent); // Agent ko turant save karo
+                
+                System.out.println("DEBUG: Agent Status updated to AVAILABLE in DB");
+            }
         }
 
         return resolvedComplaint;
     }
+
 
     public Complaint updateComplaintStatusSimple(Long complaintId, String newStatus, String agentEmail) {
         Complaint complaint = complaintRepository.findById(complaintId)
