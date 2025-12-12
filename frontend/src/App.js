@@ -246,12 +246,12 @@ import { Toaster } from 'react-hot-toast';
 import { ThemeProvider } from './context/ThemeContext'; 
 
 // --- Visitor Pages ---
-import Home from './pages/visitor/Home';
-import About from './pages/visitor/About';
-import HowItWorks from './pages/visitor/HowItWorks';
-import Contact from './pages/visitor/Contact';
+import Home from './pages/Visitor/Home';
+import About from './pages/Visitor/About';
+import HowItWorks from './pages/Visitor/HowItWorks';
+import Contact from './pages/Visitor/Contact';
 import TrackComplaint from './pages/registered/TrackComplaint';
-import Login from './pages/visitor/Auth/Login';
+import Login from './pages/Visitor/Auth/Login';
 
 // --- Registered User Pages ---
 import CitizenDashboard from './pages/registered/Dashboard';
@@ -288,6 +288,7 @@ import AgentDashboardPage from './pages/agent/AgentDashboardPage';
 import AgentLayout from './components/agent/AgentLayout';
 import AgentComplaintDetailsPage from './pages/agent/AgentComplaintDetailsPage';
 import AgentProfile from './pages/agent/AgentProfile';
+import AgentHistoryPage from './pages/agent/AgentHistoryPage';
 
 import './App.css';
 
@@ -363,6 +364,7 @@ function App() {
           <Route path="/agent/dashboard" element={<AgentDashboardPage />} />
           <Route path="/agent/complaint/:id" element={<AgentComplaintDetailsPage />} />
           <Route path="/agent/profile" element={<AgentProfile />} />
+          <Route path="/agent/history" element={<AgentHistoryPage />} />
         </Route>
       </Routes>
     </ThemeProvider>

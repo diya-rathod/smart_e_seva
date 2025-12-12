@@ -1,164 +1,435 @@
+// // src/components/dashboard/RegisteredLayout.js
+
+// import React, { useState, useContext } from 'react';
+// import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+// import { 
+//     Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, 
+//     ListItemText, Typography, IconButton, Fab, Divider, Tooltip, AppBar, Toolbar
+// } from '@mui/material';
+// import { 
+//     Dashboard, Person, Help, AddCircle, Logout, Menu, Add as AddIcon, Notifications, AccountCircle
+// } from '@mui/icons-material';
+// import AuthContext from '../../context/AuthContext';
+// import ForcePasswordChangeModal from '../common/ForcePasswordChangeModal';
+// import './RegisteredLayout.css';
+
+// const drawerWidthOpen = 240;
+// const drawerWidthClosed = 70;
+
+// const RegisteredLayout = () => {
+//     const { auth,logout } = useContext(AuthContext);
+//     const navigate = useNavigate();
+//     const location = useLocation();
+//     const [isSidebarOpen, setSidebarOpen] = useState(true);
+//     const [isFabHovered, setFabHovered] = useState(false);
+
+//     const handleDrawerToggle = () => {
+//         setSidebarOpen(!isSidebarOpen);
+//     };
+
+//     const menuItems = [
+//         { text: 'Dashboard', icon: <Dashboard />, path: '/dashboard' },
+//         { text: 'Raise Complaint', icon: <AddCircle />, path: '/raise-complaint' },
+//         { text: 'Profile', icon: <Person />, path: '/profile' },
+//         { text: 'Help', icon: <Help />, path: '/help' },
+//     ];
+
+//     const drawerContent = (
+//         <div className="sidebar-inner-container">
+//             <div>
+//                 <Box className="sidebar-header">
+//                     {isSidebarOpen && (
+//                         <Typography variant="h6" sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+//                             Smart E-Seva
+//                         </Typography>
+//                     )}
+//                     <IconButton onClick={handleDrawerToggle}>
+//                         <Menu />
+//                     </IconButton>
+//                 </Box>
+//                 <Divider />
+//                 <List>
+//                     {menuItems.map((item) => (
+//                         <ListItem key={item.text} disablePadding>
+//                             <Tooltip title={!isSidebarOpen ? item.text : ''} placement="right">
+//                                 <ListItemButton
+//                                     onClick={() => navigate(item.path)}
+//                                     className={location.pathname === item.path ? 'active-link' : ''}
+//                                 >
+//                                     <ListItemIcon>{item.icon}</ListItemIcon>
+//                                     <ListItemText 
+//                                         primary={item.text} 
+//                                         className={!isSidebarOpen ? 'sidebar-closed' : ''} 
+//                                     />
+//                                 </ListItemButton>
+//                             </Tooltip>
+//                         </ListItem>
+//                     ))}
+//                 </List>
+//             </div>
+//             <Box sx={{ marginTop: 'auto' }}>
+//                 <List>
+//                     <ListItem disablePadding>
+//                         <Tooltip title={!isSidebarOpen ? "Logout" : ''} placement="right">
+//                             <ListItemButton onClick={logout} sx={{ color: 'red' }}>
+//                                 <ListItemIcon><Logout sx={{ color: 'red' }} /></ListItemIcon>
+//                                 <ListItemText 
+//                                     primary="Logout" 
+//                                     className={!isSidebarOpen ? 'sidebar-closed' : ''} 
+//                                 />
+//                             </ListItemButton>
+//                         </Tooltip>
+//                     </ListItem>
+//                 </List>
+//             </Box>
+//         </div>
+//     );
+    
+//     return (
+//         <> {/* <-- Naya Fragment Shuru */}
+
+//             {/* --- YEH HAI NAYI CONDITION --- */}
+//             {auth?.mustChangePassword ? (
+//                 // Agar password change karna zaroori hai, to sirf modal dikhao
+//                 <ForcePasswordChangeModal />
+//             ) : (
+//                 // Agar nahi, to poora normal layout dikhao
+//                 <div className="layout-container">
+//                     <AppBar 
+//                         position="fixed"
+//                         sx={{ 
+//                             width: `calc(100% - ${isSidebarOpen ? drawerWidthOpen : drawerWidthClosed}px)`,
+//                             ml: isSidebarOpen ? `${drawerWidthOpen}px` : `${drawerWidthClosed}px`,
+//                             transition: (theme) => theme.transitions.create(['width', 'margin'], {
+//                                 easing: theme.transitions.easing.sharp,
+//                                 duration: theme.transitions.duration.enteringScreen,
+//                             }),
+//                         }}
+//                     >
+//                         <Toolbar>
+//                             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+//                                 Citizen Dashboard
+//                             </Typography>
+                            
+//                             <Tooltip title="Notifications">
+//                                 <IconButton color="inherit">
+//                                     <Notifications />
+//                                 </IconButton>
+//                             </Tooltip>
+//                             <Tooltip title="Profile Settings">
+//                                 <IconButton color="inherit" onClick={() => navigate('/profile')}>
+//                                     <AccountCircle />
+//                                 </IconButton>
+//                             </Tooltip>
+//                         </Toolbar>
+//                     </AppBar>
+                    
+//                     <Drawer
+//                         variant="permanent"
+//                         className="sidebar-drawer"
+//                         sx={{
+//                             width: isSidebarOpen ? drawerWidthOpen : drawerWidthClosed,
+//                             '& .MuiDrawer-paper': {
+//                                 width: isSidebarOpen ? drawerWidthOpen : drawerWidthClosed,
+//                                 transition: (theme) => theme.transitions.create('width', {
+//                                     easing: theme.transitions.easing.sharp,
+//                                     duration: theme.transitions.duration.enteringScreen,
+//                                 }),
+//                             },
+//                         }}
+//                         classes={{ paper: 'sidebar-paper' }}
+//                         onMouseEnter={() => setSidebarOpen(true)}
+//                         onMouseLeave={() => setSidebarOpen(false)}
+//                     >
+//                         {drawerContent}
+//                     </Drawer>
+
+//                     <Box
+//                         component="main"
+//                         className="main-content"
+//                         sx={{ 
+//                             width: `calc(100% - ${isSidebarOpen ? drawerWidthOpen : drawerWidthClosed}px)`,
+//                             paddingTop: '88px', 
+//                         }}
+//                     >
+//                         <Outlet />
+//                     </Box>
+
+//                     <Fab 
+//                         variant={isFabHovered ? "extended" : "circular"}
+//                         color="primary" 
+//                         aria-label="add-complaint" 
+//                         className="extended-fab"
+//                         sx={{ position: 'fixed', bottom: 40, right: 40 }}
+//                         onMouseEnter={() => setFabHovered(true)}
+//                         onMouseLeave={() => setFabHovered(false)}
+//                         onClick={() => navigate('/raise-complaint')}
+//                     >
+//                         {isFabHovered ? <AddIcon sx={{ mr: 1 }} /> : <AddIcon />}
+//                         {isFabHovered && "Raise New Complaint"}
+//                     </Fab>
+//                 </div>
+//             )}
+            
+
+//         </> 
+//     );
+// };
+
+// export default RegisteredLayout;
+
+
+
+
+
+// src/components/dashboard/RegisteredLayout.js
 // src/components/dashboard/RegisteredLayout.js
 
-import React, { useContext } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import {
-  Home,
-  PlusCircle,
-  ClipboardList,
-  Activity,
-  User,
-  Settings,
-  HelpCircle,
-  BookOpen,
-  Megaphone,
-  Bell,
-  Sun,
-  Moon,
-  ChevronDown,
-} from "lucide-react";
-import AuthContext from "../../context/AuthContext";
-import { useTheme } from "../../context/ThemeContext";
-import NavItem from "../ui/NavItem";
-import ForcePasswordChangeModal from "../common/ForcePasswordChangeModal";
-import "./RegisteredLayout.css";
+import React, { useState, useContext, useEffect } from 'react'; // 1. useEffect added
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { 
+    Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, 
+    ListItemText, Typography, IconButton, Fab, Divider, Tooltip, AppBar, Toolbar
+} from '@mui/material';
+import { 
+    Dashboard, Person, Help, AddCircle, Logout, Menu, Add as AddIcon, Notifications, AccountCircle
+} from '@mui/icons-material';
+import AuthContext from '../../context/AuthContext';
+import ForcePasswordChangeModal from '../common/ForcePasswordChangeModal';
+import './RegisteredLayout.css';
+import toast from 'react-hot-toast'; // 2. Toast added for Popup
 
-const navSections = [
-  {
-    label: "MAIN",
-    items: [
-      { label: "Dashboard", to: "/dashboard", icon: Home },
-      { label: "Raise Complaint", to: "/raise-complaint", icon: PlusCircle },
-      { label: "My Complaints", to: "/my-complaints", icon: ClipboardList },
-      { label: "Track Status", to: "/track-complaint", icon: Activity },
-    ],
-  },
-  {
-    label: "SUPPORT",
-    items: [
-      { label: "Profile", to: "/profile", icon: User },
-      { label: "Settings", to: "/settings", icon: Settings },
-      { label: "Help Center", to: "/help-center", icon: HelpCircle },
-      { label: "City Insights", to: "/city-insights", icon: BookOpen },
-      { label: "Announcements", to: "/announcements", icon: Megaphone },
-    ],
-  },
-];
+const drawerWidthOpen = 240;
+const drawerWidthClosed = 70;
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1'; // Live URL defined
 
 const RegisteredLayout = () => {
-  const { auth, logout } = useContext(AuthContext);
-  const { theme, toggleTheme } = useTheme();
-  const navigate = useNavigate();
+    const { auth, logout } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isFabHovered, setFabHovered] = useState(false);
 
-  if (auth?.mustChangePassword) {
-    return <ForcePasswordChangeModal />;
-  }
+    // SSE State to manage connection
+    const [sseConnection, setSseConnection] = useState(null);
 
-  return (
-    <div className="flex min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-white">
-      <aside className="fixed inset-y-0 z-20 hidden w-[260px] flex-col gap-6 border-r border-black/5 bg-white/60 px-5 py-6 backdrop-blur-xl dark:border-white/10 dark:bg-white/5 md:flex">
-        <div className="flex flex-col gap-1">
-          <p className="text-lg font-semibold text-slate-900 dark:text-white">Smart E-Seva</p>
-          <p className="text-xs uppercase tracking-[0.12em] text-slate-500 dark:text-slate-300">
-            Citizen Panel
-          </p>
-        </div>
+    const handleDrawerToggle = () => {
+        setSidebarOpen(!isSidebarOpen);
+    };
 
-        <div className="space-y-4">
-          {navSections.map((section) => (
-            <div key={section.label} className="space-y-2">
-              <span className="px-3 text-[11px] uppercase tracking-[0.12em] text-slate-400">
-                {section.label}
-              </span>
-              <div className="space-y-1">
-                {section.items.map((item) => (
-                  <NavItem key={item.label} label={item.label} to={item.to} icon={item.icon} />
-                ))}
-              </div>
+    // --- 3. NEW: LISTENER LOGIC ADDED HERE (Backend se OTP sunne ke liye) ---
+    useEffect(() => {
+        // Agar user login nahi hai, to connect mat karo
+        if (!auth.token) return;
+
+        const sseUrl = `${API_BASE_URL}/notifications/subscribe?token=${auth.token}`;
+        
+        // Purana connection close karo agar exist karta hai
+        if (sseConnection) {
+            sseConnection.close();
+        }
+
+        const eventSource = new EventSource(sseUrl);
+        setSseConnection(eventSource);
+
+        eventSource.onopen = () => {
+            console.log("Registered Layout: Notification Service Connected ✅");
+        };
+
+        // Backend bhej raha hai "verification_code", hum yahan sun rahe hain
+        eventSource.addEventListener("verification_code", (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                console.log("OTP Received:", data);
+
+                // Custom Toast UI (Bada Popup)
+                toast((t) => (
+                    <div style={{minWidth: '250px', textAlign: 'center'}}>
+                        <h3 style={{margin: '0 0 10px', color: '#2e7d32'}}>Work Completed! 🎉</h3>
+                        <p style={{fontSize: '0.9rem', marginBottom: '10px'}}>
+                            Agent has resolved Ticket: <strong>{data.ticketId}</strong>
+                        </p>
+                        <div style={{
+                            background: '#f8f9fa', 
+                            padding: '15px', 
+                            borderRadius: '8px', 
+                            border: '2px dashed #28a745',
+                            fontWeight: 'bold', 
+                            fontSize: '1.5rem', 
+                            letterSpacing: '3px',
+                            color: '#333'
+                        }}>
+                            {data.verificationCode}
+                        </div>
+                        <p style={{fontSize: '0.8rem', color: 'red', marginTop: '10px'}}>
+                            Share this code with the agent ONLY if work is done.
+                        </p>
+                        <button onClick={() => toast.dismiss(t.id)} style={{
+                            marginTop: '10px', padding: '8px 16px', border: 'none', 
+                            background: '#007bff', color: 'white', borderRadius: '4px', cursor: 'pointer'
+                        }}>
+                            Close
+                        </button>
+                    </div>
+                ), { duration: 30000, position: 'top-center' }); // 30 seconds tak rahega
+
+            } catch (e) {
+                console.error("Error parsing OTP notification", e);
+            }
+        });
+
+        eventSource.onerror = (err) => {
+            eventSource.close();
+        };
+
+        // Cleanup on unmount
+        return () => {
+            eventSource.close();
+        };
+    }, [auth.token]);
+    // ---------------------------------------------------------------
+
+    const menuItems = [
+        { text: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
+        { text: "Raise Complaint", icon: <AddCircle />, path: "/raise-complaint" },
+        { text: "Profile", icon: <Person />, path: "/profile" },
+        { text: "Help", icon: <Help />, path: "/help" },
+    ];
+
+    const drawerContent = (
+        <div className="sidebar-inner-container">
+            <div>
+                <Box className="sidebar-header">
+                    {isSidebarOpen && (
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+                            Smart E-Seva
+                        </Typography>
+                    )}
+                    <IconButton onClick={handleDrawerToggle}>
+                        <Menu />
+                    </IconButton>
+                </Box>
+                <Divider />
+                <List>
+                    {menuItems.map((item) => (
+                        <ListItem key={item.text} disablePadding>
+                            <Tooltip title={!isSidebarOpen ? item.text : ''} placement="right">
+                                <ListItemButton
+                                    onClick={() => navigate(item.path)}
+                                    className={location.pathname === item.path ? 'active-link' : ''}
+                                >
+                                    <ListItemIcon>{item.icon}</ListItemIcon>
+                                    <ListItemText 
+                                        primary={item.text} 
+                                        className={!isSidebarOpen ? 'sidebar-closed' : ''} 
+                                    />
+                                </ListItemButton>
+                            </Tooltip>
+                        </ListItem>
+                    ))}
+                </List>
             </div>
-          ))}
+            <Box sx={{ marginTop: 'auto' }}>
+                <List>
+                    <ListItem disablePadding>
+                        <Tooltip title={!isSidebarOpen ? "Logout" : ''} placement="right">
+                            <ListItemButton onClick={logout} sx={{ color: 'red' }}>
+                                <ListItemIcon><Logout sx={{ color: 'red' }} /></ListItemIcon>
+                                <ListItemText 
+                                    primary="Logout" 
+                                    className={!isSidebarOpen ? 'sidebar-closed' : ''} 
+                                />
+                            </ListItemButton>
+                        </Tooltip>
+                    </ListItem>
+                </List>
+            </Box>
         </div>
+    );
+    
+    return (
+        <> 
+            {auth?.mustChangePassword ? (
+                <ForcePasswordChangeModal />
+            ) : (
+                <div className="layout-container">
+                    <AppBar 
+                        position="fixed"
+                        sx={{ 
+                            width: `calc(100% - ${isSidebarOpen ? drawerWidthOpen : drawerWidthClosed}px)`,
+                            ml: isSidebarOpen ? `${drawerWidthOpen}px` : `${drawerWidthClosed}px`,
+                            transition: (theme) => theme.transitions.create(['width', 'margin'], {
+                                easing: theme.transitions.easing.sharp,
+                                duration: theme.transitions.duration.enteringScreen,
+                            }),
+                        }}
+                    >
+                        <Toolbar>
+                            <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                                Citizen Dashboard
+                            </Typography>
+                            
+                            <Tooltip title="Notifications">
+                                <IconButton color="inherit">
+                                    <Notifications />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Profile Settings">
+                                <IconButton color="inherit" onClick={() => navigate('/profile')}>
+                                    <AccountCircle />
+                                </IconButton>
+                            </Tooltip>
+                        </Toolbar>
+                    </AppBar>
+                    
+                    <Drawer
+                        variant="permanent"
+                        className="sidebar-drawer"
+                        sx={{
+                            width: isSidebarOpen ? drawerWidthOpen : drawerWidthClosed,
+                            '& .MuiDrawer-paper': {
+                                width: isSidebarOpen ? drawerWidthOpen : drawerWidthClosed,
+                                transition: (theme) => theme.transitions.create('width', {
+                                    easing: theme.transitions.easing.sharp,
+                                    duration: theme.transitions.duration.enteringScreen,
+                                }),
+                            },
+                        }}
+                        classes={{ paper: 'sidebar-paper' }}
+                        onMouseEnter={() => setSidebarOpen(true)}
+                        onMouseLeave={() => setSidebarOpen(false)}
+                    >
+                        {drawerContent}
+                    </Drawer>
 
-        <div className="mt-auto space-y-3 border-t border-black/5 pt-4 dark:border-white/10">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="flex w-full items-center justify-between rounded-xl border border-black/5 bg-white/70 px-3 py-2 text-sm font-medium text-slate-700 transition duration-200 hover:-translate-x-0.5 hover:shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-white"
-          >
-            <span>Theme</span>
-            {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-          </button>
-          <button
-            type="button"
-            onClick={logout}
-            className="flex w-full items-center justify-between rounded-xl border border-transparent bg-emerald-500/10 px-3 py-2 text-sm font-medium text-emerald-600 transition duration-200 hover:-translate-x-0.5 hover:bg-emerald-500/20"
-          >
-            Logout
-            <ChevronDown className="h-4 w-4" />
-          </button>
-          <p className="text-xs uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">v1.0.0</p>
-        </div>
-      </aside>
+                    <Box
+                        component="main"
+                        className="main-content"
+                        sx={{ 
+                            width: `calc(100% - ${isSidebarOpen ? drawerWidthOpen : drawerWidthClosed}px)`,
+                            paddingTop: '88px', 
+                        }}
+                    >
+                        <Outlet />
+                    </Box>
 
-      <div className="flex flex-1 flex-col md:pl-[260px]">
-        <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-black/5 bg-white/70 px-6 backdrop-blur-lg dark:border-white/10 dark:bg-white/5">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
-              Citizen Dashboard
-            </p>
-            <p className="text-lg font-semibold tracking-tight text-slate-900 dark:text-white">
-              Overview
-            </p>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <button
-                type="button"
-                className="flex h-10 w-10 items-center justify-center rounded-2xl border border-black/5 bg-white/60 shadow-sm transition duration-200 hover:scale-105 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
-              >
-                <Bell className="h-5 w-5 text-slate-600 dark:text-slate-300" />
-              </button>
-              <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-emerald-500 text-[10px] text-white">
-                2
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="flex h-10 w-10 items-center justify-center rounded-2xl border border-black/5 bg-white/60 shadow-sm transition duration-200 hover:scale-105 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
-              aria-label="Toggle theme"
-            >
-              {theme === "light" ? (
-                <Moon className="h-5 w-5 text-slate-600 dark:text-slate-300" />
-              ) : (
-                <Sun className="h-5 w-5 text-slate-600 dark:text-slate-300" />
-              )}
-            </button>
-            <button
-              type="button"
-              className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white/60 px-3 py-1 shadow-sm transition duration-200 hover:scale-105 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
-            >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900/5 text-slate-900 dark:bg-white/10 dark:text-white">
-                {auth?.name?.[0] || "C"}
-              </span>
-              <div className="text-left">
-                <p className="text-sm font-semibold text-slate-900 dark:text-white">{auth?.name || "Citizen"}</p>
-                <p className="text-[11px] uppercase tracking-[0.12em] text-slate-400 dark:text-slate-300">
-                  {auth?.role || "Citizen"}
-                </p>
-              </div>
-              <ChevronDown className="h-4 w-4 text-slate-500" />
-            </button>
-          </div>
-        </header>
-
-        <main className="flex-1 overflow-hidden px-6 py-8">
-          <Outlet />
-        </main>
-      </div>
-    </div>
-  );
+                    <Fab 
+                        variant={isFabHovered ? "extended" : "circular"}
+                        color="primary" 
+                        aria-label="add-complaint" 
+                        className="extended-fab"
+                        sx={{ position: 'fixed', bottom: 40, right: 40 }}
+                        onMouseEnter={() => setFabHovered(true)}
+                        onMouseLeave={() => setFabHovered(false)}
+                        onClick={() => navigate('/raise-complaint')}
+                    >
+                        {isFabHovered ? <AddIcon sx={{ mr: 1 }} /> : <AddIcon />}
+                        {isFabHovered && "Raise New Complaint"}
+                    </Fab>
+                </div>
+            )} 
+        </> 
+    );
 };
 
 export default RegisteredLayout;

@@ -1,40 +1,81 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios'; // API call ke liye
 import { 
     Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, 
-    ListItemText, Typography, IconButton, Divider, Tooltip, AppBar, Toolbar 
+    ListItemText, Typography, IconButton, Divider, Tooltip, AppBar, Toolbar,
+    Badge, Menu, MenuItem // <-- New Imports for Notification UI
 } from '@mui/material';
 import { 
-    Dashboard, // Dashboard Icon
-    Assignment as MyComplaintsIcon, // Icon for Assigned Complaints
+    Dashboard, 
+    Assignment as MyComplaintsIcon, 
     Logout, 
-    Menu, 
+    Menu as MenuIcon, // Alias diya kyuki Menu component bhi import kiya hai
     Notifications, 
-    AccountCircle // Profile Icon
+    AccountCircle, History 
 } from '@mui/icons-material';
-import AuthContext from '../../context/AuthContext'; // Path check kar lena
-import ForcePasswordChangeModal from '../common/ForcePasswordChangeModal'; // Import the modal
-import '../dashboard/RegisteredLayout.css'; // Citizen/Admin waali CSS hi use kar rahe hain
+import AuthContext from '../../context/AuthContext'; 
+import ForcePasswordChangeModal from '../common/ForcePasswordChangeModal'; 
+import '../dashboard/RegisteredLayout.css'; 
 
 const drawerWidthOpen = 240;
 const drawerWidthClosed = 70;
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1'; // Backend URL
 
-const AgentLayout = () => { // Component ka naam badal diya
-    const { auth, logout } = useContext(AuthContext); // 'auth' ko get kiya
+const AgentLayout = () => { 
+    const { auth, logout } = useContext(AuthContext); 
     const navigate = useNavigate();
     const location = useLocation();
     const [isSidebarOpen, setSidebarOpen] = useState(true);
+
+    // --- NEW NOTIFICATION STATE ---
+    const [notifications, setNotifications] = useState([]);
+    const [anchorEl, setAnchorEl] = useState(null); // Menu control
+    const isMenuOpen = Boolean(anchorEl);
+
+    // --- 1. Fetch Notifications Logic ---
+    const fetchNotifications = async () => {
+        if (!auth.token) return;
+        try {
+            // Backend API call
+            const res = await axios.get(`${API_BASE_URL}/notifications/my-notifications`, {
+                headers: { Authorization: `Bearer ${auth.token}` }
+            });
+            setNotifications(res.data);
+        } catch (error) {
+            console.error("Failed to load notifications", error);
+            // App crash na ho isliye error ignore kar rahe hain (silent fail)
+        }
+    };
+
+    // --- 2. Auto-Fetch Every 30 Seconds ---
+    useEffect(() => {
+        fetchNotifications(); // Initial load
+        const interval = setInterval(fetchNotifications, 30000); // Polling
+        return () => clearInterval(interval);
+    }, [auth.token]);
+
+    // --- Menu Handlers ---
+    const handleNotificationClick = (event) => {
+        setAnchorEl(event.currentTarget);
+        // Optional: Yahan "Mark as Read" API call kar sakte hain future mein
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
 
     const handleDrawerToggle = () => {
         setSidebarOpen(!isSidebarOpen);
     };
 
-    // --- AGENT KE SIDEBAR LINKS ---
+    // Calculate Unread Count
+    const unreadCount = notifications.filter(n => !n.read).length;
+
+    // --- AGENT SIDEBAR LINKS ---
     const menuItems = [
         { text: 'Dashboard', icon: <Dashboard />, path: '/agent/dashboard' },
-        
-        // Aap yahan aur links add kar sakte ho, jaise "Completed Tasks" etc.
-        // Example: { text: 'My Complaints', icon: <MyComplaintsIcon />, path: '/agent/my-complaints' } 
+        { text: 'Job History', icon: <History />, path: '/agent/history' },
     ];
 
     const drawerContent = (
@@ -47,7 +88,7 @@ const AgentLayout = () => { // Component ka naam badal diya
                         </Typography>
                     )}
                     <IconButton onClick={handleDrawerToggle}>
-                        <Menu />
+                        <MenuIcon />
                     </IconButton>
                 </Box>
                 <Divider />
@@ -89,12 +130,10 @@ const AgentLayout = () => { // Component ka naam badal diya
     );
     
     return (
-        <> {/* <-- Fragment Shuru */}
-            {/* --- FORCE PASSWORD CHANGE LOGIC --- */}
+        <> 
             {auth?.mustChangePassword ? (
                 <ForcePasswordChangeModal />
             ) : (
-                // Normal Layout
                 <div className="layout-container">
                     <AppBar 
                         position="fixed"
@@ -109,16 +148,58 @@ const AgentLayout = () => { // Component ka naam badal diya
                     >
                         <Toolbar>
                             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                                Agent Dashboard {/* <-- Title Badla */}
+                                Agent Dashboard
                             </Typography>
+                            
+                            {/* --- NOTIFICATION SECTION START --- */}
                             <Tooltip title="Notifications">
-                                <IconButton color="inherit">
-                                    <Notifications />
+                                <IconButton color="inherit" onClick={handleNotificationClick}>
+                                    <Badge badgeContent={unreadCount} color="error">
+                                        <Notifications />
+                                    </Badge>
                                 </IconButton>
                             </Tooltip>
-                            {/* Agent ke liye Profile page ka path check kar lena */}
+
+                            {/* Dropdown Menu */}
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={isMenuOpen}
+                                onClose={handleMenuClose}
+                                PaperProps={{
+                                    style: { maxHeight: 400, width: '350px' },
+                                }}
+                            >
+                                <MenuItem disabled style={{fontWeight: 'bold', borderBottom: '1px solid #ddd'}}>
+                                    Recent Notifications
+                                </MenuItem>
+                                
+                                {notifications.length === 0 ? (
+                                    <MenuItem onClick={handleMenuClose}>No new notifications</MenuItem>
+                                ) : (
+                                    notifications.map((notif) => (
+                                        <MenuItem 
+                                            key={notif.id} 
+                                            onClick={handleMenuClose}
+                                            style={{
+                                                whiteSpace: 'normal',
+                                                borderBottom: '1px solid #f0f0f0',
+                                                backgroundColor: notif.read ? 'white' : '#f0f8ff'
+                                            }}
+                                        >
+                                            <div style={{display:'flex', flexDirection:'column'}}>
+                                                <Typography variant="body2">{notif.message}</Typography>
+                                                <Typography variant="caption" color="textSecondary">
+                                                    {new Date(notif.timestamp).toLocaleString()}
+                                                </Typography>
+                                            </div>
+                                        </MenuItem>
+                                    ))
+                                )}
+                            </Menu>
+                            {/* --- NOTIFICATION SECTION END --- */}
+
                             <Tooltip title="Profile Settings">
-                                <IconButton color="inherit" onClick={() => navigate('/agent/profile')}> {/* <-- Path update karna pad sakta hai */}
+                                <IconButton color="inherit" onClick={() => navigate('/agent/profile')}>
                                     <AccountCircle />
                                 </IconButton>
                             </Tooltip>
@@ -155,9 +236,6 @@ const AgentLayout = () => { // Component ka naam badal diya
                     >
                         <Outlet />
                     </Box>
-                    
-                    {/* --- FAB HATA DIYA GAYA HAI --- */}
-                    
                 </div>
             )} 
         </> 
