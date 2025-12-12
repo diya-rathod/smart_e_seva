@@ -1,6 +1,7 @@
 package com.smarteseva.backend.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +26,7 @@ import com.smarteseva.backend.model.User;
 import com.smarteseva.backend.repository.ComplaintRepository;
 import com.smarteseva.backend.repository.UserRepository;
 import com.smarteseva.backend.service.ComplaintService; // Status DTO
+import com.smarteseva.backend.service.JwtService;
 import com.smarteseva.backend.service.UserService;
 
 @RestController
@@ -42,6 +45,9 @@ public class AgentController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtService jwtService;
     
 
     @GetMapping("/my-complaints")
@@ -136,5 +142,39 @@ public class AgentController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    // --- NEW: Toggle On-Duty / Off-Duty ---
+    @PutMapping("/toggle-status")
+    public ResponseEntity<?> toggleAgentStatus(@RequestHeader("Authorization") String token) {
+        // Token se email nikala
+        String email = jwtService.extractUsername(token.substring(7));
+        
+        User agent = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Agent not found"));
+
+        // Logic: Agar AVAILABLE hai to OFF_DUTY karo, warna AVAILABLE
+        // Note: "AVAILABLE" matlab On Duty.
+        if ("AVAILABLE".equals(agent.getAvailabilityStatus())) {
+            agent.setAvailabilityStatus("OFF_DUTY");
+        } else {
+            agent.setAvailabilityStatus("AVAILABLE");
+        }
+        
+        userRepository.save(agent);
+        // Naya status return karo frontend ko
+        return ResponseEntity.ok(Map.of("status", agent.getAvailabilityStatus()));
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<List<Complaint>> getAgentJobHistory(@RequestHeader("Authorization") String token) {
+        String email = jwtService.extractUsername(token.substring(7));
+        User agent = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Agent not found"));
+
+        // Sirf 'Resolved' status wale complaints lao
+        List<Complaint> history = complaintRepository.findByAgentIdAndStatusOrderByDateRaisedDesc(agent.getId(), "Resolved");
+        
+        return ResponseEntity.ok(history);
     }
 }

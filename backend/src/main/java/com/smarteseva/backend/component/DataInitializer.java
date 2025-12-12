@@ -1,5 +1,7 @@
 package com.smarteseva.backend.component;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,17 +21,47 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Check if the admin user already exists
-        if (!userRepository.findByEmail("admin@smarteseva.com").isPresent()) {
-            User admin = new User();
-            admin.setEmail("admin@smarteseva.com");
-            admin.setPassword(passwordEncoder.encode("admin123")); // Encode the password
-            admin.setRole("ROLE_SUPER_ADMIN");
-            // Set other necessary fields if any, e.g., name
-            admin.setName("Admin User");
+        System.out.println("---------------------------------------------");
+        System.out.println("🚀 DATA INITIALIZER: Checking Admin Status...");
+        
+        String adminEmail = "admin@smarteseva.com";
+        
+        try {
+            Optional<User> existingUser = userRepository.findByEmail(adminEmail);
             
-            userRepository.save(admin);
-            System.out.println("Created ADMIN user with email: admin@smarteseva.com");
+            if (existingUser.isPresent()) {
+                System.out.println("⚠️ Admin User Found. Updating Status to 'Active'...");
+                User admin = existingUser.get();
+                
+                // YAHAN CHANGE KIYA HAI: Status ko "Active" set kar rahe hain
+                admin.setStatus("Active"); 
+                
+                // Agar koi boolean field bhi hai to use bhi true kar do (Safe side)
+                // admin.setEnabled(true); 
+
+                userRepository.save(admin);
+                System.out.println("✅ UPDATE: Admin user status set to 'Active'.");
+                
+            } else {
+                System.out.println("🛠️ Creating New Admin User...");
+                
+                User admin = new User();
+                admin.setEmail(adminEmail);
+                admin.setPassword(passwordEncoder.encode("admin123"));
+                admin.setRole("ROLE_SUPER_ADMIN");
+                admin.setName("Super Admin");
+                
+                // Naya user banate waqt hi Active set karo
+                admin.setStatus("Active");
+                
+                userRepository.save(admin);
+                
+                System.out.println("✅ SUCCESS: Created NEW Admin with status 'Active'.");
+            }
+        } catch (Exception e) {
+            System.out.println("❌ ERROR: " + e.getMessage());
+            e.printStackTrace();
         }
+        System.out.println("---------------------------------------------");
     }
 }
