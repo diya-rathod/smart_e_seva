@@ -40,44 +40,20 @@ public class UserController {
     private ComplaintRepository complaintRepository;
     // This endpoint will return the details of the currently logged-in user
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUserDetails() {
-        try {
-            // Get the currently logged-in user's email from the security context
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            
-            if (authentication == null || authentication.getName() == null) {
-                System.err.println("!!! Authentication is null or user email is null");
-                return ResponseEntity.status(401).body("Authentication required");
-            }
-            
-            String userEmail = authentication.getName();
-            System.out.println(">>> Fetching profile for user: " + userEmail);
+    public ResponseEntity<User> getCurrentUserDetails() {
+        // Get the currently logged-in user's email from the security context
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
 
-            // Find the user in the database and return their details
-            User user = userRepository.findByEmail(userEmail)
-                    .orElse(null);
-            
-            if (user == null) {
-                System.err.println("!!! User not found in database for email: " + userEmail);
-                return ResponseEntity.status(404).body("User not found with email: " + userEmail);
-            }
-            
-            System.out.println(">>> User found: " + user.getName() + " (ID: " + user.getId() + ")");
-            
+        // Find the user in the database and return their details
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
         // We are returning the full User object for now.
         // In a real app, we would use a DTO to avoid sending the password.
         return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            System.err.println("!!! Error in getCurrentUserDetails: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
-        }
-    } catch (Exception e) {
-            System.err.println("!!! Error in getCurrentUserDetails: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
-        }
-    }
+        
+     }
 
     @GetMapping("/my-complaints") // FIX: The missing API
     public ResponseEntity<List<ComplaintResponseDTO>> getMyComplaints() {
