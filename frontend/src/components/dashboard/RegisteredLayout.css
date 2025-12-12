@@ -67,6 +67,21 @@
     transition: all 0.3s ease-in-out !important;
 }
 
+.raise-fab {
+    animation: none;
+}
+
+.raise-fab:hover {
+    animation: raiseFabBounce 0.7s ease-out;
+}
+
+@keyframes raiseFabBounce {
+    0% { transform: translateY(0); }
+    40% { transform: translateY(-6px); }
+    70% { transform: translateY(-3px); }
+    100% { transform: translateY(0); }
+}
+
 
 /* --- Gradient Animation --- */
 @keyframes moveGradient {

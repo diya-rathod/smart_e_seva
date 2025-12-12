@@ -112,7 +112,6 @@
 // import HowItWorks from './pages/visitor/HowItWorks';
 // import Contact from './pages/visitor/Contact';
 // import RaiseComplaint from './pages/visitor/RaiseComplaint';
-// import TrackComplaint from './pages/visitor/TrackComplaint';
 // import Login from './pages/visitor/Auth/Login';
 
 // // --- Registered User Pages ---
@@ -251,7 +250,7 @@ import Home from './pages/visitor/Home';
 import About from './pages/visitor/About';
 import HowItWorks from './pages/visitor/HowItWorks';
 import Contact from './pages/visitor/Contact';
-import TrackComplaint from './pages/visitor/TrackComplaint';
+import TrackComplaint from './pages/registered/TrackComplaint';
 import Login from './pages/visitor/Auth/Login';
 
 // --- Registered User Pages ---
@@ -260,6 +259,11 @@ import Profile from './pages/registered/Profile';
 import Help from './pages/registered/Help';
 import ComplaintDetails from './pages/registered/ComplaintDetails';
 import RaiseComplaintPage from './pages/registered/RaiseComplaintPage';
+import CityInsights from './pages/registered/CityInsights';
+import HelpCenter from './pages/registered/HelpCenter';
+import Announcements from './pages/registered/Announcements';
+import MyComplaints from './pages/registered/MyComplaints';
+import SettingsPage from './pages/registered/SettingsPage';
 
 // --- Admin Pages ---
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -317,7 +321,6 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/track-complaint" element={<TrackComplaint />} />
           <Route path="/login" element={<Login />} />
         </Route>
 
@@ -328,6 +331,12 @@ function App() {
           <Route path="/help" element={<Help />} />
           <Route path="/complaint/:ticketId" element={<ComplaintDetails />} />
           <Route path="/raise-complaint" element={<RaiseComplaintPage />} />
+          <Route path="/city-insights" element={<CityInsights />} />
+          <Route path="/help-center" element={<HelpCenter />} />
+          <Route path="/announcements" element={<Announcements />} />
+          <Route path="/my-complaints" element={<MyComplaints />} />
+          <Route path="/track-complaint" element={<TrackComplaint />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
 
         {/* Group 3: Admin Routes */}

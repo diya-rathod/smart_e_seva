@@ -18,8 +18,12 @@ module.exports = {
         'glass-md': '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)',
       },
       animation: {
-      spin: "spin 40s linear infinite",
-    },
+        spin: "spin 40s linear infinite",
+      },
+      fontFamily: {
+        sans: ["Inter", "Poppins", "system-ui", "sans-serif"],
+        display: ["Inter", "system-ui", "sans-serif"],
+      },
     },
   },
   plugins: [],
