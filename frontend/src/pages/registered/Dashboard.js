@@ -95,13 +95,13 @@ import {
 
 // Import UI Components from index
 import {
-  KpiCard,
+  KPICard,
   StatusChip,
   ActivityItem,
   QuickActionButton,
   ComplaintCard
 } from '../../components/ui/dashboard';
-import KPICard from './KPICard';
+// import KPICard from './KPICard';
 
 import './Dashboard.css';
 
