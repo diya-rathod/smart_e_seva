@@ -1,24 +1,30 @@
 import React from "react";
+import { motion } from 'framer-motion';
 
-const QuickActionButton = ({ label, icon, onClick, variant = "primary" }) => {
-  const base =
-    "flex items-center gap-2 rounded-2xl border px-4 py-3 text-sm font-semibold tracking-[0.02em] leading-[1.5] transition duration-200 hover:shadow-[0_2px_10px_rgba(0,0,0,0.06)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400";
-
-  const variantClasses = {
-    primary: "border-black/5 bg-white/80 text-slate-900 dark:border-white/10 dark:bg-white/5 dark:text-white",
-    ghost: "bg-transparent text-slate-600 dark:text-slate-300",
+const QuickActionButton = ({ icon, label, onClick, variant = 'primary', disabled = false }) => {
+  const variants = {
+    primary: 'bg-slate-900 dark:bg-emerald-500 text-white hover:shadow-emerald-500/30',
+    secondary: 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-2 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700',
+    outline: 'bg-transparent border-2 border-slate-900 dark:border-emerald-500 text-slate-900 dark:text-emerald-500 hover:bg-slate-900 hover:text-white dark:hover:bg-emerald-500 dark:hover:text-white'
   };
 
   return (
-    <button
-      type="button"
+    <motion.button
+      whileHover={{ scale: disabled ? 1 : 1.05 }}
+      whileTap={{ scale: disabled ? 1 : 0.95 }}
       onClick={onClick}
-      aria-label={label}
-      className={`${base} ${variantClasses[variant] || variantClasses.primary}`}
+      disabled={disabled}
+      className={`
+        px-6 py-3 rounded-full font-semibold text-sm
+        shadow-lg hover:shadow-xl transition-all duration-300
+        flex items-center gap-2 justify-center
+        disabled:opacity-50 disabled:cursor-not-allowed
+        ${variants[variant]}
+      `}
     >
-      <span className="h-5 w-5">{icon}</span>
-      {label}
-    </button>
+      {icon}
+      <span>{label}</span>
+    </motion.button>
   );
 };
 

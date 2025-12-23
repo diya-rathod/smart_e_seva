@@ -187,6 +187,7 @@
 
 import React, { useState, useContext, useEffect } from 'react'; // 1. useEffect added
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { ListAlt } from '@mui/icons-material';
 import { 
     Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, 
     ListItemText, Typography, IconButton, Fab, Divider, Tooltip, AppBar, Toolbar
@@ -205,6 +206,9 @@ const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1'; // Live 
 
 const RegisteredLayout = () => {
     const { auth, logout } = useContext(AuthContext);
+    if (!auth) {
+        return null; 
+    }
     const navigate = useNavigate();
     const location = useLocation();
     const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -291,6 +295,9 @@ const RegisteredLayout = () => {
 
     const menuItems = [
         { text: "Dashboard", icon: <Dashboard />, path: "/dashboard" },
+        // --- NEW ITEM ADDED ---
+        { text: "My Complaints", icon: <ListAlt />, path: "/my-complaints" }, 
+        // ----------------------
         { text: "Raise Complaint", icon: <AddCircle />, path: "/raise-complaint" },
         { text: "Profile", icon: <Person />, path: "/profile" },
         { text: "Help", icon: <Help />, path: "/help" },

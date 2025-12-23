@@ -1,106 +1,389 @@
-import { useMemo, useState } from "react";
+// import { useMemo, useState } from "react";
+// import {
+//   Activity,
+//   Droplet,
+//   Flashlight,
+//   Hammer,
+//   MapPin,
+//   Search,
+//   Trash2,
+//   X,
+// } from "lucide-react";
+
+// const complaintsData = [
+//   {
+//     id: "CMP-11204",
+//     title: "Water leakage near Sector 12 transformer",
+//     category: "Water Leakage",
+//     status: "In Progress",
+//     submittedAt: "2025-12-01T09:23:00Z",
+//     eta: "Crew notified, ETA 2 hrs",
+//     ticketId: "WAT-2048",
+//     description:
+//       "Water is pooling next to the transformer and running into the basement of Block B's parking area. Risk of equipment shorting.",
+//     location: "Sector 12, near civic center parking",
+//     coords: { lat: 27.7102, lng: 85.3157 },
+//     agent: { name: "Neha Kapoor", phone: "+91 98765 43210" },
+//     photos: ["leakage-1.jpg", "leakage-2.jpg"],
+//   },
+//   {
+//     id: "CMP-11205",
+//     title: "Street light fault on Block D avenue",
+//     category: "Street Light",
+//     status: "Resolved",
+//     submittedAt: "2025-11-28T21:10:00Z",
+//     eta: "Work completed",
+//     ticketId: "STR-3342",
+//     description:
+//       "Multiple poles between Block D and E have flickering lights that fail after 11PM. Neighbors are requesting a safety check.",
+//     location: "Block D Avenue, near community market",
+//     coords: { lat: 27.7115, lng: 85.3104 },
+//     agent: { name: "Arjun Mehta", phone: "+91 98123 00987" },
+//     photos: ["street-light.jpg"],
+//   },
+//   {
+//     id: "CMP-11206",
+//     title: "Garbage pile-up behind central park",
+//     category: "Waste",
+//     status: "New",
+//     submittedAt: "2025-12-10T14:48:00Z",
+//     eta: "Pending assignment",
+//     ticketId: "WST-4010",
+//     description:
+//       "Overflowing bins attract stray animals and block the footpath for evening walkers. Requesting a pickup and sanitization.",
+//     location: "Behind central park playground",
+//     coords: { lat: 27.7090, lng: 85.3172 },
+//     agent: { name: "Pending", phone: "-" },
+//     photos: [],
+//   },
+// ];
+
+// const categoryMeta = {
+//   "Water Leakage": { Icon: Droplet, color: "bg-emerald-100 text-emerald-600" },
+//   "Street Light": { Icon: Flashlight, color: "bg-amber-100 text-amber-600" },
+//   Waste: { Icon: Trash2, color: "bg-sky-100 text-sky-600" },
+// };
+
+// const statusStyles = {
+//   New: "bg-yellow-100 text-yellow-700",
+//   "In Progress": "bg-blue-100 text-blue-700",
+//   Resolved: "bg-emerald-100 text-emerald-600",
+// };
+
+// const timelineSteps = [
+//   { label: "Submitted", key: "Submitted" },
+//   { label: "Assigned", key: "Assigned" },
+//   { label: "In Progress", key: "In Progress" },
+//   { label: "Resolved", key: "Resolved" },
+// ];
+
+// const MyComplaints = () => {
+//   const [filter, setFilter] = useState("All");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [expanded, setExpanded] = useState(null);
+
+//   const filteredComplaints = useMemo(() => {
+//     return complaintsData.filter((complaint) => {
+//       if (filter !== "All" && complaint.status !== filter) {
+//         return false;
+//       }
+//       if (!searchTerm) return true;
+//       const query = searchTerm.toLowerCase();
+//       return (
+//         complaint.title.toLowerCase().includes(query) ||
+//         complaint.description.toLowerCase().includes(query) ||
+//         complaint.location.toLowerCase().includes(query) ||
+//         complaint.ticketId.toLowerCase().includes(query)
+//       );
+//     });
+//   }, [filter, searchTerm]);
+
+//   return (
+//     <div className="min-h-screen w-full bg-slate-50 py-12 dark:bg-slate-950">
+//       <div className="w-full space-y-6 px-4 sm:px-6 lg:px-8">
+//         <header className="space-y-1">
+//           <p className="text-xs uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">Citizen dashboard</p>
+//           <h1 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">My Complaints</h1>
+//           <p className="text-sm leading-[1.4] text-slate-500 dark:text-slate-400">
+//             Keep track of every request with live timelines, notes from technicians, and quick access to all documentation.
+//           </p>
+//         </header>
+
+//         <div className="rounded-2xl border border-black/5 bg-white/80 p-6 shadow-[0_15px_40px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-white/5">
+//           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+//             <div className="inline-flex flex-wrap gap-2">
+//               {["All", "New", "In Progress", "Resolved"].map((item) => (
+//                 <button
+//                   key={item}
+//                   onClick={() => setFilter(item)}
+//                   className={`rounded-full px-4 py-2 text-sm font-medium transition ${filter === item ? "bg-emerald-600 text-white shadow-sm" : "border border-gray-200 text-slate-700 hover:border-emerald-300"}`}
+//                 >
+//                   {item}
+//                 </button>
+//               ))}
+//             </div>
+//             <div className="relative w-full md:w-72">
+//               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+//               <input
+//                 type="text"
+//                 value={searchTerm}
+//                 onChange={(event) => setSearchTerm(event.target.value)}
+//                 placeholder="Search by title, ID, location…"
+//                 className="w-full rounded-xl border border-gray-200 bg-white px-10 py-3 text-sm tracking-normal placeholder:text-gray-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40"
+//               />
+//               {searchTerm && (
+//                 <button
+//                   type="button"
+//                   onClick={() => setSearchTerm("")}
+//                   className="absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-slate-100 text-xs text-slate-500 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"
+//                 >
+//                   <X className="h-3 w-3" />
+//                 </button>
+//               )}
+//             </div>
+//           </div>
+
+//           <div className="mt-6 space-y-4">
+//             {filteredComplaints.map((complaint) => {
+//               const isExpanded = expanded === complaint.id;
+//               const { Icon, color } = categoryMeta[complaint.category] || {
+//                 Icon: Activity,
+//                 color: "bg-slate-100 text-slate-600",
+//               };
+//               return (
+//                 <div key={complaint.id} className="space-y-2">
+//                   <div
+//                     onClick={() => setExpanded(isExpanded ? null : complaint.id)}
+//                     className={`flex cursor-pointer flex-col gap-4 rounded-xl border border-gray-200/50 bg-white/80 p-5 shadow-sm transition duration-200 ${isExpanded ? "shadow-md" : "hover:-translate-y-0.5 hover:shadow-md"} dark:border-white/10 dark:bg-white/5`}
+//                     aria-expanded={isExpanded}
+//                   >
+//                     <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
+//                       <div className="flex items-center gap-4">
+//                         <span className={`flex h-11 w-11 items-center justify-center rounded-2xl ${color}`}>
+//                           <Icon className="h-5 w-5" />
+//                         </span>
+//                         <div>
+//                           <p className="text-base font-medium tracking-tight text-slate-900 dark:text-white">{complaint.title}</p>
+//                           <p className="text-sm text-slate-500 dark:text-slate-300">{complaint.description}</p>
+//                           <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+//                             <span>{new Date(complaint.submittedAt).toLocaleString()}</span>
+//                             <span className="flex items-center gap-1">
+//                               <MapPin className="h-3 w-3" />
+//                               {complaint.ticketId}
+//                             </span>
+//                           </div>
+//                         </div>
+//                       </div>
+//                       <div className="flex items-start justify-between gap-4 md:flex-col md:items-end">
+//                         <span
+//                           className={`rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[complaint.status]} transition hover:brightness-95`}
+//                         >
+//                           {complaint.status}
+//                         </span>
+//                         <span className="text-xs text-slate-400 dark:text-slate-500">{complaint.eta}</span>
+//                         <span className="text-slate-400 transition group-hover:text-slate-600 dark:text-slate-500">
+//                           {!isExpanded ? "▾" : "▴"}
+//                         </span>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   <div
+//                     className={`overflow-hidden rounded-xl border border-dashed border-gray-200/60 bg-slate-100/60 p-6 transition-all duration-300 dark:border-white/10 dark:bg-white/5 ${isExpanded ? "opacity-100" : "pointer-events-none opacity-0"}`}
+//                     style={{ maxHeight: isExpanded ? "740px" : "0px" }}
+//                   >
+//                     <div className="space-y-5">
+//                       <div className="space-y-2">
+//                         <p className="text-sm font-semibold tracking-tight text-slate-700 dark:text-slate-200">Status timeline</p>
+//                         <div className="relative space-y-4 pl-6">
+//                           <span className="absolute left-1 top-1 bottom-1 w-[2px] bg-slate-300 dark:bg-slate-700"></span>
+//                           {timelineSteps.map((step, index) => {
+//                             const currentIndex = timelineSteps.findIndex((s) => s.key === complaint.status);
+//                             const isActive = index <= currentIndex;
+//                             return (
+//                               <div key={step.key} className="flex items-center gap-3">
+//                                 <span
+//                                   className={`flex h-4 w-4 items-center justify-center rounded-full border transition ${isActive ? "border-emerald-500 bg-emerald-500/20" : "border-slate-300 dark:border-white/20"}`}
+//                                 >
+//                                   <span className={`h-2 w-2 rounded-full ${isActive ? "bg-emerald-600" : "bg-transparent"}`}></span>
+//                                 </span>
+//                                 <div>
+//                                   <p className="text-xs font-semibold tracking-tight text-slate-700 dark:text-slate-200">{step.label}</p>
+//                                   <p className="text-xs text-slate-500 dark:text-slate-400">
+//                                     {isActive ? "Completed" : "Pending"}
+//                                   </p>
+//                                 </div>
+//                               </div>
+//                             );
+//                           })}
+//                         </div>
+//                       </div>
+
+//                       <div className="grid gap-4 md:grid-cols-2">
+//                         <div className="space-y-2 rounded-2xl border border-gray-200/50 bg-white/80 p-4 text-sm text-slate-600 shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
+//                           <p className="text-xs font-semibold tracking-tight text-slate-500 dark:text-slate-400">Agent on the case</p>
+//                           <p className="font-medium text-slate-900 dark:text-white">{complaint.agent.name}</p>
+//                           <p>{complaint.agent.phone}</p>
+//                         </div>
+//                         <div className="space-y-2 rounded-2xl border border-gray-200/50 bg-white/80 p-4 text-sm text-slate-600 shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
+//                           <p className="text-xs font-semibold tracking-tight text-slate-500 dark:text-slate-400">Submitted at</p>
+//                           <p>{new Date(complaint.submittedAt).toLocaleString()}</p>
+//                           <p className="text-xs text-slate-500 dark:text-slate-400">{complaint.location}</p>
+//                           <p className="text-xs text-slate-500 dark:text-slate-400">
+//                             Coordinates: {complaint.coords.lat.toFixed(4)}, {complaint.coords.lng.toFixed(4)}
+//                           </p>
+//                         </div>
+//                       </div>
+
+//                       <div className="rounded-2xl border border-gray-200/50 bg-white/80 p-4 shadow-sm dark:border-white/10 dark:bg-white/5">
+//                         <p className="text-xs font-semibold tracking-tight text-slate-500 dark:text-slate-400">Map preview</p>
+//                         <div className="mt-3 h-32 w-full rounded-xl border border-dashed border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-white/10"></div>
+//                       </div>
+
+//                       {complaint.photos.length > 0 && (
+//                         <div className="space-y-2">
+//                           <p className="text-xs font-semibold tracking-tight text-slate-500 dark:text-slate-400">Photos</p>
+//                           <div className="flex gap-3">
+//                             {complaint.photos.map((photo) => (
+//                               <div
+//                                 key={photo}
+//                                 className="flex h-24 w-24 items-center justify-center rounded-2xl border border-gray-200/60 bg-white/80 text-xs text-slate-500 shadow-sm dark:border-white/10 dark:bg-white/5"
+//                               >
+//                                 {photo}
+//                               </div>
+//                             ))}
+//                           </div>
+//                         </div>
+//                       )}
+//                     </div>
+//                   </div>
+//                 </div>
+//               );
+//             })}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default MyComplaints;
+
+
+
+
+
+
+import React, { useMemo, useState, useEffect, useContext } from "react";
 import {
   Activity,
   Droplet,
   Flashlight,
-  Hammer,
   MapPin,
   Search,
   Trash2,
   X,
+  AlertTriangle // Fallback icon
 } from "lucide-react";
+import axios from 'axios';
+import AuthContext from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
-const complaintsData = [
-  {
-    id: "CMP-11204",
-    title: "Water leakage near Sector 12 transformer",
-    category: "Water Leakage",
-    status: "In Progress",
-    submittedAt: "2025-12-01T09:23:00Z",
-    eta: "Crew notified, ETA 2 hrs",
-    ticketId: "WAT-2048",
-    description:
-      "Water is pooling next to the transformer and running into the basement of Block B's parking area. Risk of equipment shorting.",
-    location: "Sector 12, near civic center parking",
-    coords: { lat: 27.7102, lng: 85.3157 },
-    agent: { name: "Neha Kapoor", phone: "+91 98765 43210" },
-    photos: ["leakage-1.jpg", "leakage-2.jpg"],
-  },
-  {
-    id: "CMP-11205",
-    title: "Street light fault on Block D avenue",
-    category: "Street Light",
-    status: "Resolved",
-    submittedAt: "2025-11-28T21:10:00Z",
-    eta: "Work completed",
-    ticketId: "STR-3342",
-    description:
-      "Multiple poles between Block D and E have flickering lights that fail after 11PM. Neighbors are requesting a safety check.",
-    location: "Block D Avenue, near community market",
-    coords: { lat: 27.7115, lng: 85.3104 },
-    agent: { name: "Arjun Mehta", phone: "+91 98123 00987" },
-    photos: ["street-light.jpg"],
-  },
-  {
-    id: "CMP-11206",
-    title: "Garbage pile-up behind central park",
-    category: "Waste",
-    status: "New",
-    submittedAt: "2025-12-10T14:48:00Z",
-    eta: "Pending assignment",
-    ticketId: "WST-4010",
-    description:
-      "Overflowing bins attract stray animals and block the footpath for evening walkers. Requesting a pickup and sanitization.",
-    location: "Behind central park playground",
-    coords: { lat: 27.7090, lng: 85.3172 },
-    agent: { name: "Pending", phone: "-" },
-    photos: [],
-  },
-];
+const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
+// --- CONFIGURATION OBJECTS (UI Helpers) ---
 const categoryMeta = {
   "Water Leakage": { Icon: Droplet, color: "bg-emerald-100 text-emerald-600" },
   "Street Light": { Icon: Flashlight, color: "bg-amber-100 text-amber-600" },
-  Waste: { Icon: Trash2, color: "bg-sky-100 text-sky-600" },
+  "Waste": { Icon: Trash2, color: "bg-sky-100 text-sky-600" },
+  // Default fallback
+  "default": { Icon: Activity, color: "bg-slate-100 text-slate-600" }
 };
 
 const statusStyles = {
   New: "bg-yellow-100 text-yellow-700",
-  "In Progress": "bg-blue-100 text-blue-700",
+  "In-Progress": "bg-blue-100 text-blue-700", // "In Progress" ko backend key se match kiya
   Resolved: "bg-emerald-100 text-emerald-600",
+  Rejected: "bg-red-100 text-red-600"
 };
 
 const timelineSteps = [
-  { label: "Submitted", key: "Submitted" },
-  { label: "Assigned", key: "Assigned" },
-  { label: "In Progress", key: "In Progress" },
+  { label: "Submitted", key: "New" }, // Backend status key "New"
+  { label: "Assigned", key: "Assigned" }, // Note: Backend shayad 'Assigned' status na bhejta ho, 'In-Progress' hi use kare
+  { label: "In Progress", key: "In-Progress" },
   { label: "Resolved", key: "Resolved" },
 ];
 
 const MyComplaints = () => {
+  const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const [complaints, setComplaints] = useState([]); // Real Data
+  const [loading, setLoading] = useState(true);
+  
   const [filter, setFilter] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [expanded, setExpanded] = useState(null);
 
+  // --- 1. FETCH DATA FROM API ---
+  useEffect(() => {
+    const fetchMyComplaints = async () => {
+      if (!auth || !auth.token) return;
+      setLoading(true);
+      try {
+        const config = { headers: { 'Authorization': `Bearer ${auth.token}` } };
+        // Endpoint: Check karein agar ye aapke backend me alag hai
+        const response = await axios.get(`${API_BASE_URL}/users/my-complaints`, config);
+        
+        // Data set karein
+        setComplaints(response.data);
+      } catch (error) {
+        console.error("Failed to fetch complaints:", error);
+        toast.error("Could not load your complaints.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMyComplaints();
+  }, [auth]);
+
+  // --- 2. FILTERING LOGIC ---
   const filteredComplaints = useMemo(() => {
-    return complaintsData.filter((complaint) => {
+    return complaints.filter((complaint) => {
+      // Status Filter
       if (filter !== "All" && complaint.status !== filter) {
         return false;
       }
+      
+      // Search Filter
       if (!searchTerm) return true;
       const query = searchTerm.toLowerCase();
+      
       return (
-        complaint.title.toLowerCase().includes(query) ||
-        complaint.description.toLowerCase().includes(query) ||
-        complaint.location.toLowerCase().includes(query) ||
-        complaint.ticketId.toLowerCase().includes(query)
+        complaint.category?.toLowerCase().includes(query) ||
+        complaint.description?.toLowerCase().includes(query) ||
+        complaint.ticketId?.toLowerCase().includes(query) ||
+        // Location check (optional safe check)
+        (complaint.latitude && complaint.longitude && `Lat: ${complaint.latitude}, Lng: ${complaint.longitude}`.toLowerCase().includes(query))
       );
     });
-  }, [filter, searchTerm]);
+  }, [filter, searchTerm, complaints]);
+
+  if (loading) {
+    return (
+        <div className="min-h-screen w-full bg-slate-50 flex items-center justify-center dark:bg-slate-950">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+        </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 py-12 dark:bg-slate-950">
-      <div className="w-full space-y-6 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen w-full bg-slate-50 py-12 dark:bg-slate-950 transition-colors duration-300">
+      <div className="w-full space-y-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"> {/* Added max-w for better centering */}
+        
+        {/* Header */}
         <header className="space-y-1">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-400 dark:text-slate-500">Citizen dashboard</p>
           <h1 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-white">My Complaints</h1>
@@ -109,27 +392,36 @@ const MyComplaints = () => {
           </p>
         </header>
 
-        <div className="rounded-2xl border border-black/5 bg-white/80 p-6 shadow-[0_15px_40px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-white/5">
+        {/* Controls Container */}
+        <div className="rounded-2xl border border-black/5 bg-white/80 p-6 shadow-[0_15px_40px_rgba(15,23,42,0.08)] dark:border-white/10 dark:bg-white/5 backdrop-blur-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            
+            {/* Filter Buttons */}
             <div className="inline-flex flex-wrap gap-2">
-              {["All", "New", "In Progress", "Resolved"].map((item) => (
+              {["All", "New", "In-Progress", "Resolved"].map((item) => (
                 <button
                   key={item}
                   onClick={() => setFilter(item)}
-                  className={`rounded-full px-4 py-2 text-sm font-medium transition ${filter === item ? "bg-emerald-600 text-white shadow-sm" : "border border-gray-200 text-slate-700 hover:border-emerald-300"}`}
+                  className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                    filter === item 
+                      ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 scale-105" 
+                      : "border border-gray-200 text-slate-700 hover:border-emerald-300 dark:border-slate-700 dark:text-slate-300"
+                  }`}
                 >
                   {item}
                 </button>
               ))}
             </div>
+
+            {/* Search Bar */}
             <div className="relative w-full md:w-72">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
-                placeholder="Search by title, ID, location…"
-                className="w-full rounded-xl border border-gray-200 bg-white px-10 py-3 text-sm tracking-normal placeholder:text-gray-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40"
+                placeholder="Search by category, ID..."
+                className="w-full rounded-xl border border-gray-200 bg-white px-10 py-3 text-sm tracking-normal placeholder:text-gray-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/40 transition-all"
               />
               {searchTerm && (
                 <button
@@ -143,123 +435,164 @@ const MyComplaints = () => {
             </div>
           </div>
 
+          {/* Complaints List */}
           <div className="mt-6 space-y-4">
-            {filteredComplaints.map((complaint) => {
-              const isExpanded = expanded === complaint.id;
-              const { Icon, color } = categoryMeta[complaint.category] || {
-                Icon: Activity,
-                color: "bg-slate-100 text-slate-600",
-              };
-              return (
-                <div key={complaint.id} className="space-y-2">
-                  <div
-                    onClick={() => setExpanded(isExpanded ? null : complaint.id)}
-                    className={`flex cursor-pointer flex-col gap-4 rounded-xl border border-gray-200/50 bg-white/80 p-5 shadow-sm transition duration-200 ${isExpanded ? "shadow-md" : "hover:-translate-y-0.5 hover:shadow-md"} dark:border-white/10 dark:bg-white/5`}
-                    aria-expanded={isExpanded}
-                  >
-                    <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
-                      <div className="flex items-center gap-4">
-                        <span className={`flex h-11 w-11 items-center justify-center rounded-2xl ${color}`}>
-                          <Icon className="h-5 w-5" />
-                        </span>
-                        <div>
-                          <p className="text-base font-medium tracking-tight text-slate-900 dark:text-white">{complaint.title}</p>
-                          <p className="text-sm text-slate-500 dark:text-slate-300">{complaint.description}</p>
-                          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
-                            <span>{new Date(complaint.submittedAt).toLocaleString()}</span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="h-3 w-3" />
-                              {complaint.ticketId}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-start justify-between gap-4 md:flex-col md:items-end">
-                        <span
-                          className={`rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[complaint.status]} transition hover:brightness-95`}
-                        >
-                          {complaint.status}
-                        </span>
-                        <span className="text-xs text-slate-400 dark:text-slate-500">{complaint.eta}</span>
-                        <span className="text-slate-400 transition group-hover:text-slate-600 dark:text-slate-500">
-                          {!isExpanded ? "▾" : "▴"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    className={`overflow-hidden rounded-xl border border-dashed border-gray-200/60 bg-slate-100/60 p-6 transition-all duration-300 dark:border-white/10 dark:bg-white/5 ${isExpanded ? "opacity-100" : "pointer-events-none opacity-0"}`}
-                    style={{ maxHeight: isExpanded ? "740px" : "0px" }}
-                  >
-                    <div className="space-y-5">
-                      <div className="space-y-2">
-                        <p className="text-sm font-semibold tracking-tight text-slate-700 dark:text-slate-200">Status timeline</p>
-                        <div className="relative space-y-4 pl-6">
-                          <span className="absolute left-1 top-1 bottom-1 w-[2px] bg-slate-300 dark:bg-slate-700"></span>
-                          {timelineSteps.map((step, index) => {
-                            const currentIndex = timelineSteps.findIndex((s) => s.key === complaint.status);
-                            const isActive = index <= currentIndex;
-                            return (
-                              <div key={step.key} className="flex items-center gap-3">
-                                <span
-                                  className={`flex h-4 w-4 items-center justify-center rounded-full border transition ${isActive ? "border-emerald-500 bg-emerald-500/20" : "border-slate-300 dark:border-white/20"}`}
-                                >
-                                  <span className={`h-2 w-2 rounded-full ${isActive ? "bg-emerald-600" : "bg-transparent"}`}></span>
-                                </span>
-                                <div>
-                                  <p className="text-xs font-semibold tracking-tight text-slate-700 dark:text-slate-200">{step.label}</p>
-                                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                                    {isActive ? "Completed" : "Pending"}
-                                  </p>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      <div className="grid gap-4 md:grid-cols-2">
-                        <div className="space-y-2 rounded-2xl border border-gray-200/50 bg-white/80 p-4 text-sm text-slate-600 shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
-                          <p className="text-xs font-semibold tracking-tight text-slate-500 dark:text-slate-400">Agent on the case</p>
-                          <p className="font-medium text-slate-900 dark:text-white">{complaint.agent.name}</p>
-                          <p>{complaint.agent.phone}</p>
-                        </div>
-                        <div className="space-y-2 rounded-2xl border border-gray-200/50 bg-white/80 p-4 text-sm text-slate-600 shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
-                          <p className="text-xs font-semibold tracking-tight text-slate-500 dark:text-slate-400">Submitted at</p>
-                          <p>{new Date(complaint.submittedAt).toLocaleString()}</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">{complaint.location}</p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">
-                            Coordinates: {complaint.coords.lat.toFixed(4)}, {complaint.coords.lng.toFixed(4)}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="rounded-2xl border border-gray-200/50 bg-white/80 p-4 shadow-sm dark:border-white/10 dark:bg-white/5">
-                        <p className="text-xs font-semibold tracking-tight text-slate-500 dark:text-slate-400">Map preview</p>
-                        <div className="mt-3 h-32 w-full rounded-xl border border-dashed border-slate-200 bg-slate-100 dark:border-white/10 dark:bg-white/10"></div>
-                      </div>
-
-                      {complaint.photos.length > 0 && (
-                        <div className="space-y-2">
-                          <p className="text-xs font-semibold tracking-tight text-slate-500 dark:text-slate-400">Photos</p>
-                          <div className="flex gap-3">
-                            {complaint.photos.map((photo) => (
-                              <div
-                                key={photo}
-                                className="flex h-24 w-24 items-center justify-center rounded-2xl border border-gray-200/60 bg-white/80 text-xs text-slate-500 shadow-sm dark:border-white/10 dark:bg-white/5"
-                              >
-                                {photo}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+            {filteredComplaints.length === 0 ? (
+                <div className="text-center py-10 text-slate-500 dark:text-slate-400">
+                    <AlertTriangle className="mx-auto h-10 w-10 mb-2 opacity-50" />
+                    <p>No complaints found.</p>
                 </div>
-              );
-            })}
+            ) : (
+                filteredComplaints.map((complaint) => {
+                const isExpanded = expanded === complaint.id;
+                
+                // Determine Icon and Color based on Category
+                const { Icon, color } = categoryMeta[complaint.category] || categoryMeta["default"];
+                
+                return (
+                    <div key={complaint.id} className="space-y-2">
+                    {/* Card Header (Clickable) */}
+                    <div
+                        onClick={() => setExpanded(isExpanded ? null : complaint.id)}
+                        className={`flex cursor-pointer flex-col gap-4 rounded-xl border border-gray-200/50 bg-white/80 p-5 shadow-sm transition duration-200 ${
+                        isExpanded ? "shadow-md ring-1 ring-emerald-500/20" : "hover:-translate-y-0.5 hover:shadow-md"
+                        } dark:border-white/10 dark:bg-white/5`}
+                        aria-expanded={isExpanded}
+                    >
+                        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
+                        <div className="flex items-center gap-4">
+                            {/* Icon Box */}
+                            <span className={`flex h-11 w-11 items-center justify-center rounded-2xl ${color} shadow-sm`}>
+                                <Icon className="h-5 w-5" />
+                            </span>
+                            
+                            {/* Title & Meta */}
+                            <div>
+                                <p className="text-base font-medium tracking-tight text-slate-900 dark:text-white">
+                                    {complaint.category} <span className="text-slate-400 font-normal text-sm ml-2">#{complaint.ticketId}</span>
+                                </p>
+                                <p className="text-sm text-slate-500 dark:text-slate-300 line-clamp-1">{complaint.description}</p>
+                                
+                                <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                                    <span>{complaint.dateRaised ? new Date(complaint.dateRaised).toLocaleString() : 'Date N/A'}</span>
+                                    {complaint.latitude && (
+                                        <span className="flex items-center gap-1">
+                                        <MapPin className="h-3 w-3" />
+                                        Location Detected
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Status Badge & Arrow */}
+                        <div className="flex items-start justify-between gap-4 md:flex-col md:items-end">
+                            <span
+                            className={`rounded-full px-3 py-1 text-xs font-semibold ${statusStyles[complaint.status] || "bg-gray-100 text-gray-600"} transition hover:brightness-95`}
+                            >
+                            {complaint.status}
+                            </span>
+                            <span className="text-slate-400 transition group-hover:text-slate-600 dark:text-slate-500">
+                            {!isExpanded ? "▾" : "▴"}
+                            </span>
+                        </div>
+                        </div>
+                    </div>
+
+                    {/* Expanded Content (Details) */}
+                    <div
+                        className={`overflow-hidden rounded-xl border border-dashed border-gray-200/60 bg-slate-100/60 p-6 transition-all duration-300 dark:border-white/10 dark:bg-white/5 ${
+                        isExpanded ? "opacity-100 mt-2" : "pointer-events-none opacity-0 max-h-0 p-0 border-0"
+                        }`}
+                        // Note: Removed fixed maxHeight to allow content to grow naturally, relying on max-h-0 for hiding
+                    >
+                        <div className="space-y-5">
+                            {/* 1. Timeline Section */}
+                            <div className="space-y-2">
+                                <p className="text-sm font-semibold tracking-tight text-slate-700 dark:text-slate-200">Status timeline</p>
+                                <div className="relative space-y-4 pl-6">
+                                <span className="absolute left-1 top-1 bottom-1 w-[2px] bg-slate-300 dark:bg-slate-700"></span>
+                                {timelineSteps.map((step, index) => {
+                                    // Logic to determine if step is active
+                                    let isActive = false;
+                                    if(complaint.status === 'Resolved') isActive = true;
+                                    else if(complaint.status === 'In-Progress' && step.key !== 'Resolved') isActive = true;
+                                    else if(complaint.status === 'New' && step.key === 'New') isActive = true;
+
+                                    return (
+                                    <div key={step.key} className="flex items-center gap-3">
+                                        <span
+                                        className={`flex h-4 w-4 items-center justify-center rounded-full border transition z-10 bg-white dark:bg-slate-800 ${
+                                            isActive ? "border-emerald-500" : "border-slate-300 dark:border-white/20"
+                                        }`}
+                                        >
+                                        <span className={`h-2 w-2 rounded-full ${isActive ? "bg-emerald-600" : "bg-transparent"}`}></span>
+                                        </span>
+                                        <div>
+                                        <p className="text-xs font-semibold tracking-tight text-slate-700 dark:text-slate-200">{step.label}</p>
+                                        </div>
+                                    </div>
+                                    );
+                                })}
+                                </div>
+                            </div>
+
+                            {/* 2. Details Grid */}
+                            <div className="grid gap-4 md:grid-cols-2">
+                                {/* Agent Details */}
+                                <div className="space-y-2 rounded-2xl border border-gray-200/50 bg-white/80 p-4 text-sm text-slate-600 shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
+                                <p className="text-xs font-semibold tracking-tight text-slate-500 dark:text-slate-400">Agent on the case</p>
+                                {complaint.agent ? (
+                                    <>
+                                        <p className="font-medium text-slate-900 dark:text-white">{complaint.agent.name || 'Name N/A'}</p>
+                                        <p>{complaint.agent.email}</p>
+                                        {complaint.agent.mobileNumber && <p>{complaint.agent.mobileNumber}</p>}
+                                    </>
+                                ) : (
+                                    <p className="text-amber-500 italic">Assigning soon...</p>
+                                )}
+                                </div>
+
+                                {/* Location Details */}
+                                <div className="space-y-2 rounded-2xl border border-gray-200/50 bg-white/80 p-4 text-sm text-slate-600 shadow-sm dark:border-white/10 dark:bg-white/5 dark:text-gray-300">
+                                <p className="text-xs font-semibold tracking-tight text-slate-500 dark:text-slate-400">Location Info</p>
+                                <p className="font-medium">Coordinates:</p>
+                                <p className="text-xs font-mono bg-slate-100 dark:bg-slate-800 p-1 rounded inline-block">
+                                    {complaint.latitude?.toFixed(4) || 'N/A'}, {complaint.longitude?.toFixed(4) || 'N/A'}
+                                </p>
+                                <button 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(`/complaint/${complaint.ticketId}`); // Detail page par le jao
+                                    }}
+                                    className="block mt-2 text-emerald-600 hover:underline text-xs"
+                                >
+                                    View Live Tracking →
+                                </button>
+                                </div>
+                            </div>
+
+                            {/* 3. Photos Section */}
+                            {complaint.photoUrl && (
+                                <div className="space-y-2">
+                                <p className="text-xs font-semibold tracking-tight text-slate-500 dark:text-slate-400">Photo Evidence</p>
+                                <div className="flex gap-3">
+                                    <div className="relative h-24 w-24 overflow-hidden rounded-2xl border border-gray-200/60 bg-white/80 shadow-sm group">
+                                        <img 
+                                            src={complaint.photoUrl} 
+                                            alt="Evidence" 
+                                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                        />
+                                    </div>
+                                </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    </div>
+                );
+                })
+            )}
           </div>
         </div>
       </div>
@@ -268,4 +601,3 @@ const MyComplaints = () => {
 };
 
 export default MyComplaints;
-

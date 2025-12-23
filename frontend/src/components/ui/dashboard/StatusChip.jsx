@@ -1,32 +1,45 @@
 import React from "react";
 
-const statusStyles = {
-  new: {
-    bg: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-200",
-  },
-  "in-progress": {
-    bg: "bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-200",
-  },
-  resolved: {
-    bg: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-200",
-  },
-  default: {
-    bg: "bg-slate-100 text-slate-700 dark:bg-slate-900/50 dark:text-slate-200",
-  },
-};
-
 const StatusChip = ({ status }) => {
-  const normalized = (status || "default").toLowerCase().replace(/\s+/g, "-");
-  const styles = statusStyles[normalized] || statusStyles.default;
+  const statusConfig = {
+    'New': {
+      bg: 'bg-blue-100 dark:bg-blue-900/30',
+      text: 'text-blue-700 dark:text-blue-300',
+      border: 'border-blue-200 dark:border-blue-800',
+      dot: 'bg-blue-500'
+    },
+    'In-Progress': {
+      bg: 'bg-amber-100 dark:bg-amber-900/30',
+      text: 'text-amber-700 dark:text-amber-300',
+      border: 'border-amber-200 dark:border-amber-800',
+      dot: 'bg-amber-500'
+    },
+    'Resolved': {
+      bg: 'bg-emerald-100 dark:bg-emerald-900/30',
+      text: 'text-emerald-700 dark:text-emerald-300',
+      border: 'border-emerald-200 dark:border-emerald-800',
+      dot: 'bg-emerald-500'
+    },
+    'Closed': {
+      bg: 'bg-gray-100 dark:bg-gray-800/30',
+      text: 'text-gray-700 dark:text-gray-300',
+      border: 'border-gray-200 dark:border-gray-700',
+      dot: 'bg-gray-500'
+    },
+    'Rejected': {
+      bg: 'bg-red-100 dark:bg-red-900/30',
+      text: 'text-red-700 dark:text-red-300',
+      border: 'border-red-200 dark:border-red-800',
+      dot: 'bg-red-500'
+    }
+  };
+
+  const config = statusConfig[status] || statusConfig['New'];
 
   return (
-    <span
-      role="status"
-      aria-label={`Status: ${status}`}
-      className={`inline-flex items-center gap-2 rounded-2xl px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.02em] leading-[1.3] ${styles.bg}`}
-    >
-      <span className="h-1.5 w-1.5 rounded-full bg-current" />
-      {status || "Unknown"}
+    <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${config.bg} ${config.text} border ${config.border}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${config.dot} ${status === 'In-Progress' ? 'animate-pulse' : ''}`}></span>
+      {status}
     </span>
   );
 };

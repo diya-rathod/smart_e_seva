@@ -263,6 +263,20 @@ L.Icon.Default.mergeOptions({
 
 const API_BASE_URL = 'https://smart-eseva-backend.onrender.com/api/v1';
 
+const agentIcon = new L.divIcon({
+    className: 'custom-agent-icon',
+    html: `
+        <div class="agent-pin">
+            <div class="agent-inner-circle">
+                <img src="/scooter.png" class="agent-img" alt="Agent" />
+            </div>
+            <div class="agent-pulse-ring"></div>
+        </div>
+    `,
+    iconSize: [50, 50],
+    iconAnchor: [25, 25],
+    popupAnchor: [0, -25]
+});
 
 
 const ComplaintDetails = () => {
@@ -320,54 +334,6 @@ const ComplaintDetails = () => {
     }, [ticketId, auth]);
 
 
-
-    // --- 2. WebSocket Connection Logic ---
-
-    // useEffect(() => {
-
-    //     if (complaint && complaint.agent && complaint.status !== 'Resolved') {
-
-    //         const socket = new SockJS('https://smart-eseva-backend.onrender.com/ws');
-
-    //         const stompClient = Stomp.over(socket);
-
-    //         stompClientRef.current = stompClient;
-
-
-
-    //         stompClient.connect({}, () => {
-
-    //             const topic = `/topic/complaint/${complaint.id}/location`;
-
-    //             stompClient.subscribe(topic, (message) => {
-
-    //                 const locationUpdate = JSON.parse(message.body);
-
-    //                 setAgentPosition([locationUpdate.lat, locationUpdate.lng]);
-
-    //             });
-
-    //         }, () => {
-
-    //             toast.error("Live tracking connection failed.");
-
-    //         });
-
-
-
-    //         return () => {
-
-    //             if (stompClientRef.current && stompClientRef.current.connected) {
-
-    //                 stompClientRef.current.disconnect();
-
-    //             }
-
-    //         };
-
-    //     }
-
-    // }, [complaint]);
 
     useEffect(() => {
 
@@ -536,91 +502,54 @@ const ComplaintDetails = () => {
                                 )}
 
                                 {agentPosition && (
-
-                                    <Marker position={agentPosition}>
-
-                                        <Popup>Agent: {complaint.agent?.name}</Popup>
-
+                                    <Marker position={agentPosition} icon={agentIcon}>
+                                        <Popup>
+                                            <div style={{ textAlign: 'center' }}>
+                                                <strong>{complaint.agent?.name}</strong><br />
+                                                <span style={{ fontSize: '12px', color: 'green' }}>Live Tracking...</span>
+                                            </div>
+                                        </Popup>
                                     </Marker>
-
                                 )}
-
                             </MapContainer>
-
                         </div>
-
                         {complaint.agent && complaint.status !== 'Resolved' && !agentPosition && (
-
                             <p>Waiting for agent to start the journey...</p>
-
                         )}
-
                     </div>
-
                     {/* --- MAP SECTION END --- */}
 
-
-
                     <div className="details-section">
-
                         <h2>Description</h2>
-
                         <p>{complaint.description}</p>
-
                     </div>
-
-
-
                     {complaint.photoUrl && (
-
                         <div className="details-section">
-
                             <h2>Photo Evidence</h2>
-
                             <img src={complaint.photoUrl} alt="Complaint Evidence" />
-
                         </div>
-
                     )}
 
                 </div>
 
-
-
                 <div className="details-sidebar">
-
                     {/* Isko dynamic data se connect karna padega */}
 
                     {/* <div className="details-section status-timeline"> ... </div> */}
 
-
-
                     {complaint.agent && (
-
                         <div className="details-section agent-details">
-
                             <h2>Assigned Agent</h2>
-
                             <p><strong>Name:</strong> {complaint.agent.name}</p>
-
                             <p><strong>Contact:</strong> {complaint.agent.mobileNumber || 'N/A'}</p>
-
                         </div>
-
                     )}
-
-
-
                     {/* Isko bhi dynamic data se connect karna padega */}
 
                     {/* <div className="details-section updates-log"> ... </div> */}
-
                 </div>
-
             </div>
-
         </div>
-
     );
 
 };
@@ -628,3 +557,55 @@ const ComplaintDetails = () => {
 
 
 export default ComplaintDetails;
+
+
+
+
+
+// --- 2. WebSocket Connection Logic ---
+
+// useEffect(() => {
+
+//     if (complaint && complaint.agent && complaint.status !== 'Resolved') {
+
+//         const socket = new SockJS('https://smart-eseva-backend.onrender.com/ws');
+
+//         const stompClient = Stomp.over(socket);
+
+//         stompClientRef.current = stompClient;
+
+
+
+//         stompClient.connect({}, () => {
+
+//             const topic = `/topic/complaint/${complaint.id}/location`;
+
+//             stompClient.subscribe(topic, (message) => {
+
+//                 const locationUpdate = JSON.parse(message.body);
+
+//                 setAgentPosition([locationUpdate.lat, locationUpdate.lng]);
+
+//             });
+
+//         }, () => {
+
+//             toast.error("Live tracking connection failed.");
+
+//         });
+
+
+
+//         return () => {
+
+//             if (stompClientRef.current && stompClientRef.current.connected) {
+
+//                 stompClientRef.current.disconnect();
+
+//             }
+
+//         };
+
+//     }
+
+// }, [complaint]);
