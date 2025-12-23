@@ -101,6 +101,7 @@ import {
   QuickActionButton,
   ComplaintCard
 } from '../../components/ui/dashboard';
+import KPICard from './KPICard';
 
 import './Dashboard.css';
 
